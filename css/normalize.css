@@ -286,7 +286,7 @@ ul {
 }
 
 dd {
-    margin: 0 0 0 40px;
+    margin: 0 0 0 0px;
 }
 
 /*
@@ -296,7 +296,7 @@ dd {
 menu,
 ol,
 ul {
-    padding: 0 0 0 40px;
+    padding: 0 0 0 0px;
 }
 
 /*
