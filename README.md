@@ -1,2 +1,2 @@
 # sandunrmst.github.io
-My Personal Site
+My Personal Website
