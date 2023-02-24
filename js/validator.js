@@ -1,4 +1,7 @@
-
+/*
+* Author: RMST
+* Version: 2.0
+*/
 
 +function ($) {
   'use strict';

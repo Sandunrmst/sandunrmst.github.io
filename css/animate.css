@@ -1,6 +1,13 @@
 @charset "UTF-8";
 
+/*
+* Author: RMST
+* Version: 2.0
+*/
 
+/*
+ 
+ * -------------------------- */
 .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;

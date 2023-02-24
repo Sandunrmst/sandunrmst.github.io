@@ -1,5 +1,5 @@
 /*
-* Author: rmst
+* Author: RMST
 * Version: 2.0
 */
 

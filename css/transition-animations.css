@@ -1,6 +1,7 @@
-/* animation sets */
-
-/* move from / to  */
+/*
+* Author: RMST
+* Version: 2.0
+*/
 
 .pt-page-moveToLeft {
 	-webkit-animation: moveToLeft .6s ease both;

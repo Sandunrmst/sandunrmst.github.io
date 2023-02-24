@@ -1,5 +1,8 @@
 
-
+/*
+* Author: RMST
+* Version: 2.0
+*/
 
 /* ============================================================================= 
 1. Fonts
@@ -930,16 +933,16 @@ body > footer .copyrights {
 @media only screen and (max-width: 600px) {
   .start-page-content .page-header .title-block .sp-subtitle {
     color: #fff;
-    font-size: 13px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 600;
     letter-spacing: 1px;
     margin: 0;
     padding-bottom: 5px;
   }
 
   .rmst{
-    font-size: 13px;
-  font-weight: 400;
+    font-size: 14px;
+  font-weight: 600;
   }
 
 }
