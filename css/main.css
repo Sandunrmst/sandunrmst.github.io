@@ -912,7 +912,7 @@ body > footer .copyrights {
 }
 
 .rmst{
-
+  font-family: consolas;
   font-size: 25px;
   font-weight: 600;
   background: -webkit-linear-gradient(101deg, #09009f, #00ff95 80%);
@@ -943,6 +943,7 @@ body > footer .copyrights {
   }
 
   .rmst{
+  font-family: consolas;
   font-size: 12px;
   font-weight: 400;
   }
