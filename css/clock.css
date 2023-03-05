@@ -30,7 +30,7 @@
 
     position: relative;
     display: flex;
-    margin-top: 15px;
+    margin-top: 10px;
     justify-content: center;
     align-items: center;
 }
@@ -39,8 +39,8 @@
     justify-content: center;
     align-items: center; 
     height: 100%;
-    margin-bottom: -50px;
-    margin-top: 8px;
+    margin-bottom: -38px;
+    margin-top: 13px;
 }
 
 .clock .contain h2{
