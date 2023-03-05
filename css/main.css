@@ -904,7 +904,7 @@ body > footer .copyrights {
   color: #fff;
   font-size: 54px;
   font-weight: 700;
-  margin: 30px 0 0;
+  margin: 0 0 0;
   background: -webkit-linear-gradient(45deg, #09009f, #00ff95 80%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -923,8 +923,9 @@ body > footer .copyrights {
 
 .start-page-content .page-header .title-block .sp-subtitle {
   color: #fff;
+  font-family: consolas;
   font-size: 22px;
-  font-weight: 400;
+  font-weight: 800;
   letter-spacing: 1px;
   margin: 0;
   padding-bottom: 5px;
@@ -933,17 +934,22 @@ body > footer .copyrights {
 @media only screen and (max-width: 600px) {
   .start-page-content .page-header .title-block .sp-subtitle {
     color: #fff;
-    font-size: 14px;
-    font-weight: 600;
+    font-family: consolas;
+    font-size: 12px;
+    font-weight: 400;
     letter-spacing: 1px;
     margin: 0;
     padding-bottom: 5px;
   }
 
   .rmst{
-    font-size: 14px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 400;
   }
+
+  .start-page-content .social-links {
+    margin-top: 10px !important;
+}
 
 }
 
@@ -2635,7 +2641,7 @@ blockquote footer, blockquote small, blockquote .small {
   }
 
   .start-page-content .page-header .title-block .sp-subtitle {
-    margin-top: 15px;
+    margin-top: 10px;
   }
 
   .custom-page-content .page-header {

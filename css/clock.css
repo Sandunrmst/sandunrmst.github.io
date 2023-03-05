@@ -1,0 +1,96 @@
+
+
+/*
+* Author: RMST
+* Version: 2.0
+*/
+
+
+.dot {
+  animation: dot-animation 1s steps(5, start) infinite;
+  -webkit-animation: dot-animation 1s steps(5, start) infinite;
+
+}
+@keyframes dot-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes dot-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+.dot-st{
+    margin-top: 6px;
+}
+
+.sl-clock{
+
+    position: relative;
+    display: flex;
+    margin-top: 15px;
+    justify-content: center;
+    align-items: center;
+}
+.clock .contain{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 100%;
+    margin-bottom: -50px;
+    margin-top: 8px;
+}
+
+.clock .contain h2{
+    font-size: 1.1em;
+    color: #fff;
+}
+
+.clock .contain h2:nth-child(odd){
+    padding: 5px 15px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+    margin: 0 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.colck .contain h2#seconds{
+    color: #f9d524;
+}
+
+#ampm{
+    position: relative;
+    /* top: -50px; */
+    font-size: 0.8em;
+    color: #fff;
+    font-weight: 400; 
+}
+
+
+@media only screen and (max-width: 600px) {
+    
+    .clock .contain h2{
+        font-size: 0.8em;
+        color: #fff;
+    }
+
+    #ampm{
+        position: relative;
+        /* top: -50px; */
+        font-size: 0.8em;
+        color: #fff;
+        font-weight: 400; 
+    }
+
+    .clock .contain{
+        
+        margin-top: 2px;
+    }
+
+  
+  }
+
