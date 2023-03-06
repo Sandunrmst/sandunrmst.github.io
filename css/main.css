@@ -21,6 +21,34 @@
 2. General styles
 ============================================================================= */
 
+/*  Scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  /* background: red;  */
+  background: -webkit-linear-gradient(45deg, #008cff, #00012a 100%);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: -webkit-linear-gradient(45deg, #00012a, #008cff 100%);
+}
+
+/*  End Scrollbar */
+
+
 html {
   position: relative;
   height: 100%;
