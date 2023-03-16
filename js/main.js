@@ -3,6 +3,8 @@
 * Version: 2.0
 */
 
+
+
 (function($) {
 "use strict";
     // Subpages resize
