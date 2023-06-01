@@ -41,6 +41,7 @@ function clock(){
     var  ampm_time = h >= 12 ? 'PM' : 'AM';
     h = h % 12;
     h = h ? h : 12; // the hour '0' should be '12'
+    h = h < 10 ? '0' + h : h; // 01, 02, 03, 04 bla bla blaaa
     m = m < 10 ? '0' + m : m;
     s = s < 10 ? '0' + s : s;
     
