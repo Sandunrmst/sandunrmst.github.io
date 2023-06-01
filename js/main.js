@@ -269,11 +269,7 @@
                 }
             });
 
-        //Google Maps
-        $("#map").googleMap();
-        $("#map").addMarker({
-            address: "15 avenue des champs Elysées 75008 Paris" // Your Address
-        });
+       
     });
 
 })(jQuery);

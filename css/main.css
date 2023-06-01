@@ -1010,6 +1010,11 @@ body > footer .copyrights {
   box-shadow: 0px 6px 18px 0px rgba(0,0,0,0.2);
   background-color: #05809a;
   color: #fff;
+  transform: scale(1.2);
+}
+
+.start-page-content .social-links a:hover i{
+  color: #ffffff;
 }
 
 .start-page-content .social-links a i {
@@ -1017,10 +1022,6 @@ body > footer .copyrights {
   font-size: 16px;
   color: #00012a;
   transition: 0.5s;
-}
-
-.start-page-content .social-links a i:hover{
-  color: #ffffff;
 }
 
 .start-page-content .page-content {
@@ -1211,6 +1212,7 @@ body > footer .copyrights {
 .skill-container {
   background-color: #f5f5f5;
   border: 1px solid #e0e0e0;
+  border-radius: 25px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -1223,6 +1225,7 @@ body > footer .copyrights {
   background-color: #05739a;
   height: 10px;
   padding: 0;
+  border-radius: 25px;
 }
 /* Animate skills on subpage load */
 .pt-page .skill-percentage {
@@ -1355,7 +1358,7 @@ body > footer .copyrights {
 .client-block {
   text-align: center;
   padding: 5px 0;
-  opacity: 0.4;
+  opacity: 0.6;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
@@ -1369,7 +1372,12 @@ body > footer .copyrights {
 
 .client-block img {
   max-width: 80px;
+  transition: all 0.2s ease-in-out;
 }
+.client-block img:hover {
+  transform: scale(1.2);
+}
+
 /* /Clients */
 
 /* Fun Facts */
