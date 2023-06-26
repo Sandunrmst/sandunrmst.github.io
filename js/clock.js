@@ -10,7 +10,7 @@ function clock(){
     let seconds = document.getElementById('seconds');
     let ampm = document.getElementById('ampm');
 
-    //New Zealand Time display
+    //Display the Sri Lankan Time
     tz='Asia/Colombo';
     let str=new Date().toLocaleString("en-LK",{timeZone:tz,timeZoneName:"short"});
     let dt2 = new Date();
