@@ -2402,6 +2402,7 @@ blockquote footer, blockquote small, blockquote .small {
   font-size: 12px;
 }
 
+
 /* ============================================================================= 
 12. Media Queries 
 ============================================================================= */
@@ -2712,4 +2713,10 @@ blockquote footer, blockquote small, blockquote .small {
   .home-page-description {
     font-size: 16px;
   }
+}
+
+.download-resume i{
+  color: #05739a;
+  font-size: 1rem;
+  margin-left: 6px;
 }
