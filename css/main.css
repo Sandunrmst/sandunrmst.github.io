@@ -16,7 +16,7 @@
 /* Google fonts */
 @import url("https://fonts.googleapis.com/css?family=Roboto:100,300,300i,400,400i,700,700i|Montserrat:300,400,500,600,700");
 
-
+@import url("spinner.css");
 /* ============================================================================= 
 2. General styles
 ============================================================================= */
@@ -1955,13 +1955,7 @@ body > footer .copyrights {
 }
 /* / Contact form */
 
-/* Google Map */
-.map {
-  width: 100%;
-  height: 180px;
-  margin: 15px 0 30px;
-}
-/* / Google Map */
+
 
 
 /* ============================================================================= 
@@ -2829,6 +2823,30 @@ blockquote footer, blockquote small, blockquote .small {
  margin-top: 20px;
  font-size: 1.1rem;
 }
+/* sent messeage preloader  */
+#message-loader {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  background:rgba(0, 24, 54, 0.2);
+  height:100%;
+  color: #fff;
+  border-radius: 2%;
+}
+.hide-message{
+  display: none;
+}
+
+.show-message {
+  display:block;
+}
+
+.preloader-sendMail {
+  text-align:center;
+  padding-top:100px;
+}
+/* sent messeage preloader  */
 
 @media only screen and (max-width: 768px) {
   .contact-me{
@@ -3062,4 +3080,5 @@ blockquote footer, blockquote small, blockquote .small {
       align-items: center;
   }
 }
+
 
