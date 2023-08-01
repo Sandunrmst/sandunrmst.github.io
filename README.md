@@ -4,7 +4,6 @@
 <h3 align="center">I do build some really cool piece of shit 😎</h3>
 
 <p align="right"> <img src="https://komarev.com/ghpvc/?username=sandunrmst&label=Profile%20views&color=0e75b6&style=flat" alt="sandunrmst" /> </p>
-<img align="right" src ="https://github.com/Sandunrmst/sandunrmst.github.io/assets/49017841/d8d2b0c2-e94b-441b-b564-00b0868c1eff" width ="400px" alt-"RMST"> 
 
   🌱 I’m currently learning **React**
 
