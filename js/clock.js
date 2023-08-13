@@ -4,51 +4,31 @@
 * Version: 2.0
 */
 
-function clock(){
-    let hour = document.getElementById('hour');
-    let minute = document.getElementById('minute');
-    let seconds = document.getElementById('seconds');
-    let ampm = document.getElementById('ampm');
+function clock() {
+    // Get the current time in Sri Lanka
+    const tz = 'Asia/Colombo';
+    const now = new Date();
+    const localTime = new Date(now.toLocaleString('en-US', { timeZone: tz }));
+    const diff = now.getTime() - localTime.getTime();
+    const currentTime = new Date(now.getTime() - diff);
 
-    //Display the Sri Lankan Time
-    tz='Asia/Colombo';
-    let str=new Date().toLocaleString("en-LK",{timeZone:tz,timeZoneName:"short"});
-    let dt2 = new Date();
-    let str2 = new Date(dt2.toLocaleString('en-US',{timeZone: tz}));
-    
-    let diff= dt2.getTime()-str2.getTime();
-    let dt3=new Date(dt2.getTime()-diff);
-    
-    let h= dt3.getHours();
-    let m= dt3.getMinutes();
-    let s= dt3.getSeconds();
-    
-    
-    //Convert 24 hour time to 12 hour format with AM PM Indicator
-    // if(h>=12){
-    //     h = h - 12;
-    //     var ampm_time = "PM";
-    // }else{
-    //     var ampm_time= 'AM';
-    // }
-    
-    // // Add 0 to the begining of number if less than 10
-    // h = ( h < 10 ) ? '0' + h : h;
-    // m = ( m < 10 ) ? '0' + m : m;
-    // s = ( s < 10 ) ? '0' + s : s;
+    // Format the time as a 12-hour time with an AM/PM indicator
+    let hours = currentTime.getHours();
+    let minutes = currentTime.getMinutes();
+    let seconds = currentTime.getSeconds();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours || 12; // the hour '0' should be '12'
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
 
-    //Convert 24 hour time to 12 hour format with AM PM Indicator
-    var  ampm_time = h >= 12 ? 'PM' : 'AM';
-    h = h % 12;
-    h = h ? h : 12; // the hour '0' should be '12'
-    h = h < 10 ? '0' + h : h; // 01, 02, 03, 04 bla bla blaaa
-    m = m < 10 ? '0' + m : m;
-    s = s < 10 ? '0' + s : s;
-    
-    hour.innerHTML = h;
-    minute.innerHTML = m;
-    seconds.innerHTML = s; 
-    ampm.innerHTML = ampm_time;
+    // Update the contents of the HTML elements to display the time
+    document.getElementById('hour').innerHTML = hours;
+    document.getElementById('minute').innerHTML = minutes;
+    document.getElementById('seconds').innerHTML = seconds;
+    document.getElementById('ampm').innerHTML = ampm;
 }
 
-var interval = setInterval(clock, 1000);
+// Set up a timer to call the clock function every second
+const interval = setInterval(clock, 1000);
