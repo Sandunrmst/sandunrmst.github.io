@@ -1255,6 +1255,11 @@ body > footer .copyrights {
 .skill-percentage.skill-8 {
   width: 77%;
 }
+
+/*Skill 9*/
+.skill-percentage.skill-9 {
+  width: 40%;
+}
 /* Skills */
 
 .download-resume {
