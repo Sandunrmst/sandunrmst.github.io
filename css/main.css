@@ -2663,7 +2663,7 @@ blockquote footer, blockquote small, blockquote .small {
   }
 
   .site-main-menu li:first-child {
-    margin-top: 25px;
+    /* margin-top: 25px; */
   }
 
   .site-main-menu li a,
