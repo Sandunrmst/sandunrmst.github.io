@@ -710,6 +710,7 @@ body > footer .copyrights {
   .header.sticked .site-main-menu li {
     margin-top: 13px;
   }
+
 }
 
 .site-main-menu li a,
@@ -720,7 +721,7 @@ body > footer .copyrights {
   margin: 0 20px;
   text-align: center;
   color: #49515d;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1;
   font-weight: 400;
   position: relative;
@@ -728,6 +729,8 @@ body > footer .copyrights {
   outline: none;
   opacity: 0.6;
 }
+
+
 
 .site-main-menu li:last-child a {
   margin-right: 0;
@@ -762,6 +765,37 @@ body > footer .copyrights {
   width: 25px;
 }
 
+@media only screen and (max-width: 991px) {
+
+  .site-main-menu li a,
+.site-main-menu li a:hover {
+
+
+  font-size: 2.8rem;
+  color: #fff;
+  font-weight: 700;
+  margin: 0 0 0;
+  background: -webkit-linear-gradient(45deg, #09009f, #00ff95 97%);
+    background-clip: border-box;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+}
+
+.site-main-menu li a:hover:after,
+.site-main-menu li.active a:after {
+display: none;
+}
+
+.site-main-menu li{
+  
+  padding: 10px;
+
+}
+
+}
+
 .menu-icon {
   display: block;
   font-size: 21px;
@@ -785,9 +819,15 @@ body > footer .copyrights {
 
 .menu-toggle i {
   color: #fff;
-  font-size: 21px;
+  font-size: 23px;
   line-height: 50px;
+  background: -webkit-linear-gradient(45deg, #09009f, #00ff95 85%);
+  background-clip: border-box;
+-webkit-background-clip: text;
+background-clip: text;
+-webkit-text-fill-color: transparent;
 }
+
 /* /Mobile menu toggle */
 
 
@@ -810,6 +850,7 @@ body > footer .copyrights {
 .block-title h3 {
   font-size: 24px;
   margin: 5px 0 25px;
+  text-align: center;
 }
 
 .block-title h3 span {
@@ -917,7 +958,7 @@ body > footer .copyrights {
   font-size: 54px;
   font-weight: 700;
   margin: 0 0 0;
-  background: -webkit-linear-gradient(45deg, #09009f, #00ff95 80%);
+  background: -webkit-linear-gradient(45deg, #080093db, #02ef8cd6 80%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -927,14 +968,14 @@ body > footer .copyrights {
   font-family: consolas;
   font-size: 25px;
   font-weight: 600;
-  background: -webkit-linear-gradient(101deg, #09009f, #00ff95 80%);
+  background: -webkit-linear-gradient(101deg, #09009f, #01f08ce3 80%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .start-page-content .page-header .title-block .sp-subtitle {
-  color: #fff;
+  color: #f9f9f9;
   font-family: consolas;
   font-size: 22px;
   font-weight: 800;
@@ -2452,14 +2493,18 @@ blockquote footer, blockquote small, blockquote .small {
   }
 
   .header {
-    width: 100%;
-    max-width: 320px;
-    height: calc(100% - 50px);
-    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    /* max-width: 320px; */
+    /* height: calc(100% - 50px); */
+    height: 100vh;
+    left: 0;
     top: 50px;
     z-index: 1001;
     overflow: auto;
-    background-color: #05739a;
+    background-color: #010242;
     -webkit-box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.2);
     -moz-box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.2);
     box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.2);
@@ -2510,11 +2555,16 @@ blockquote footer, blockquote small, blockquote .small {
     display: inline-block;
     float: left;
     color: #fff;
-    font-size: 18px;
-    font-weight: 400;
+    font-size: 17px;
+    font-weight: 600;
     font-family: 'Montserrat', Helvetica, sans-serif;
     margin: 0;
     line-height: 50px;
+    background: -webkit-linear-gradient(45deg, #080093db, #02ef8cd6 80%);
+    background-clip: border-box;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   }
 
   .site-title-block .site-description {
