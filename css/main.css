@@ -771,11 +771,11 @@ body > footer .copyrights {
 .site-main-menu li a:hover {
 
 
-  font-size: 2.8rem;
+  font-size: 2.6rem;
   color: #fff;
   font-weight: 700;
   margin: 0 0 0;
-  background: -webkit-linear-gradient(45deg, #09009f, #00ff95 97%);
+  background: -webkit-linear-gradient(120deg, #09009f, #00ff95 90%);
     background-clip: border-box;
   -webkit-background-clip: text;
   background-clip: text;
@@ -847,10 +847,13 @@ background-clip: text;
 }
 
 /* custom-pages */
+.block-title.myservice{
+  text-align: center;
+
+}
 .block-title h3 {
   font-size: 24px;
   margin: 5px 0 25px;
-  text-align: center;
 }
 
 .block-title h3 span {
@@ -2504,7 +2507,7 @@ blockquote footer, blockquote small, blockquote .small {
     top: 50px;
     z-index: 1001;
     overflow: auto;
-    background-color: #010242;
+    background-color: #000133;;
     -webkit-box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.2);
     -moz-box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.2);
     box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.2);
