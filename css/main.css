@@ -3159,3 +3159,65 @@ blockquote footer, blockquote small, blockquote .small {
   50% { opacity: 0.0; }
   100% { opacity: 1; }
 }
+
+/* Image Loding*/ 
+
+
+.loader {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+  .loader span{
+    position: absolute;
+    top: 35px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+    .loader span:nth-child(1){
+      left: 15%;
+      animation: loader 1s infinite;
+      background: #eb4335;
+      box-shadow: 0 0 10px #eb4335,  0 0 30px #eb4335;
+    }
+    .loader span:nth-child(2){
+      left: 40%;
+      animation: loader 1s 0.2s infinite;
+      background: #fbbc05;
+      box-shadow: 0 0 10px #fbbc05,  0 0 30px #fbbc05;
+    }
+    .loader span:nth-child(3){
+      left: 65%;
+      animation: loader 1s 0.4s infinite;
+      background: #34a853;
+      box-shadow: 0 0 10px #34a853,  0 0 30px #34a853;
+    }
+    .loader span:nth-child(4){
+      left: 90%;
+      animation: loader 1s 0.6s infinite;
+      background: #4285f4;
+      box-shadow: 0 0 10px #4285f4,  0 0 30px #4285f4;
+    }
+    @keyframes loader {
+        0%{
+          transform: scale(0.5);
+        }
+        50%{
+          transform: scale(2);
+        }
+        100%{
+          transform: scale(0.5);
+        }
+    }
+
+    .loader:hover span {
+      border-radius: 0%;
+    }
+
+
+
+
+
