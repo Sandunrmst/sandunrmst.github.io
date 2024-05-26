@@ -2504,7 +2504,7 @@ blockquote footer, blockquote small, blockquote .small {
     /* height: calc(100% - 50px); */
     height: 100vh;
     left: 0;
-    top: 50px;
+    top: 47px;
     z-index: 1001;
     overflow: auto;
     background-color: #000133;;
@@ -3219,5 +3219,97 @@ blockquote footer, blockquote small, blockquote .small {
 
 
 
+    /*Quick Rotator*/
 
+    @media screen and (max-width: 768px) {  
+      .nav-rmst{
+        z-index: 10010;
+        position: fixed;
+        bottom: 110px;
+        right: 15px;
+        width: 80px;
+        /* height: 300px; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.6s ease;
+      }
+      
+      .toggle-btn-rmst{
+        opacity: 0.8;
+      }
+      .toggle-btn-rmst i{
+      background-color: white;
+      font-size: 25px;
+      opacity: 0.7;
+      color: #05739a;
+      }
+      
+      .nav-rmst .nav-content-rmst{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: rotate(-45deg);
+      }
+      .nav-content-rmst .toggle-btn-rmst,
+      .nav-content-rmst span a{
+        height: 60px;
+        width: 60px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      }
+      .nav-content-rmst span a {
+        background-color: white
+      }
+      
+      
+      .nav-content-rmst .toggle-btn-rmst{
+        font-size: 35px;
+        color: #0e2431;
+        z-index: 100;
+        cursor: pointer;
+        transform: rotate(-225deg);
+        transition: all 0.6s ease;
+      }
+      .nav-rmst.open .toggle-btn-rmst{
+        transform: rotate(0deg);
+      }
+      .nav-content-rmst span{
+        position: absolute;
+        transition: all 0.6s ease;
+        opacity: 0;
+      }
+      .nav-rmst.open .nav-content-rmst span{
+        transform: rotate(calc(var(--i) * (360deg/8))) translateY(100px);
+        opacity: 1;
+      }
+      .nav-content-rmst span a{
+        text-decoration: none;
+        transform: rotate(45deg);
+      }
+      .nav-content-rmst span a i{
+        font-size: 24px;
+        color: #0e2431;
+        transform: rotate(calc(var(--i) * (360deg/ -8)));
+        opacity: 0.8;
+        transition: 0.2s;
+        color: #00012a;;
+      }
+      .nav-content-rmst span a:hover i{
+        opacity: 1;
+      }
+      
+      .rotator-hide{
+        visibility: hidden;
+        opacity: 0;
+      }
+      
+      }
+      
+      
 

@@ -50,6 +50,7 @@
             var windowWidth = $(window).width();
             if (windowWidth < 1024) {
                 $('#site_header').addClass('mobile-menu-hide');
+                $('#rmst_rotator').removeClass('rotator-hide');
             }
         }
         // /Hide Mobile menu
@@ -189,6 +190,7 @@
             // Mobile menu
             $('.menu-toggle').on("click", function () {
                 $('#site_header').toggleClass('mobile-menu-hide');
+                $('#rmst_rotator').toggleClass('rotator-hide');
             });
     
             // Mobile menu hide on main menu item click
@@ -205,4 +207,21 @@
         });
     
     })(jQuery);
+
+    /*Quick Roteter */
     
+    const navrmst = document.querySelector(".nav-rmst"),
+      toggleBtnRmst = navrmst.querySelector(".toggle-btn-rmst");
+
+      iconBtnRmst = navrmst.querySelectorAll(".iconclose")
+      // console.log(iconBtn)
+      iconBtnRmst.forEach(btn => {
+        btn.addEventListener("click" , () =>{
+          navrmst.classList.remove("open");
+        });
+      });
+
+
+      toggleBtnRmst.addEventListener("click" , () =>{
+    navrmst.classList.toggle("open");
+  });
