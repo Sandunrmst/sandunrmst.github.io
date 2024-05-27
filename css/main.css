@@ -3310,6 +3310,12 @@ blockquote footer, blockquote small, blockquote .small {
       }
       
       }
-      
+
+
+      @media screen and (min-width: 768px) {
+  .rotator {
+    display: none;
+  }
+}
       
 
