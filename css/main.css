@@ -3374,7 +3374,7 @@ blockquote footer, blockquote small, blockquote .small {
 
 .infinite-btn a:hover{
   transform: scale(1.1);
-  color: #008cff;
+  color: #c7e1f7;;
 }
 
 @media screen and (max-width: 599px) {
