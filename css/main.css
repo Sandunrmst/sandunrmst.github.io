@@ -1004,8 +1004,8 @@ background-clip: text;
   .start-page-content .page-header .title-block .sp-subtitle {
     color: #fff;
     font-family: consolas;
-    font-size: 12px;
-    font-weight: 400;
+    font-size: 16px;
+    font-weight: 600;
     letter-spacing: 1px;
     margin: 0;
     padding-bottom: 5px;
@@ -1013,8 +1013,8 @@ background-clip: text;
 
   .rmst{
   font-family: consolas;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 20px;
+  font-weight: 600;
   }
 
   .start-page-content .social-links {
@@ -3359,6 +3359,7 @@ blockquote footer, blockquote small, blockquote .small {
   border-radius: 7px;
   padding-top: 10px;
   padding-bottom: 10px;
+  margin-bottom: -20px;
   background-color: #00012a;
 
 
@@ -3367,7 +3368,7 @@ blockquote footer, blockquote small, blockquote .small {
 .infinite-btn a{
   width: 100%;
   color: #d5d5f1;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
 
 }
@@ -3378,6 +3379,11 @@ blockquote footer, blockquote small, blockquote .small {
 }
 
 @media screen and (max-width: 599px) {
+
+  .infinite-btn {
+    margin-bottom: -30px;
+  }
+
   .infinite-btn a{
     font-size: 1rem;
   }
