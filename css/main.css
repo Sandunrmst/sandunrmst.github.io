@@ -981,7 +981,7 @@ background-clip: text;
 }
 
 .rmst{
-  font-family: consolas;
+  font-family: consolas, monospace;
   font-size: 25px;
   font-weight: 600;
   background: -webkit-linear-gradient(101deg, #09009f, #01f08ce3 80%);
@@ -992,29 +992,35 @@ background-clip: text;
 
 .start-page-content .page-header .title-block .sp-subtitle {
   color: #f9f9f9;
-  font-family: consolas;
+  font-family: consolas, monospace;
   font-size: 22px;
   font-weight: 800;
   letter-spacing: 1px;
   margin: 0;
   padding-bottom: 5px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @media only screen and (max-width: 600px) {
   .start-page-content .page-header .title-block .sp-subtitle {
     color: #fff;
-    font-family: consolas;
+    font-family: consolas, monospace;
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 1px;
     margin: 0;
     padding-bottom: 5px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .rmst{
-  font-family: consolas;
+  font-family: consolas, monospace;
   font-size: 20px;
   font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   }
 
   .start-page-content .social-links {
