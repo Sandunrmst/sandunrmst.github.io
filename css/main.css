@@ -3481,4 +3481,54 @@ blockquote footer, blockquote small, blockquote .small {
   }
 }
 
+/* Freelance Available Icon  */
 
+.animated-icon {
+  position: relative;
+  color: #5c9606;
+  transform-origin: center;
+  animation: heartbeat 1.8s infinite;
+}
+
+/* Ripple (outer wave) */
+.animated-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(103, 167, 8, 0.5);
+  animation: ripple 1.8s infinite ease-out;
+  z-index: -1;
+}
+
+/* Heartbeat animation */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.15);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+}
+
+/* Ripple animation */
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.5);
+    opacity: 0;
+  }
+}
