@@ -155,7 +155,7 @@ var PageTransitions = (function ($, options) {
 
         // Checking for 'data-animation' attribute.
         if (!($pageTrigger.attr('data-animation'))) {
-            var animNumber = parseInt(Math.floor(Math.random() * 69) + 1);
+            var animNumber = parseInt(Math.floor(Math.random() * 71) + 1);
             $pageTrigger.data('animation', animNumber);
         }
 
@@ -171,9 +171,9 @@ var PageTransitions = (function ($, options) {
             selectedAnimNumber = parseInt(animation);
         }
 
-        // Checking if the animation number is out of bound, max allowed value is 1 to 67.
-        if (selectedAnimNumber > 69) {
-            alert("Transition.js : Invalid 'data-animation' attribute configuration. Animation number should not be greater than 69");
+        // Checking if the animation number is out of bound, max allowed value is 1 to 69.
+        if (selectedAnimNumber > 71) {
+            alert("Transition.js : Invalid 'data-animation' attribute configuration. Animation number should not be greater than 71");
             return false;
         }
 
@@ -453,6 +453,14 @@ var PageTransitions = (function ($, options) {
             case 69:
                 inClass = 'pt-page-scaleHyperZoomIn';
                 outClass = 'pt-page-scaleHyperZoomOut';
+                break;
+            case 70:
+                inClass = 'pt-page-rotatePerspectiveFlipIn';
+                outClass = 'pt-page-rotatePerspectiveFlipOut';
+                break;
+            case 71:
+                inClass = 'pt-page-rotateHelixIn';
+                outClass = 'pt-page-rotateHelixOut';
                 break;
         }
 
