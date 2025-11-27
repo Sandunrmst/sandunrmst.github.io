@@ -162,6 +162,11 @@ var PageTransitions = (function ($, options) {
         var animation = $pageTrigger.data('animation').toString(),
             gotoPage, inClass, outClass, selectedAnimNumber;
 
+        // Check if mobile and data-animation-mobile is present
+        if ($(window).width() <= 767 && $pageTrigger.attr('data-animation-mobile')) {
+            animation = $pageTrigger.attr('data-animation-mobile').toString();
+        }
+
         // Check if the delimiter '-' is present then create an animation array list.
         if (animation.indexOf('-') != -1) {
             var randomAnimList = animation.split('-');
