@@ -3584,25 +3584,53 @@ blockquote .small {
 /* Freelance Available Icon  */
 
 .animated-icon {
-  display: inline-block;
-  /* color is set inline in HTML, but we can enforce it here too or leave it */
-  border-radius: 50%;
-  animation: professional-pulse 2s infinite ease-in-out;
+  position: relative;
+  animation: heartbeat 1.6s infinite ease-in-out;
 }
 
-@keyframes professional-pulse {
-  0% {
+/* Glow Pulse Ripple Behind Icon */
+.animated-icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  background: rgba(113, 183, 6, 0.6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ripple 1.6s infinite ease-out;
+  z-index: -1;
+}
+
+@keyframes heartbeat {
+
+  0%,
+  100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(113, 183, 6, 0.7);
   }
 
-  50% {
-    transform: scale(1.15);
-    box-shadow: 0 0 15px 0 rgba(113, 183, 6, 0.5);
+  20% {
+    transform: scale(1.18);
+  }
+
+  40% {
+    transform: scale(1.1);
+  }
+
+  60% {
+    transform: scale(1.18);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
   }
 
   100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(113, 183, 6, 0);
+    transform: translate(-50%, -50%) scale(2.4);
+    opacity: 0;
   }
 }
