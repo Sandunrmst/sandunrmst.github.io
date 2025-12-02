@@ -3402,7 +3402,7 @@ blockquote .small {
     position: absolute;
     transition: all 0.6s ease;
     opacity: 0;
-    mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+
   }
 
   .nav-rmst.open .nav-content-rmst span {
@@ -3421,7 +3421,7 @@ blockquote .small {
     transform: rotate(calc(var(--i) * (360deg/ -8)));
     opacity: 0.8;
     transition: 0.2s;
-    color: #00012a;
+    color: #00608e;
     ;
   }
 
