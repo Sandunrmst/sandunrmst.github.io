@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Surgeon – Free PDF Tools | Merge, Split, Compress, Convert & Edit</title>
+    <meta name="description"
+        content="PDF Surgeon is a free all-in-one PDF toolkit. Merge PDFs, split pages, compress files, convert to Word/Excel, extract pages, protect and more. 100% secure and fast." />
+    <meta name="keywords"
+        content="pdf surgeon, pdf tools offline, free pdf toolkit, merge pdf, split pdf, compress pdf, convert pdf, pdf to word, pdf to excel, rotate pdf, unlock pdf, protect pdf, extract pdf pages, offline pdf editor, ilovepdf alternative, smallpdf alternative" />
+    <!-- OPEN GRAPH -->
+    <meta property="og:title" content="PDF Surgeon – Free PDF Tools by RMST" />
+    <meta property="og:description"
+        content="Free all-in-one PDF editor with offline merge, split, compress, convert, rotate, extract, protect, unlock and more tools." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://sandunrmst.com/pdfsurgeon/preview.jpg" />
+    <meta property="og:url" content="https://sandunrmst.com/pdfsurgeon" />
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="favicon.png">
+    <!-- Local PDF Lib -->
+    <script src="libs/pdf-lib.min.js"></script>
+    <!-- Local PDF.js for rendering -->
+    <script src="libs/pdf.min.js"></script>
+    <script>
+        // Set worker path
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'libs/pdf.worker.min.js';
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <img src="logo.png" alt="PDF Surgeon Logo" class="logo">
+                <h1>PDF SURGEON</h1>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="merge-tab">Merge PDFs</button>
+            <button class="tab-btn" data-tab="split-tab">Split PDF</button>
+            <button class="tab-btn" data-tab="compress-tab">Compress PDF</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- MERGE SECTION -->
+            <div id="merge-tab" class="tab-pane active">
+                <div class="upload-area" id="merge-upload-area">
+                    <p>Drag & Drop PDF files here or</p>
+                    <input type="file" id="merge-file-input" multiple accept="application/pdf" hidden>
+                    <button class="btn secondary" onclick="document.getElementById('merge-file-input').click()">Select
+                        Files</button>
+                </div>
+
+                <div id="merge-help-text" class="help-text hidden"></div>
+
+                <ul id="file-list" class="file-list">
+                    <!-- File items will be added here dynamically -->
+                </ul>
+
+                <div class="actions">
+                    <button id="merge-btn" class="btn primary" disabled>Merge PDF</button>
+                </div>
+            </div>
+
+            <!-- SPLIT SECTION -->
+            <div id="split-tab" class="tab-pane">
+                <div class="upload-area" id="split-upload-area">
+                    <p>Drag & Drop a PDF file here or</p>
+                    <input type="file" id="split-file-input" accept="application/pdf" hidden>
+                    <button class="btn secondary" onclick="document.getElementById('split-file-input').click()">Select
+                        File</button>
+                </div>
+
+                <div id="split-preview" class="hidden">
+                    <h3>Select Pages to Split</h3>
+                    <div class="split-options">
+                        <label>
+                            <input type="radio" name="split-mode" value="all" checked> Split all pages or
+                            individual files
+                        </label>
+                        <label>
+                            <input type="radio" name="split-mode" value="range"> Split by range
+                        </label>
+                    </div>
+
+                    <div id="split-help-text" class="help-text"></div>
+
+                    <div id="range-input-container" class="hidden">
+                        <input type="text" id="range-input" placeholder="e.g. 1-3, 5, 7-9">
+                        <small>Enter page numbers or ranges (e.g., 1-3)</small>
+                    </div>
+
+                    <div id="pages-grid" class="pages-grid">
+                        <!-- Pages will be rendered here -->
+                    </div>
+
+                    <div class="actions">
+                        <button id="split-btn" class="btn primary">Split PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPRESS SECTION -->
+            <div id="compress-tab" class="tab-pane">
+                <div class="upload-area" id="compress-upload-area">
+                    <p>Drag & Drop a PDF file here or</p>
+                    <input type="file" id="compress-file-input" accept="application/pdf" hidden>
+                    <button class="btn secondary"
+                        onclick="document.getElementById('compress-file-input').click()">Select
+                        File</button>
+                </div>
+
+                <div id="compress-options-container" class="hidden">
+                    <h3>Compression Levels</h3>
+                    <div class="compress-options">
+                        <label class="compress-option-card">
+                            <input type="radio" name="compress-level" value="low">
+                            <div class="option-content">
+                                <span class="option-title">Low</span>
+                                <span class="option-desc">Smallest size</span>
+                            </div>
+                        </label>
+                        <label class="compress-option-card">
+                            <input type="radio" name="compress-level" value="standard" checked>
+                            <div class="option-content">
+                                <span class="option-title">Standard</span>
+                                <span class="option-desc">Balanced</span>
+                            </div>
+                        </label>
+                        <label class="compress-option-card">
+                            <input type="radio" name="compress-level" value="high">
+                            <div class="option-content">
+                                <span class="option-title">High</span>
+                                <span class="option-desc">Best quality</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="file-info-display" id="compress-file-info"></div>
+
+                    <div class="actions">
+                        <button id="compress-btn" class="btn primary">Compress PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="copyrights">&copy;
+
+            <script>document.currentScript.parentElement.innerHTML += new Date().getFullYear();</script> All rights
+            reserved. PDF Surgeon by RMST
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>
