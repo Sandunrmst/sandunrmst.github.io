@@ -41,6 +41,7 @@ function init() {
     setupMergeEvents();
     setupSplitEvents();
     setupCompressEvents();
+    setupConvertEvents();
 }
 
 // --- TABS ---
@@ -728,6 +729,7 @@ async function compressPDF() {
     } catch (err) {
         console.error('Compression Error:', err);
         showNotification('Error compressing PDF.', 'error');
+
     } finally {
         compressBtn.textContent = 'Compress PDF';
         compressBtn.disabled = false;
@@ -749,3 +751,346 @@ function downloadFile(data, filename) {
 
 // Start
 init();
+
+// --- CONVERT SECTION ---
+function setupConvertEvents() {
+    const subTabs = document.querySelectorAll('.sub-tab-btn');
+    const subTabPanes = document.querySelectorAll('.sub-tab-pane');
+
+    subTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all sub-tabs and panes
+            subTabs.forEach(t => t.classList.remove('active'));
+            subTabPanes.forEach(p => p.classList.remove('active'));
+
+            // Add active class to clicked tab
+            tab.classList.add('active');
+
+            // Show corresponding pane
+            const targetId = tab.dataset.subtab;
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    setupConvertToPDFEvents();
+}
+
+
+// --- CONVERT TO PDF LOGIC ---
+let jpgFiles = [];
+let wordFile = null;
+
+function setupConvertToPDFEvents() {
+    // Radio Buttons
+    const typeRadios = document.getElementsByName('convert-to-type');
+    typeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const type = e.target.value;
+            document.getElementById('jpg-to-pdf-section').classList.add('hidden');
+            document.getElementById('word-to-pdf-section').classList.add('hidden');
+
+            if (type === 'jpg-to-pdf') {
+                document.getElementById('jpg-to-pdf-section').classList.remove('hidden');
+            } else if (type === 'word-to-pdf') {
+                document.getElementById('word-to-pdf-section').classList.remove('hidden');
+            }
+        });
+    });
+
+    // JPG Events
+    const jpgInput = document.getElementById('jpg-file-input');
+    const jpgUploadArea = document.getElementById('jpg-upload-area');
+    const jpgConvertBtn = document.getElementById('jpg-convert-btn');
+
+    jpgInput.addEventListener('change', (e) => handleJPGFiles(e.target.files));
+
+    jpgUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        jpgUploadArea.classList.add('dragover');
+    });
+    jpgUploadArea.addEventListener('dragleave', () => jpgUploadArea.classList.remove('dragover'));
+    jpgUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        jpgUploadArea.classList.remove('dragover');
+        handleJPGFiles(e.dataTransfer.files);
+    });
+
+    jpgConvertBtn.addEventListener('click', convertJPGtoPDF);
+
+    // JPG List Drag Over (for reordering)
+    const jpgFileList = document.getElementById('jpg-file-list');
+    jpgFileList.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(jpgFileList, e.clientY);
+        const draggable = document.querySelector('.dragging');
+        if (afterElement == null) {
+            jpgFileList.appendChild(draggable);
+        } else {
+            jpgFileList.insertBefore(draggable, afterElement);
+        }
+    });
+
+    // Word Events
+    const wordInput = document.getElementById('word-file-input');
+    const wordUploadArea = document.getElementById('word-upload-area');
+    const wordConvertBtn = document.getElementById('word-convert-btn');
+
+    wordInput.addEventListener('change', (e) => handleWordFile(e.target.files[0]));
+
+    wordUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        wordUploadArea.classList.add('dragover');
+    });
+    wordUploadArea.addEventListener('dragleave', () => wordUploadArea.classList.remove('dragover'));
+    wordUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        wordUploadArea.classList.remove('dragover');
+        handleWordFile(e.dataTransfer.files[0]);
+    });
+
+    wordConvertBtn.addEventListener('click', convertWordToPDF);
+}
+
+function handleJPGFiles(files) {
+    const newFiles = Array.from(files).filter(f => f.type === 'image/jpeg' || f.type === 'image/jpg' || f.type === 'image/png');
+    if (newFiles.length === 0) return;
+
+    jpgFiles = [...jpgFiles, ...newFiles];
+    renderJPGList();
+}
+
+function renderJPGList() {
+    const listEl = document.getElementById('jpg-file-list');
+    const btn = document.getElementById('jpg-convert-btn');
+
+    listEl.innerHTML = '';
+    jpgFiles.forEach((file, index) => {
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        div.draggable = true;
+        div.dataset.index = index;
+
+        // Create preview container
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'file-preview';
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'contain';
+        previewDiv.appendChild(img);
+
+        div.innerHTML = `
+            <div class="file-info">${file.name}</div>
+            <div class="file-controls">
+                <button onclick="moveJPG(${index}, -1)" title="Move Up" class="btn-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                </button>
+                <button onclick="moveJPG(${index}, 1)" title="Move Down" class="btn-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="separator"></div>
+                <button class="btn-icon remove" onclick="removeJPG(${index})">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+        `;
+
+        // Insert preview at the beginning
+        div.insertBefore(previewDiv, div.firstChild);
+
+        // Drag sorting events
+        div.addEventListener('dragstart', () => {
+            div.classList.add('dragging');
+        });
+
+        div.addEventListener('dragend', () => {
+            div.classList.remove('dragging');
+            updateJPGFilesOrder();
+        });
+
+        listEl.appendChild(div);
+    });
+
+
+
+    const helpText = document.getElementById('jpg-help-text');
+
+    if (jpgFiles.length > 0) {
+        document.getElementById('jpg-upload-area').classList.add('hidden');
+        helpText.textContent = "Tip: Drag and drop files to reorder them. The top file will be the first page in the merged PDF.";
+        helpText.classList.remove('hidden');
+        btn.disabled = false;
+    } else {
+        document.getElementById('jpg-upload-area').classList.remove('hidden');
+        helpText.classList.add('hidden');
+        btn.disabled = true;
+    }
+}
+
+window.moveJPG = (index, direction) => {
+    if ((index === 0 && direction === -1) || (index === jpgFiles.length - 1 && direction === 1)) return;
+
+    const temp = jpgFiles[index];
+    jpgFiles[index] = jpgFiles[index + direction];
+    jpgFiles[index + direction] = temp;
+    renderJPGList();
+};
+
+function updateJPGFilesOrder() {
+    const listEl = document.getElementById('jpg-file-list');
+    const items = listEl.querySelectorAll('.file-item');
+
+    const currentFilesMap = [...jpgFiles];
+    jpgFiles = [];
+
+    items.forEach(item => {
+        const oldIndex = parseInt(item.dataset.index);
+        jpgFiles.push(currentFilesMap[oldIndex]);
+    });
+
+    renderJPGList();
+}
+
+window.removeJPG = (index) => {
+    jpgFiles.splice(index, 1);
+    renderJPGList();
+};
+
+async function convertJPGtoPDF() {
+    if (jpgFiles.length === 0) return;
+
+    const btn = document.getElementById('jpg-convert-btn');
+    try {
+        btn.textContent = 'Converting...';
+        btn.disabled = true;
+
+        const pdfDoc = await PDFDocument.create();
+
+        for (const file of jpgFiles) {
+            const arrayBuffer = await file.arrayBuffer();
+            let image;
+
+            if (file.type === 'image/png') {
+                image = await pdfDoc.embedPng(arrayBuffer);
+            } else {
+                image = await pdfDoc.embedJpg(arrayBuffer);
+            }
+
+            const page = pdfDoc.addPage([image.width, image.height]);
+            page.drawImage(image, {
+                x: 0,
+                y: 0,
+                width: image.width,
+                height: image.height,
+            });
+        }
+
+        const pdfBytes = await pdfDoc.save();
+        triggerDownloadAnimation(btn);
+        downloadFile(pdfBytes, 'images-converted.pdf');
+
+    } catch (err) {
+        console.error(err);
+        showNotification('Error converting images.', 'error');
+    } finally {
+        btn.textContent = 'Convert to PDF';
+        btn.disabled = false;
+    }
+}
+
+function handleWordFile(file) {
+    if (!file || !file.name.endsWith('.docx')) return;
+
+    wordFile = file;
+    const infoEl = document.getElementById('word-file-info');
+    const btn = document.getElementById('word-convert-btn');
+    const uploadArea = document.getElementById('word-upload-area');
+
+    uploadArea.classList.add('hidden');
+    infoEl.textContent = `Selected: ${file.name}`;
+    infoEl.classList.remove('hidden');
+    btn.disabled = false;
+}
+
+async function convertWordToPDF() {
+    if (!wordFile) return;
+
+    const btn = document.getElementById('word-convert-btn');
+
+    try {
+        btn.textContent = 'Preparing...';
+        btn.disabled = true;
+
+        const arrayBuffer = await wordFile.arrayBuffer();
+
+        // 1. Convert DOCX to HTML using Mammoth
+        const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+        const html = result.value;
+        const messages = result.messages;
+
+        if (messages.length > 0) {
+            console.warn('Mammoth warnings:', messages);
+        }
+
+        if (!html) {
+            throw new Error('No content extracted from Word file.');
+        }
+
+        // 2. Create a hidden iframe
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = 'none';
+        document.body.appendChild(iframe);
+
+        // 3. Write HTML to iframe
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(`
+            <html>
+            <head>
+                <title>${wordFile.name.replace('.docx', '')}</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                        color: #000;
+                        padding: 20px;
+                        max-width: 800px;
+                        margin: 0 auto;
+                    }
+                    img { max-width: 100%; height: auto; }
+                    table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
+                    td, th { border: 1px solid #ddd; padding: 8px; }
+                    @media print {
+                        body { padding: 0; margin: 2cm; }
+                    }
+                </style>
+            </head>
+            <body>
+                ${html}
+                <script>
+                    window.onload = function() {
+                        setTimeout(function() {
+                            window.print();
+                            window.parent.document.body.removeChild(window.frameElement);
+                        }, 500);
+                    };
+                </script>
+            </body>
+            </html>
+        `);
+        doc.close();
+
+        showNotification('Print dialog opened. Please select "Save as PDF".', 'success');
+
+    } catch (err) {
+        console.error('Word to PDF Error:', err);
+        showNotification('Error processing Word file.', 'error');
+    } finally {
+        btn.textContent = 'Convert to PDF';
+        btn.disabled = false;
+    }
+}

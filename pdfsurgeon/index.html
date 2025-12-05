@@ -27,6 +27,8 @@
         // Set worker path
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'libs/pdf.worker.min.js';
     </script>
+    <!-- Word to PDF Libs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 </head>
 
 <body>
@@ -43,6 +45,7 @@
             <button class="tab-btn active" data-tab="merge-tab">Merge PDFs</button>
             <button class="tab-btn" data-tab="split-tab">Split PDF</button>
             <button class="tab-btn" data-tab="compress-tab">Compress PDF</button>
+            <button class="tab-btn" data-tab="convert-tab">Convert PDF</button>
         </div>
 
         <div class="tab-content">
@@ -147,12 +150,75 @@
                     </div>
                 </div>
             </div>
+
+            <!-- CONVERT SECTION -->
+            <div id="convert-tab" class="tab-pane">
+                <div class="sub-tabs">
+                    <button class="sub-tab-btn active" data-subtab="convert-to-pdf">Convert to PDF</button>
+                    <button class="sub-tab-btn" data-subtab="convert-from-pdf">Convert from PDF</button>
+                </div>
+
+                <div id="convert-to-pdf" class="sub-tab-pane active">
+                    <div class="conversion-type-selector">
+                        <label class="compress-option-card">
+                            <input type="radio" name="convert-to-type" value="jpg-to-pdf">
+                            <div class="option-content">
+                                <span class="option-title">Image to PDF</span>
+                                <span class="option-desc">Convert JPG/PNG to PDF</span>
+                            </div>
+                        </label>
+                        <label class="compress-option-card">
+                            <input type="radio" name="convert-to-type" value="word-to-pdf">
+                            <div class="option-content">
+                                <span class="option-title">Word to PDF</span>
+                                <span class="option-desc">Convert DOCX to PDF</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- JPG TO PDF -->
+                    <div id="jpg-to-pdf-section" class="conversion-section hidden">
+                        <div class="upload-area" id="jpg-upload-area">
+                            <p>Drag & Drop Images (JPG, PNG) here or</p>
+                            <input type="file" id="jpg-file-input" multiple accept="image/jpeg, image/jpg, image/png"
+                                hidden>
+                            <button class="btn secondary"
+                                onclick="document.getElementById('jpg-file-input').click()">Select Images</button>
+                        </div>
+                        <div id="jpg-help-text" class="help-text hidden"></div>
+                        <div id="jpg-file-list" class="file-list"></div>
+                        <div class="actions">
+                            <button id="jpg-convert-btn" class="btn primary" disabled>Convert to PDF</button>
+                        </div>
+                    </div>
+
+                    <!-- WORD TO PDF -->
+                    <div id="word-to-pdf-section" class="conversion-section hidden">
+                        <div class="upload-area" id="word-upload-area">
+                            <p>Drag & Drop Word file (.docx) here or</p>
+                            <input type="file" id="word-file-input" accept=".docx" hidden>
+                            <button class="btn secondary"
+                                onclick="document.getElementById('word-file-input').click()">Select Word File</button>
+                        </div>
+                        <div id="word-file-info" class="file-info-display hidden"></div>
+                        <div class="actions">
+                            <button id="word-convert-btn" class="btn primary" disabled>Convert to PDF</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="convert-from-pdf" class="sub-tab-pane">
+                    <div class="upload-area">
+                        <p>Convert PDF to Word, Excel, JPG</p>
+                        <p class="small-text">(Coming Soon)</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <footer>
         <div class="copyrights">&copy;
-
             <script>document.currentScript.parentElement.innerHTML += new Date().getFullYear();</script> All rights
             reserved. PDF Surgeon by RMST
         </div>
