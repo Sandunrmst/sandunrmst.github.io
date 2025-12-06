@@ -31,6 +31,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <!-- Excel to PDF Libs -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <!-- Fabric.js for PDF Editing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
 </head>
 
 <body>
@@ -48,6 +50,7 @@
             <button class="tab-btn" data-tab="split-tab">Split PDF</button>
             <button class="tab-btn" data-tab="compress-tab">Compress PDF</button>
             <button class="tab-btn" data-tab="convert-tab">Convert PDF</button>
+            <button class="tab-btn" data-tab="edit-tab">Edit PDF</button>
         </div>
 
         <div class="tab-content">
@@ -82,13 +85,20 @@
 
                 <div id="split-preview" class="hidden">
                     <h3>Select Pages to Split</h3>
-                    <div class="split-options">
-                        <label>
-                            <input type="radio" name="split-mode" value="all" checked> Split all pages or
-                            individual files
+                    <div class="compress-options">
+                        <label class="compress-option-card">
+                            <input type="radio" name="split-mode" value="all" checked>
+                            <div class="option-content">
+                                <span class="option-title">Extract Pages</span>
+                                <span class="option-desc">Split all pages or select manually</span>
+                            </div>
                         </label>
-                        <label>
-                            <input type="radio" name="split-mode" value="range"> Split by range
+                        <label class="compress-option-card">
+                            <input type="radio" name="split-mode" value="range">
+                            <div class="option-content">
+                                <span class="option-title">Split by Range</span>
+                                <span class="option-desc">Extract custom page range</span>
+                            </div>
                         </label>
                     </div>
 
@@ -156,8 +166,14 @@
             <!-- CONVERT SECTION -->
             <div id="convert-tab" class="tab-pane">
                 <div class="sub-tabs">
-                    <button class="sub-tab-btn active" data-subtab="convert-to-pdf">Convert to PDF</button>
-                    <button class="sub-tab-btn" data-subtab="convert-from-pdf">Convert from PDF</button>
+                    <label class="radio-tab">
+                        <input type="radio" name="convert-mode" value="convert-to-pdf" checked>
+                        <span>Convert to PDF</span>
+                    </label>
+                    <label class="radio-tab">
+                        <input type="radio" name="convert-mode" value="convert-from-pdf">
+                        <span>Convert from PDF</span>
+                    </label>
                 </div>
 
                 <div id="convert-to-pdf" class="sub-tab-pane active">
@@ -236,6 +252,209 @@
                         <p class="small-text">(Coming Soon)</p>
                     </div>
                 </div>
+            </div>
+
+            <!-- EDIT SECTION -->
+            <div id="edit-tab" class="tab-pane">
+                <div class="sub-tabs">
+                    <label class="radio-tab">
+                        <input type="radio" name="edit-feature-mode" value="edit" checked>
+                        <span>Edit PDF</span>
+                    </label>
+                    <label class="radio-tab">
+                        <input type="radio" name="edit-feature-mode" value="sign">
+                        <span>Sign PDF (Coming Soon)</span>
+                    </label>
+                </div>
+
+                <div id="edit-feature-content">
+                    <div class="upload-area" id="edit-upload-area">
+                        <p>Drag & Drop a PDF file here or</p>
+                        <input type="file" id="edit-file-input" accept="application/pdf" hidden>
+                        <button class="btn secondary"
+                            onclick="document.getElementById('edit-file-input').click()">Select
+                            File</button>
+                    </div>
+
+                    <div id="editor-container" class="hidden">
+                        <div class="editor-toolbar">
+                            <button id="tool-select" class="tool-btn active" title="Select">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+                                </svg>
+                            </button>
+                            <button id="tool-text" class="tool-btn" title="Add Text">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M4 7V4h16v3M9 20h6M12 4v16"></path>
+                                </svg>
+                            </button>
+                            <button id="tool-draw" class="tool-btn" title="Free Draw">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                                    <path d="M2 2l7.586 7.586"></path>
+                                    <circle cx="11" cy="11" r="2"></circle>
+                                </svg>
+                            </button>
+                            <div class="tool-divider"></div>
+                            <button id="tool-rect" class="tool-btn" title="Rectangle">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                </svg>
+                            </button>
+                            <button id="tool-circle" class="tool-btn" title="Circle">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                </svg>
+                            </button>
+                            <button id="tool-line" class="tool-btn" title="Line">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <line x1="4" y1="20" x2="20" y2="4"></line>
+                                </svg>
+                            </button>
+
+                            <div class="tool-divider"></div>
+
+                            <div class="emoji-dropdown">
+                                <button id="tool-emoji" class="tool-btn" title="Insert Emoji">
+                                    <span>😀</span>
+                                </button>
+                                <div class="emoji-content hidden">
+                                    <span data-emoji="😀">😀</span>
+                                    <span data-emoji="😂">😂</span>
+                                    <span data-emoji="😍">😍</span>
+                                    <span data-emoji="🤔">🤔</span>
+                                    <span data-emoji="👍">👍</span>
+                                    <span data-emoji="👎">👎</span>
+                                    <span data-emoji="✅">✅</span>
+                                    <span data-emoji="❌">❌</span>
+                                    <span data-emoji="🔥">🔥</span>
+                                    <span data-emoji="⭐">⭐</span>
+                                    <span data-emoji="🚩">🚩</span>
+                                    <span data-emoji="💡">💡</span>
+                                    <!-- New Emojis -->
+                                    <span data-emoji="🇱🇰">🇱🇰</span>
+                                    <span data-emoji="❤️">❤️</span>
+                                    <span data-emoji="💲">💲</span>
+                                    <span data-emoji="⚠️">⚠️</span>
+                                    <span data-emoji="📍">📍</span>
+                                    <span data-emoji="📞">📞</span>
+                                    <span data-emoji="✉️">✉️</span>
+                                    <span data-emoji="➡️">➡️</span>
+                                </div>
+                            </div>
+                            <div class="tool-divider"></div>
+                            <button id="tool-image" class="tool-btn" title="Add Image"
+                                onclick="document.getElementById('edit-image-input').click()">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                            </button>
+                            <input type="file" id="edit-image-input" accept="image/*" hidden>
+
+                            <div class="tool-divider"></div>
+                            <input type="color" id="tool-color" value="#000000" title="Color">
+                            <button id="tool-delete" class="tool-btn text-danger" title="Delete Selected">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path
+                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- TEXT PROPERTIES TOOLBAR (Hidden by default) -->
+                        <div id="text-properties-toolbar" class="editor-toolbar secondary-toolbar hidden">
+                            <select id="font-family" title="Font Family">
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+
+                            <div class="tool-divider"></div>
+
+                            <select id="font-size" title="Font Size">
+                                <option value="12">12</option>
+                                <option value="14">14</option>
+                                <option value="16">16</option>
+                                <option value="18">18</option>
+                                <option value="20" selected>20</option>
+                                <option value="24">24</option>
+                                <option value="30">30</option>
+                                <option value="36">36</option>
+                                <option value="48">48</option>
+                                <option value="60">60</option>
+                                <option value="72">72</option>
+                            </select>
+
+                            <div class="tool-divider"></div>
+
+                            <button id="text-bold" class="tool-btn" title="Bold">
+                                <strong>B</strong>
+                            </button>
+                            <button id="text-italic" class="tool-btn" title="Italic">
+                                <em>I</em>
+                            </button>
+                            <button id="text-underline" class="tool-btn" title="Underline">
+                                <u>U</u>
+                            </button>
+
+                            <div class="tool-divider"></div>
+
+                            <button id="text-align-left" class="tool-btn" title="Align Left">
+                                <span style="font-size: 14px;">&#9776;</span>
+                            </button>
+                            <button id="text-align-center" class="tool-btn" title="Align Center">
+                                <span style="font-size: 14px;">&#9778;</span>
+                            </button>
+                            <button id="text-align-right" class="tool-btn" title="Align Right">
+                                <span style="font-size: 14px;">&#9779;</span>
+                            </button>
+
+                            <div class="tool-divider"></div>
+
+                            <!-- Reusing the color input logic, but specific for text updating -->
+                            <!-- We will sync this with the main color picker -->
+                        </div>
+
+                        <div id="canvas-wrapper" class="canvas-wrapper">
+                            <canvas id="pdf-editor-canvas"></canvas>
+                        </div>
+
+                        <div class="actions">
+                            <button id="save-pdf-btn" class="btn primary">Save & Download PDF</button>
+                            <button id="clear-pdf-btn" class="btn secondary">Clear All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIRMATION MODAL -->
+    <div id="confirmation-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Clear All Edits?</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to clear all annotations? This action cannot be undone.</p>
+            </div>
+            <div class="modal-actions">
+                <button id="modal-cancel-btn" class="btn secondary">Cancel</button>
+                <button id="modal-confirm-btn" class="btn danger">Yes, I'm sure</button>
             </div>
         </div>
     </div>

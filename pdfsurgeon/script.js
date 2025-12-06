@@ -42,6 +42,7 @@ function init() {
     setupSplitEvents();
     setupCompressEvents();
     setupConvertEvents();
+    setupEditEvents();
 }
 
 // --- TABS ---
@@ -754,20 +755,17 @@ init();
 
 // --- CONVERT SECTION ---
 function setupConvertEvents() {
-    const subTabs = document.querySelectorAll('.sub-tab-btn');
-    const subTabPanes = document.querySelectorAll('.sub-tab-pane');
+    const convertModeRadios = document.getElementsByName('convert-mode');
 
-    subTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            // Remove active class from all sub-tabs and panes
-            subTabs.forEach(t => t.classList.remove('active'));
+    convertModeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const targetId = e.target.value;
+
+            // Hide all sub-tab panes
+            const subTabPanes = document.querySelectorAll('#convert-tab .sub-tab-pane');
             subTabPanes.forEach(p => p.classList.remove('active'));
 
-            // Add active class to clicked tab
-            tab.classList.add('active');
-
             // Show corresponding pane
-            const targetId = tab.dataset.subtab;
             document.getElementById(targetId).classList.add('active');
         });
     });
@@ -779,6 +777,7 @@ function setupConvertEvents() {
 // --- CONVERT TO PDF LOGIC ---
 let jpgFiles = [];
 let wordFile = null;
+let excelFile = null;
 
 function setupConvertToPDFEvents() {
     // Radio Buttons
@@ -934,8 +933,6 @@ function renderJPGList() {
 
         listEl.appendChild(div);
     });
-
-
 
     const helpText = document.getElementById('jpg-help-text');
 
@@ -1145,8 +1142,6 @@ async function convertWordToPDF() {
 }
 
 // --- EXCEL TO PDF LOGIC ---
-let excelFile = null;
-
 function handleExcelFile(file) {
     if (!file || (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls'))) return;
 
@@ -1269,5 +1264,538 @@ async function convertExcelToPDF() {
     } finally {
         btn.textContent = 'Convert to PDF';
         btn.disabled = false;
+    }
+}
+
+
+// --- EDIT PDF SECTION ---
+let editFile = null;
+let fabricCanvas = null;
+let editPdfDoc = null;
+let editPdfBytes = null;
+let currentEditTool = 'select'; // select, text, draw, rect, circle
+
+function setupEditEvents() {
+    const editUploadArea = document.getElementById('edit-upload-area');
+    const editFileInput = document.getElementById('edit-file-input');
+    const savePdfBtn = document.getElementById('save-pdf-btn');
+    const clearPdfBtn = document.getElementById('clear-pdf-btn');
+    const colorPicker = document.getElementById('tool-color');
+
+    // Drag & Drop
+    editUploadArea.addEventListener('dragover', (e) => { e.preventDefault(); editUploadArea.classList.add('dragover'); });
+    editUploadArea.addEventListener('dragleave', () => editUploadArea.classList.remove('dragover'));
+    editUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        editUploadArea.classList.remove('dragover');
+        handleEditFile(e.dataTransfer.files[0]);
+    });
+
+    editFileInput.addEventListener('change', (e) => handleEditFile(e.target.files[0]));
+
+    // Toolbar Tools
+    document.getElementById('tool-select').addEventListener('click', () => setEditTool('select'));
+    document.getElementById('tool-text').addEventListener('click', () => setEditTool('text'));
+    document.getElementById('tool-draw').addEventListener('click', () => setEditTool('draw'));
+    document.getElementById('tool-rect').addEventListener('click', () => addShape('rect'));
+    document.getElementById('tool-circle').addEventListener('click', () => addShape('circle'));
+
+    // Image Upload
+    document.getElementById('edit-image-input').addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+            addEditImage(e.target.files[0]);
+            e.target.value = ''; // Reset
+        }
+    });
+
+    // Delete
+    document.getElementById('tool-delete').addEventListener('click', deleteSelectedObject);
+
+    // Color Change
+    colorPicker.addEventListener('input', (e) => {
+        const color = e.target.value;
+        if (fabricCanvas) {
+            fabricCanvas.freeDrawingBrush.color = color;
+            const activeObj = fabricCanvas.getActiveObject();
+            if (activeObj) {
+                if (activeObj.type === 'i-text' || activeObj.type === 'text') {
+                    activeObj.set('fill', color);
+                } else if (activeObj.type === 'rect' || activeObj.type === 'circle') {
+                    activeObj.set('stroke', color);
+                }
+                fabricCanvas.renderAll();
+            }
+        }
+    });
+
+    // Buttons
+    // Modal Elements
+    const modal = document.getElementById('confirmation-modal');
+    const modalCancel = document.getElementById('modal-cancel-btn');
+    const modalConfirm = document.getElementById('modal-confirm-btn');
+    let onConfirmAction = null;
+
+    function showConfirmModal(action) {
+        onConfirmAction = action;
+        modal.classList.remove('hidden');
+    }
+
+    function hideConfirmModal() {
+        modal.classList.add('hidden');
+        onConfirmAction = null;
+    }
+
+    modalCancel.addEventListener('click', hideConfirmModal);
+
+    modalConfirm.addEventListener('click', () => {
+        if (onConfirmAction) onConfirmAction();
+        hideConfirmModal();
+    });
+
+    // Buttons
+    savePdfBtn.addEventListener('click', saveEditedPdf);
+    clearPdfBtn.addEventListener('click', () => {
+        showConfirmModal(clearAnnotations);
+    });
+
+    // Feature Switcher
+    const modeRadios = document.getElementsByName('edit-feature-mode');
+    modeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'sign') {
+                showNotification('Sign PDF feature is coming soon!', 'info');
+                // Revert to edit
+                setTimeout(() => {
+                    document.querySelector('input[name="edit-feature-mode"][value="edit"]').checked = true;
+                }, 500);
+            }
+        });
+    });
+}
+
+// Suppress specific PDF.js warnings that are noisy but harmless
+const originalWarn = console.warn;
+console.warn = function (...args) {
+    if (args[0] && typeof args[0] === 'string' && args[0].includes('CanvasTextBaseline')) return;
+    originalWarn.apply(console, args);
+};
+
+async function handleEditFile(file) {
+    if (!file || file.type !== 'application/pdf') return;
+
+    // Check if Fabric is loaded
+    if (typeof fabric === 'undefined') {
+        showNotification('Fabric.js library not loaded. Please check your internet connection.', 'error');
+        return;
+    }
+
+    editFile = file;
+    document.getElementById('edit-upload-area').classList.add('hidden');
+    document.getElementById('editor-container').classList.remove('hidden');
+
+    try {
+        const arrayBuffer = await file.arrayBuffer();
+        editPdfBytes = arrayBuffer; // Store for later
+
+        // Load with PDF.js for rendering
+        const loadingTask = pdfjsLib.getDocument(arrayBuffer);
+        const pdf = await loadingTask.promise;
+        const page = await pdf.getPage(1); // Currently only editing page 1
+
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvasEl = document.getElementById('pdf-editor-canvas');
+
+        if (!canvasEl) {
+            console.error('Canvas element not found!');
+            return;
+        }
+
+        // Initialize Fabric Canvas
+        if (fabricCanvas) {
+            fabricCanvas.dispose();
+        }
+
+        // Set dimensions explicitly
+        canvasEl.width = viewport.width;
+        canvasEl.height = viewport.height;
+
+        // Render PDF page to canvas context first (as background)
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = viewport.width;
+        tempCanvas.height = viewport.height;
+        const tempContext = tempCanvas.getContext('2d');
+
+        // Render PDF (awaiting this is critical)
+        try {
+            await page.render({ canvasContext: tempContext, viewport }).promise;
+        } catch (renderErr) {
+            console.warn('PDF Rendering Warning:', renderErr);
+        }
+
+        const bgDataUrl = tempCanvas.toDataURL('image/png');
+
+        // Create Fabric Canvas
+        fabricCanvas = new fabric.Canvas('pdf-editor-canvas', {
+            width: viewport.width,
+            height: viewport.height,
+            isDrawingMode: false,
+            selection: true
+        });
+
+        // Set background and wait for it to load
+        fabricCanvas.setBackgroundImage(bgDataUrl, fabricCanvas.renderAll.bind(fabricCanvas), {
+            originX: 'left',
+            originY: 'top'
+        });
+
+        // Setup Brush
+        fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(fabricCanvas);
+        fabricCanvas.freeDrawingBrush.width = 3;
+        const colorPicker = document.getElementById('tool-color');
+        if (colorPicker) {
+            fabricCanvas.freeDrawingBrush.color = colorPicker.value;
+        }
+
+        // Selection Events for UI Updates
+        fabricCanvas.on('selection:created', handleSelection);
+        fabricCanvas.on('selection:updated', handleSelection);
+        fabricCanvas.on('selection:cleared', () => {
+            document.getElementById('text-properties-toolbar').classList.add('hidden');
+        });
+
+        // --- Text Tool Event Listeners ---
+        document.getElementById('font-family').addEventListener('change', function () {
+            const activeObj = fabricCanvas.getActiveObject();
+            if (activeObj && (activeObj.type === 'i-text' || activeObj.type === 'text')) {
+                activeObj.set('fontFamily', this.value);
+                fabricCanvas.requestRenderAll();
+            }
+        });
+
+        document.getElementById('font-size').addEventListener('change', function () {
+            const activeObj = fabricCanvas.getActiveObject();
+            if (activeObj && (activeObj.type === 'i-text' || activeObj.type === 'text')) {
+                activeObj.set('fontSize', parseInt(this.value, 10));
+                fabricCanvas.requestRenderAll();
+            }
+        });
+
+        document.getElementById('text-bold').addEventListener('click', function () {
+            const activeObj = fabricCanvas.getActiveObject();
+            if (activeObj && (activeObj.type === 'i-text' || activeObj.type === 'text')) {
+                activeObj.set('fontWeight', activeObj.fontWeight === 'bold' ? 'normal' : 'bold');
+                fabricCanvas.requestRenderAll();
+                this.classList.toggle('active', activeObj.fontWeight === 'bold');
+            }
+        });
+
+        document.getElementById('text-italic').addEventListener('click', function () {
+            const activeObj = fabricCanvas.getActiveObject();
+            if (activeObj && (activeObj.type === 'i-text' || activeObj.type === 'text')) {
+                activeObj.set('fontStyle', activeObj.fontStyle === 'italic' ? 'normal' : 'italic');
+                fabricCanvas.requestRenderAll();
+                this.classList.toggle('active', activeObj.fontStyle === 'italic');
+            }
+        });
+
+        document.getElementById('text-underline').addEventListener('click', function () {
+            const activeObj = fabricCanvas.getActiveObject();
+            if (activeObj && (activeObj.type === 'i-text' || activeObj.type === 'text')) {
+                activeObj.set('underline', !activeObj.underline);
+                fabricCanvas.requestRenderAll();
+                this.classList.toggle('active', !!activeObj.underline);
+            }
+        });
+
+        const textAlignButtons = ['left', 'center', 'right'];
+        textAlignButtons.forEach(align => {
+            document.getElementById(`text-align-${align}`).addEventListener('click', function () {
+                const activeObj = fabricCanvas.getActiveObject();
+                if (activeObj && (activeObj.type === 'i-text' || activeObj.type === 'text')) {
+                    activeObj.set('textAlign', align);
+                    fabricCanvas.requestRenderAll();
+
+                    // Update Active State
+                    textAlignButtons.forEach(a => {
+                        document.getElementById(`text-align-${a}`).classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Line Tool
+        document.getElementById('tool-line').addEventListener('click', () => {
+            setEditTool('draw'); // Temporarily set to draw to start logic
+            addEditLine();
+        });
+
+        // Emoji Tool Logic
+        const emojiBtn = document.getElementById('tool-emoji');
+        const emojiContent = document.querySelector('.emoji-content');
+
+        emojiBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            emojiContent.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('.emoji-content span').forEach(span => {
+            span.addEventListener('click', (e) => {
+                const emoji = e.target.getAttribute('data-emoji');
+                addEditEmoji(emoji);
+                emojiContent.classList.add('hidden');
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (emojiBtn && !emojiBtn.contains(e.target) && !emojiContent.contains(e.target)) {
+                emojiContent.classList.add('hidden');
+            }
+        });
+
+        setEditTool('select');
+        console.log('PDF Editor Initialized Successfully');
+
+    } catch (err) {
+        console.error('Editor Initialization Error:', err);
+        showNotification('Error loading PDF for editing.', 'error');
+        document.getElementById('edit-upload-area').classList.remove('hidden');
+        document.getElementById('editor-container').classList.add('hidden');
+    }
+}
+
+function setEditTool(tool) {
+    currentEditTool = tool;
+
+    // UI Update
+    document.querySelectorAll('.editor-toolbar .tool-btn').forEach(btn => btn.classList.remove('active'));
+
+    if (tool === 'select') {
+        document.getElementById('tool-select').classList.add('active');
+        fabricCanvas.isDrawingMode = false;
+        fabricCanvas.selection = true;
+        fabricCanvas.defaultCursor = 'default';
+        fabricCanvas.forEachObject(o => o.selectable = true);
+    } else if (tool === 'draw') {
+        document.getElementById('tool-draw').classList.add('active');
+        fabricCanvas.isDrawingMode = true;
+        fabricCanvas.defaultCursor = 'crosshair';
+        fabricCanvas.discardActiveObject();
+        fabricCanvas.requestRenderAll();
+    } else if (tool === 'text') {
+        document.getElementById('tool-text').classList.add('active');
+        fabricCanvas.isDrawingMode = false;
+        addText();
+        setEditTool('select'); // Switch back after adding
+    }
+}
+
+function addText() {
+    const text = new fabric.IText('Type here', {
+        left: 100,
+        top: 100,
+        fontFamily: 'Arial',
+        fill: document.getElementById('tool-color').value,
+        fontSize: 20
+    });
+    fabricCanvas.add(text);
+    fabricCanvas.setActiveObject(text);
+}
+
+function addShape(shape) {
+    const color = document.getElementById('tool-color').value;
+    let obj;
+
+    if (shape === 'rect') {
+        obj = new fabric.Rect({
+            left: 150,
+            top: 150,
+            fill: 'transparent',
+            stroke: color,
+            strokeWidth: 3,
+            width: 100,
+            height: 60
+        });
+    } else if (shape === 'circle') {
+        obj = new fabric.Circle({
+            left: 200,
+            top: 200,
+            fill: 'transparent',
+            stroke: color,
+            strokeWidth: 3,
+            radius: 40
+        });
+    }
+
+    if (obj) {
+        fabricCanvas.add(obj);
+        fabricCanvas.setActiveObject(obj);
+        setEditTool('select');
+    }
+}
+
+function addEditLine() {
+    const color = document.getElementById('tool-color').value;
+    const line = new fabric.Line([50, 50, 200, 50], {
+        stroke: color,
+        strokeWidth: 3,
+        selectable: true
+    });
+    fabricCanvas.add(line);
+    fabricCanvas.setActiveObject(line);
+    setEditTool('select');
+}
+
+function addEditEmoji(emoji) {
+    const text = new fabric.Text(emoji, {
+        left: 200,
+        top: 200,
+        fontSize: 40,
+        selectable: true
+    });
+    fabricCanvas.add(text);
+    fabricCanvas.setActiveObject(text);
+    setEditTool('select');
+}
+
+function addEditImage(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        fabric.Image.fromURL(e.target.result, function (img) {
+            img.scaleToWidth(150);
+            fabricCanvas.add(img);
+            fabricCanvas.centerObject(img);
+            fabricCanvas.setActiveObject(img);
+            setEditTool('select');
+        });
+    };
+    reader.readAsDataURL(file);
+}
+
+function deleteSelectedObject() {
+    const activeObjects = fabricCanvas.getActiveObjects();
+    if (activeObjects.length) {
+        fabricCanvas.discardActiveObject();
+        activeObjects.forEach(function (obj) {
+            fabricCanvas.remove(obj);
+        });
+    }
+}
+
+function clearAnnotations() {
+    fabricCanvas.getObjects().forEach(obj => {
+        // Don't remove background image
+        fabricCanvas.remove(obj);
+    });
+}
+
+function handleSelection(e) {
+    const obj = e.selected[0];
+    if (!obj) return;
+
+    // Color Picker Sync
+    const colorInput = document.getElementById('tool-color');
+    if (obj.type === 'i-text' || obj.type === 'text') {
+        colorInput.value = obj.fill;
+    } else if (obj.stroke) {
+        colorInput.value = obj.stroke;
+    }
+
+    // Text Properties Sync
+    const textToolbar = document.getElementById('text-properties-toolbar');
+    if (obj.type === 'i-text' || obj.type === 'text') {
+        textToolbar.classList.remove('hidden');
+
+        // Sync Font Family
+        const fontFamilySelect = document.getElementById('font-family');
+        if (fontFamilySelect) fontFamilySelect.value = obj.fontFamily || 'Arial';
+
+        // Sync Font Size
+        const fontSizeSelect = document.getElementById('font-size');
+        if (fontSizeSelect) fontSizeSelect.value = obj.fontSize || 20;
+
+        // Sync Bold/Italic
+        // Sync Bold/Italic
+        const boldBtn = document.getElementById('text-bold');
+        if (boldBtn) boldBtn.classList.toggle('active', obj.fontWeight === 'bold');
+
+        const italicBtn = document.getElementById('text-italic');
+        if (italicBtn) italicBtn.classList.toggle('active', obj.fontStyle === 'italic');
+
+        // Sync Underline
+        const underlineBtn = document.getElementById('text-underline');
+        if (underlineBtn) underlineBtn.classList.toggle('active', !!obj.underline);
+
+        // Sync Alignment
+        const textAlignButtons = ['left', 'center', 'right'];
+        textAlignButtons.forEach(align => {
+            const btn = document.getElementById(`text-align-${align}`);
+            if (btn) {
+                if (obj.textAlign === align) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            }
+        });
+
+    } else {
+        textToolbar.classList.add('hidden');
+    }
+}
+
+async function saveEditedPdf() {
+    try {
+        const saveBtn = document.getElementById('save-pdf-btn');
+        saveBtn.textContent = 'Saving...';
+        saveBtn.disabled = true;
+
+        // 1. Export Fabric Canvas to PNG (without background PDF image)
+        // We temporarily remove background to get only annotations
+        const originalBg = fabricCanvas.backgroundImage;
+        fabricCanvas.backgroundImage = null;
+        fabricCanvas.renderAll();
+
+        // High multiplier for better resolution on the PDF
+        const dataUrl = fabricCanvas.toDataURL({
+            format: 'png',
+            multiplier: 2
+        });
+
+        // Restore background
+        fabricCanvas.setBackgroundImage(originalBg, fabricCanvas.renderAll.bind(fabricCanvas));
+
+        // 2. Load original PDF
+        const arrayBuffer = await editFile.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(arrayBuffer);
+        const pages = pdfDoc.getPages();
+        const firstPage = pages[0]; // Logic only for page 1 currently
+
+        // 3. Embed the annotation image
+        const pngImage = await pdfDoc.embedPng(dataUrl);
+
+        // 4. Draw image on top of profile
+        const { width, height } = firstPage.getSize();
+
+        firstPage.drawImage(pngImage, {
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+        });
+
+        // 5. Save and Download
+        const pdfBytes = await pdfDoc.save();
+        triggerDownloadAnimation(saveBtn);
+        downloadFile(pdfBytes, 'edited.pdf');
+
+    } catch (err) {
+        console.error(err);
+        showNotification('Error saving PDF', 'error');
+    } finally {
+        const saveBtn = document.getElementById('save-pdf-btn');
+        saveBtn.textContent = 'Save & Download PDF';
+        saveBtn.disabled = false;
     }
 }

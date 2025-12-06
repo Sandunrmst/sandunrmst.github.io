@@ -1034,6 +1034,7 @@ footer {
     color: #888;
     margin-top: 0.5rem;
 }
+
 /* CONVERSION SECTIONS */
 .conversion-type-selector {
     display: flex;
@@ -1066,7 +1067,7 @@ footer {
     .sub-tabs {
         flex-wrap: wrap;
     }
-    
+
     .conversion-type-selector {
         flex-direction: column;
         align-items: center;
@@ -1074,3 +1075,304 @@ footer {
 }
 
 
+
+/* --- EDIT PDF STYLES --- */
+/* RADIO TABS */
+.radio-tab {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #f4f4f4;
+    border-radius: 20px;
+    transition: all 0.2s;
+    user-select: none;
+    border: 1px solid transparent;
+}
+
+.radio-tab:hover {
+    background: #e9e9e9;
+}
+
+.radio-tab input[type="radio"] {
+    accent-color: var(--primary-color);
+    margin: 0;
+}
+
+.radio-tab:has(input:checked) {
+    background: #e6f0fa;
+    color: var(--primary-color);
+    font-weight: 500;
+    border-color: #b3d7ff;
+}
+
+/* EDITOR TOOBLAR */
+.editor-toolbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.tool-btn {
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 36px;
+    min-height: 36px;
+}
+
+.tool-btn:hover {
+    background: #f4f4f4;
+    color: var(--primary-color);
+}
+
+.tool-btn.active {
+    background: #e6f0fa;
+    color: var(--primary-color);
+    border-color: #b3d7ff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tool-divider {
+    width: 1px;
+    height: 24px;
+    background: #eee;
+    margin: 0 5px;
+}
+
+.text-danger {
+    color: #e74c3c;
+}
+
+.text-danger:hover {
+    background: #fff5f5;
+    color: #c0392b;
+    border-color: #fadbd8;
+}
+
+#tool-color {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* Emoji Picker */
+.emoji-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.emoji-content {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    z-index: 100;
+    min-width: 140px;
+}
+
+.emoji-content.hidden {
+    display: none;
+}
+
+.emoji-content span {
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    text-align: center;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.emoji-content span:hover {
+    background: #f0f0f0;
+}
+
+.secondary-toolbar {
+    margin-top: -10px;
+    /* Pull closer to main toolbar */
+    border-top: none;
+    background: #fcfcfc;
+    padding: 8px;
+    gap: 15px;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.secondary-toolbar select {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #444;
+    cursor: pointer;
+    background: white;
+}
+
+.secondary-toolbar select:hover {
+    border-color: #bbb;
+}
+
+.tool-btn strong,
+.tool-btn em {
+    font-size: 16px;
+    font-family: serif;
+}
+
+.secondary-toolbar.hidden {
+    display: none;
+}
+
+
+/* CANVAS WRAPPER */
+.canvas-wrapper {
+    width: 100%;
+    box-sizing: border-box;
+    /* Fix padding adding to width */
+    overflow: auto;
+    background: #525659;
+    padding: 40px;
+    border-radius: 8px;
+    display: flex;
+    /* justify-content: center;  <-- Causing overflow issues */
+    /* align-items: flex-start; */
+    min-height: 500px;
+    max-height: 80vh;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.canvas-container {
+    background: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin: auto;
+}
+
+/* Responsive adjustments for editor */
+@media (max-width: 768px) {
+    .editor-toolbar {
+        gap: 5px;
+        padding: 5px;
+    }
+
+    .tool-btn {
+        padding: 5px;
+        min-width: 30px;
+        min-height: 30px;
+    }
+
+    .canvas-wrapper {
+        padding: 10px;
+    }
+}
+
+/* CONFIRMATION MODAL */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.modal-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transform: scale(1);
+    animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-header h3 {
+    margin: 0 0 1rem 0;
+    color: #333;
+}
+
+.modal-body p {
+    color: #666;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn.danger {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+}
+
+.btn.danger:hover {
+    background-color: #c0392b;
+}
