@@ -262,9 +262,77 @@
                         <span>Edit PDF</span>
                     </label>
                     <label class="radio-tab">
-                        <input type="radio" name="edit-feature-mode" value="sign">
-                        <span>Sign PDF (Coming Soon)</span>
+                        <input type="radio" name="edit-feature-mode" value="watermark">
+                        <span>Add Watermark</span>
                     </label>
+                </div>
+
+                <!-- Watermark Controls (Hidden by default) -->
+                <div id="watermark-controls" class="watermark-panel hidden">
+                    <div class="wm-group">
+                        <label>Type:</label>
+                        <div class="wm-toggle">
+                            <button id="wm-type-text" class="active">Text</button>
+                            <button id="wm-type-image">Image</button>
+                        </div>
+                    </div>
+
+                    <!-- Text Controls -->
+                    <div id="wm-text-settings">
+                        <input type="text" id="wm-text-input" placeholder="Add Your Watermark"
+                            value="Add your text watermark here">
+                        <div class="wm-row">
+                            <select id="wm-font-family">
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                            <input type="number" id="wm-font-size" value="48" min="8" max="200" title="Font Size">
+                            <input type="color" id="wm-color" value="#cccccc" title="Color">
+                        </div>
+                    </div>
+
+                    <!-- Image Controls -->
+                    <div id="wm-image-settings" class="hidden">
+                        <button class="btn secondary sm"
+                            onclick="document.getElementById('wm-image-input').click()">Upload Image</button>
+                        <input type="file" id="wm-image-input" accept="image/*" hidden>
+                        <div class="wm-row">
+                            <label>Scale: <span id="wm-scale-val">100%</span></label>
+                            <input type="range" id="wm-scale" min="10" max="200" value="100">
+                        </div>
+                    </div>
+
+                    <div class="wm-divider"></div>
+
+                    <!-- Common Controls -->
+                    <div class="wm-grid-box">
+                        <div class="wm-row">
+                            <label>Opacity: <span id="wm-opacity-val">50%</span></label>
+                            <input type="range" id="wm-opacity" min="0" max="100" value="50">
+                        </div>
+                        <div class="wm-row">
+                            <label>Rotation: <span id="wm-rotation-val">45°</span></label>
+                            <input type="range" id="wm-rotation" min="0" max="360" value="45">
+                        </div>
+
+                        <!-- Position Grid -->
+                        <div class="wm-position-grid">
+                            <button data-pos="tl">⌜</button> <button data-pos="tc">⬆</button> <button
+                                data-pos="tr">⌝</button>
+                            <button data-pos="cl">⬅</button> <button data-pos="cc" class="active">●</button> <button
+                                data-pos="cr">➡</button>
+                            <button data-pos="bl">⌞</button> <button data-pos="bc">⬇</button> <button
+                                data-pos="br">⌟</button>
+                        </div>
+                    </div>
+
+                    <div class="wm-info">
+                        <span id="wm-file-info">Load PDF to see info</span>
+                    </div>
+
+                    <button id="apply-watermark-btn" class="btn primary full-width">Add Watermark & Download</button>
                 </div>
 
                 <div id="edit-feature-content">
@@ -277,7 +345,7 @@
                     </div>
 
                     <div id="editor-container" class="hidden">
-                        <div class="editor-toolbar">
+                        <div class="editor-toolbar hidden" id="main-editor-toolbar">
                             <button id="tool-select" class="tool-btn active" title="Select">
                                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
                                     stroke-width="2">

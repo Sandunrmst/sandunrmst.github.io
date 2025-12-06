@@ -1376,3 +1376,289 @@ footer {
 .btn.danger:hover {
     background-color: #c0392b;
 }
+
+/* Watermark Controls Section */
+.watermark-panel {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.watermark-panel.hidden {
+    display: none;
+}
+
+/* Grouping Logic for Layout */
+.wm-group {
+    margin-bottom: 16px;
+    grid-column: 1 / -1;
+    /* Full width for Type toggle */
+}
+
+.wm-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #444;
+    font-size: 0.9rem;
+}
+
+/* Toggle Switch */
+.wm-toggle {
+    display: flex;
+    background: #f1f3f5;
+    padding: 4px;
+    margin-top: 8px;
+    border-radius: 8px;
+    max-width: 100%;
+}
+
+.wm-toggle button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.2s ease;
+}
+
+.wm-toggle button:hover {
+    color: #333;
+}
+
+.wm-toggle button.active {
+    background: #fff;
+    color: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+
+
+/* Inputs & Rows */
+#wm-text-settings,
+#wm-image-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    grid-column: 1 / 2;
+}
+
+#wm-text-settings.hidden,
+#wm-image-settings.hidden {
+    display: none;
+}
+
+.wm-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0;
+}
+
+/* Input Styling */
+.watermark-panel input[type="text"],
+.watermark-panel input[type="number"],
+.watermark-panel select {
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s;
+    outline: none;
+    width: 93%;
+}
+
+.watermark-panel input[type="text"]:focus,
+.watermark-panel input[type="number"]:focus,
+.watermark-panel select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Color Picker */
+input[type="color"]#wm-color {
+    -webkit-appearance: none;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+    background: none;
+    flex: 0 0 44px;
+}
+
+input[type="color"]#wm-color::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color"]#wm-color::-webkit-color-swatch {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+/* Font Size Input specific */
+#wm-font-size {
+    width: 80px;
+    flex: 0 0 80px;
+}
+
+/* Right Column: Sliders & Grid */
+.wm-grid-box {
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    /* Center content on both Desktop & Mobile per user request */
+    text-align: center;
+}
+
+.wm-grid-box .wm-row {
+    width: 100%;
+    /* Ensure sliders take full width even when centered */
+    justify-content: center;
+}
+
+
+@media (max-width: 768px) {
+    .watermark-panel {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 20px;
+    }
+
+    .wm-group,
+    #wm-text-settings,
+    #wm-image-settings,
+    .wm-grid-box {
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        grid-column: 1 / -1;
+    }
+
+    .wm-toggle {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        justify-content: center;
+    }
+
+    .wm-row {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .watermark-panel input[type="text"],
+    .watermark-panel select {
+        text-align: center;
+    }
+
+    .wm-position-grid {
+        margin: 0 auto;
+        /* Ensure centered */
+    }
+}
+
+/* Range Input Styling */
+.watermark-panel input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #eef1f5;
+    border-radius: 3px;
+    outline: none;
+    padding: 0;
+    border: none;
+}
+
+.watermark-panel input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s;
+}
+
+.watermark-panel input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+/* Position Grid */
+.wm-position-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: fit-content;
+    margin: 10px auto;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #eef1f5;
+}
+
+.wm-position-grid button {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: all 0.2s;
+}
+
+.wm-position-grid button:hover {
+    background: #f1f3f5;
+    color: #444;
+}
+
+.wm-position-grid button.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 8px rgba(74, 144, 226, 0.25);
+}
+
+/* Info & Actions */
+.wm-info {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #eef1f5;
+    margin-top: 10px;
+}
+
+#apply-watermark-btn {
+    grid-column: 1 / -1;
+}
+
+.wm-divider {
+    display: none;
+}

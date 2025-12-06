@@ -1358,20 +1358,10 @@ function setupEditEvents() {
         showConfirmModal(clearAnnotations);
     });
 
-    // Feature Switcher
-    const modeRadios = document.getElementsByName('edit-feature-mode');
-    modeRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            if (e.target.value === 'sign') {
-                showNotification('Sign PDF feature is coming soon!', 'info');
-                // Revert to edit
-                setTimeout(() => {
-                    document.querySelector('input[name="edit-feature-mode"][value="edit"]').checked = true;
-                }, 500);
-            }
-        });
-    });
+    // Call Watermark Setup
+    setupWatermarkEvents();
 }
+
 
 // Suppress specific PDF.js warnings that are noisy but harmless
 const originalWarn = console.warn;
@@ -1404,6 +1394,17 @@ async function handleEditFile(file) {
 
         const viewport = page.getViewport({ scale: 1.5 });
         const canvasEl = document.getElementById('pdf-editor-canvas');
+
+        // Show toolbar only if in edit mode
+        const currentMode = document.querySelector('input[name="edit-feature-mode"]:checked').value;
+        const editorToolbar = document.getElementById('main-editor-toolbar');
+        if (editorToolbar) {
+            if (currentMode === 'edit') {
+                editorToolbar.classList.remove('hidden');
+            } else {
+                editorToolbar.classList.add('hidden');
+            }
+        }
 
         if (!canvasEl) {
             console.error('Canvas element not found!');
@@ -1691,6 +1692,10 @@ function clearAnnotations() {
 }
 
 function handleSelection(e) {
+    // If not in Edit mode, do not show contextual toolbars
+    const currentMode = document.querySelector('input[name="edit-feature-mode"]:checked').value;
+    if (currentMode !== 'edit') return;
+
     const obj = e.selected[0];
     if (!obj) return;
 
@@ -1797,5 +1802,322 @@ async function saveEditedPdf() {
         const saveBtn = document.getElementById('save-pdf-btn');
         saveBtn.textContent = 'Save & Download PDF';
         saveBtn.disabled = false;
+    }
+}
+
+// --- WATERMARK LOGIC ---
+let watermarkObject = null;
+let watermarkMode = 'text'; // 'text' or 'image'
+
+function setupWatermarkEvents() {
+    // Mode Switching (Edit vs Watermark)
+    const modeRadios = document.getElementsByName('edit-feature-mode');
+    console.log("Setting up watermark events, found radios:", modeRadios.length);
+    modeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const mode = e.target.value;
+            const editorToolbar = document.getElementById('main-editor-toolbar');
+            const textProperties = document.getElementById('text-properties-toolbar'); // Ensure this exists in HTML or variable
+            const watermarkControls = document.getElementById('watermark-controls');
+
+            if (mode === 'watermark') {
+                if (editorToolbar) editorToolbar.classList.add('hidden');
+                if (textProperties) textProperties.classList.add('hidden');
+                if (watermarkControls) watermarkControls.classList.remove('hidden');
+                initWatermark();
+            } else {
+                if (editorToolbar) editorToolbar.classList.remove('hidden');
+                // textProperties should stay hidden until an object is selected
+                if (watermarkControls) watermarkControls.classList.add('hidden');
+                clearWatermark();
+            }
+        });
+    });
+
+    // Watermark Type Toggle
+    const wmTextBtn = document.getElementById('wm-type-text');
+    const wmImageBtn = document.getElementById('wm-type-image');
+
+    if (wmTextBtn) wmTextBtn.addEventListener('click', () => toggleWatermarkType('text'));
+    if (wmImageBtn) wmImageBtn.addEventListener('click', () => toggleWatermarkType('image'));
+
+    // Text Inputs
+    const textInput = document.getElementById('wm-text-input');
+    const fontSelect = document.getElementById('wm-font-family');
+    const fontSizeInput = document.getElementById('wm-font-size');
+    const colorInput = document.getElementById('wm-color');
+
+    if (textInput) textInput.addEventListener('input', updateWatermark);
+    if (fontSelect) fontSelect.addEventListener('change', updateWatermark);
+    if (fontSizeInput) fontSizeInput.addEventListener('input', updateWatermark);
+    if (colorInput) colorInput.addEventListener('input', updateWatermark);
+
+    // Common Inputs
+    const opacityInput = document.getElementById('wm-opacity');
+    if (opacityInput) opacityInput.addEventListener('input', (e) => {
+        const val = document.getElementById('wm-opacity-val');
+        if (val) val.textContent = e.target.value + '%';
+        updateWatermark();
+    });
+
+    const rotationInput = document.getElementById('wm-rotation');
+    if (rotationInput) rotationInput.addEventListener('input', (e) => {
+        const val = document.getElementById('wm-rotation-val');
+        if (val) val.textContent = e.target.value + '°';
+        updateWatermark();
+    });
+
+    const scaleInput = document.getElementById('wm-scale');
+    if (scaleInput) scaleInput.addEventListener('input', (e) => {
+        const val = document.getElementById('wm-scale-val');
+        if (val) val.textContent = e.target.value + '%';
+        updateWatermark();
+    });
+
+    // Position Grid
+    document.querySelectorAll('.wm-position-grid button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.wm-position-grid button').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            updateWatermarkPosition(e.target.dataset.pos);
+        });
+    });
+
+    // Image Upload
+    const imgInput = document.getElementById('wm-image-input');
+    if (imgInput) imgInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (f) => {
+                updateWatermarkImage(f.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Apply Button
+    const applyBtn = document.getElementById('apply-watermark-btn');
+    if (applyBtn) applyBtn.addEventListener('click', saveWatermarkedPDF);
+}
+
+function initWatermark() {
+    if (!fabricCanvas) return;
+
+    // Clear existing overlay objects if any, existing content is kept
+    toggleWatermarkType('text');
+}
+
+function clearWatermark() {
+    if (watermarkObject && fabricCanvas) {
+        fabricCanvas.remove(watermarkObject);
+        watermarkObject = null;
+        fabricCanvas.requestRenderAll();
+    }
+}
+
+function toggleWatermarkType(type) {
+    watermarkMode = type;
+    const textSettings = document.getElementById('wm-text-settings');
+    const imageSettings = document.getElementById('wm-image-settings');
+    const textBtn = document.getElementById('wm-type-text');
+    const imageBtn = document.getElementById('wm-type-image');
+
+    if (type === 'text') {
+        if (textSettings) textSettings.classList.remove('hidden');
+        if (imageSettings) imageSettings.classList.add('hidden');
+        if (textBtn) textBtn.classList.add('active');
+        if (imageBtn) imageBtn.classList.remove('active');
+        updateWatermark(); // Create text object
+    } else {
+        if (textSettings) textSettings.classList.add('hidden');
+        if (imageSettings) imageSettings.classList.remove('hidden');
+        if (textBtn) textBtn.classList.remove('active');
+        if (imageBtn) imageBtn.classList.add('active');
+        if (!watermarkObject || watermarkObject.type !== 'image') {
+            clearWatermark(); // Wait for upload
+        }
+    }
+}
+
+function updateWatermark() {
+    if (!fabricCanvas) return;
+
+    const textInput = document.getElementById('wm-text-input');
+    if (!textInput) return;
+
+    const text = textInput.value;
+    const fontFamily = document.getElementById('wm-font-family').value;
+    const fontSize = parseInt(document.getElementById('wm-font-size').value);
+    const color = document.getElementById('wm-color').value;
+    const opacity = parseInt(document.getElementById('wm-opacity').value) / 100;
+    const rotation = parseInt(document.getElementById('wm-rotation').value);
+
+    // Remove old object IF it's the wrong type or we are re-creating text
+    if (watermarkObject && watermarkObject.type !== 'image' && watermarkMode === 'text') {
+        fabricCanvas.remove(watermarkObject);
+    }
+    // Also remove if mode switched
+    if (watermarkMode === 'text' && watermarkObject && watermarkObject.type === 'image') {
+        fabricCanvas.remove(watermarkObject);
+        watermarkObject = null;
+    }
+
+    if (watermarkMode === 'text') {
+        watermarkObject = new fabric.Text(text, {
+            fontFamily: fontFamily,
+            fontSize: fontSize,
+            fill: color,
+            opacity: opacity,
+            angle: rotation,
+            selectable: false, // User moves via grid
+            originX: 'center',
+            originY: 'center'
+        });
+        fabricCanvas.add(watermarkObject);
+
+        // Re-apply position
+        const activePos = document.querySelector('.wm-position-grid button.active');
+        if (activePos) updateWatermarkPosition(activePos.dataset.pos);
+        else fabricCanvas.centerObject(watermarkObject);
+
+    } else if (watermarkMode === 'image' && watermarkObject && watermarkObject.type === 'image') {
+        // Just update props of existing image
+        watermarkObject.set({
+            opacity: opacity,
+            angle: rotation
+        });
+
+        const scaleVal = document.getElementById('wm-scale').value;
+        const scale = parseInt(scaleVal) / 100;
+        // Reset scale first then apply
+        watermarkObject.scale(scale);
+
+        fabricCanvas.requestRenderAll();
+
+        const activePos = document.querySelector('.wm-position-grid button.active');
+        if (activePos) updateWatermarkPosition(activePos.dataset.pos);
+    }
+}
+
+function updateWatermarkImage(dataUrl) {
+    if (!fabricCanvas) return;
+
+    fabric.Image.fromURL(dataUrl, (img) => {
+        if (watermarkObject) fabricCanvas.remove(watermarkObject);
+
+        watermarkObject = img;
+        watermarkObject.set({
+            originX: 'center',
+            originY: 'center',
+            selectable: false
+        });
+
+        fabricCanvas.add(watermarkObject);
+        updateWatermark(); // Apply other props (opacity, etc)
+    });
+}
+
+
+function updateWatermarkPosition(pos) {
+    if (!watermarkObject || !fabricCanvas) return;
+
+    const w = fabricCanvas.getWidth();
+    const h = fabricCanvas.getHeight();
+    const padding = 40;
+
+    let left = w / 2;
+    let top = h / 2;
+
+    switch (pos) {
+        case 'tl': left = padding; top = padding; watermarkObject.set({ originX: 'left', originY: 'top' }); break;
+        case 'tc': left = w / 2; top = padding; watermarkObject.set({ originX: 'center', originY: 'top' }); break;
+        case 'tr': left = w - padding; top = padding; watermarkObject.set({ originX: 'right', originY: 'top' }); break;
+        case 'cl': left = padding; top = h / 2; watermarkObject.set({ originX: 'left', originY: 'center' }); break;
+        case 'cc': left = w / 2; top = h / 2; watermarkObject.set({ originX: 'center', originY: 'center' }); break;
+        case 'cr': left = w - padding; top = h / 2; watermarkObject.set({ originX: 'right', originY: 'center' }); break;
+        case 'bl': left = padding; top = h - padding; watermarkObject.set({ originX: 'left', originY: 'bottom' }); break;
+        case 'bc': left = w / 2; top = h - padding; watermarkObject.set({ originX: 'center', originY: 'bottom' }); break;
+        case 'br': left = w - padding; top = h - padding; watermarkObject.set({ originX: 'right', originY: 'bottom' }); break;
+    }
+
+    watermarkObject.set({ left, top });
+    watermarkObject.setCoords();
+    fabricCanvas.requestRenderAll();
+}
+
+async function saveWatermarkedPDF() {
+    if (!editFile) {
+        showNotification("No PDF file loaded!", "error");
+        return;
+    }
+
+    try {
+        const btn = document.getElementById('apply-watermark-btn');
+        btn.textContent = 'Processing...';
+        btn.disabled = true;
+
+        // Fetch fresh ArrayBuffer to avoid "detached" errors
+        const arrayBuffer = await editFile.arrayBuffer();
+        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+        const pages = pdfDoc.getPages();
+
+        // 1. Isolate Watermark to PNG
+        const originalBg = fabricCanvas.backgroundImage;
+
+        // We need to temporarily remove the background image from fabric canvas 
+        // to take a snapshot of ONLY the watermark.
+        // However, setBackgroundImage(null) is async or requires callback.
+        // A simpler way: Hide all objects except watermark, hide background (set opacity 0?)
+
+        const objects = fabricCanvas.getObjects();
+        objects.forEach(o => { if (o !== watermarkObject) o.visible = false; });
+
+        // Hide background logic:
+        // Fabric doesn't easily let us toggle background visibility without removing it.
+        // Let's create a temporary canvas to render just the watermark object?
+        // Or simplified: Just render the watermark object to dataURL directly? 
+        // watermarkObject.toDataURL() only renders the object clipped to its box, not relative to canvas.
+        // We need it relative to canvas size to preserve position.
+
+        // Let's try setting background opacity to 0
+        if (fabricCanvas.backgroundImage) fabricCanvas.backgroundImage.opacity = 0;
+        fabricCanvas.renderAll();
+
+        const watermarkDataUrl = fabricCanvas.toDataURL({
+            format: 'png',
+            multiplier: 2
+        });
+
+        // Restore
+        if (fabricCanvas.backgroundImage) fabricCanvas.backgroundImage.opacity = 1;
+        objects.forEach(o => o.visible = true);
+        fabricCanvas.renderAll();
+
+        // 2. Embed
+        const watermarkImage = await pdfDoc.embedPng(watermarkDataUrl);
+        const wmDims = watermarkImage.scale(0.5); // 1 / multiplier
+
+        // 3. Draw on ALL pages
+        pages.forEach(page => {
+            page.drawImage(watermarkImage, {
+                x: 0,
+                y: 0,
+                width: page.getWidth(),
+                height: page.getHeight(),
+            });
+        });
+
+        const pdfBytes = await pdfDoc.save();
+        downloadFile(pdfBytes, "watermarked_document.pdf", "application/pdf");
+        showNotification("Watermark added to all pages!", "success");
+
+    } catch (err) {
+        console.error("Save Watermark Error:", err);
+        showNotification("Failed to save watermark.", "error");
+    } finally {
+        const btn = document.getElementById('apply-watermark-btn');
+        btn.textContent = 'Add Watermark & Download';
+        btn.disabled = false;
     }
 }
