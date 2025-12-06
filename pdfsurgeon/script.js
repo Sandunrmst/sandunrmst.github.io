@@ -788,11 +788,14 @@ function setupConvertToPDFEvents() {
             const type = e.target.value;
             document.getElementById('jpg-to-pdf-section').classList.add('hidden');
             document.getElementById('word-to-pdf-section').classList.add('hidden');
+            document.getElementById('excel-to-pdf-section').classList.add('hidden');
 
             if (type === 'jpg-to-pdf') {
                 document.getElementById('jpg-to-pdf-section').classList.remove('hidden');
             } else if (type === 'word-to-pdf') {
                 document.getElementById('word-to-pdf-section').classList.remove('hidden');
+            } else if (type === 'excel-to-pdf') {
+                document.getElementById('excel-to-pdf-section').classList.remove('hidden');
             }
         });
     });
@@ -849,6 +852,26 @@ function setupConvertToPDFEvents() {
     });
 
     wordConvertBtn.addEventListener('click', convertWordToPDF);
+
+    // Excel Events
+    const excelInput = document.getElementById('excel-file-input');
+    const excelUploadArea = document.getElementById('excel-upload-area');
+    const excelConvertBtn = document.getElementById('excel-convert-btn');
+
+    excelInput.addEventListener('change', (e) => handleExcelFile(e.target.files[0]));
+
+    excelUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        excelUploadArea.classList.add('dragover');
+    });
+    excelUploadArea.addEventListener('dragleave', () => excelUploadArea.classList.remove('dragover'));
+    excelUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        excelUploadArea.classList.remove('dragover');
+        handleExcelFile(e.dataTransfer.files[0]);
+    });
+
+    excelConvertBtn.addEventListener('click', convertExcelToPDF);
 }
 
 function handleJPGFiles(files) {
@@ -1008,10 +1031,36 @@ function handleWordFile(file) {
     const uploadArea = document.getElementById('word-upload-area');
 
     uploadArea.classList.add('hidden');
-    infoEl.textContent = `Selected: ${file.name}`;
+
+    // Create UI for selected file
+    infoEl.innerHTML = `
+        <div class="file-item" style="margin:0; border:var(--primary-color) 1px solid;">
+            <div class="file-info">${file.name}</div>
+            <div class="file-controls">
+                <button class="btn-icon remove" onclick="removeWordFile()" title="Remove">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+        </div>
+    `;
+
     infoEl.classList.remove('hidden');
     btn.disabled = false;
 }
+
+window.removeWordFile = () => {
+    wordFile = null;
+    const infoEl = document.getElementById('word-file-info');
+    const btn = document.getElementById('word-convert-btn');
+    const uploadArea = document.getElementById('word-upload-area');
+    const input = document.getElementById('word-file-input');
+
+    input.value = ''; // Reset input
+    infoEl.classList.add('hidden');
+    infoEl.innerHTML = '';
+    uploadArea.classList.remove('hidden');
+    btn.disabled = true;
+};
 
 async function convertWordToPDF() {
     if (!wordFile) return;
@@ -1089,6 +1138,134 @@ async function convertWordToPDF() {
     } catch (err) {
         console.error('Word to PDF Error:', err);
         showNotification('Error processing Word file.', 'error');
+    } finally {
+        btn.textContent = 'Convert to PDF';
+        btn.disabled = false;
+    }
+}
+
+// --- EXCEL TO PDF LOGIC ---
+let excelFile = null;
+
+function handleExcelFile(file) {
+    if (!file || (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls'))) return;
+
+    excelFile = file;
+    const infoEl = document.getElementById('excel-file-info');
+    const btn = document.getElementById('excel-convert-btn');
+    const uploadArea = document.getElementById('excel-upload-area');
+
+    uploadArea.classList.add('hidden');
+
+    // Create UI for selected file (mimicking Word feature)
+    infoEl.innerHTML = `
+        <div class="file-item" style="margin:0; border:var(--primary-color) 1px solid;">
+            <div class="file-info">${file.name}</div>
+            <div class="file-controls">
+                <button class="btn-icon remove" onclick="removeExcelFile()" title="Remove">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+        </div>
+    `;
+
+    infoEl.classList.remove('hidden');
+    btn.disabled = false;
+}
+
+window.removeExcelFile = () => {
+    excelFile = null;
+    const infoEl = document.getElementById('excel-file-info');
+    const btn = document.getElementById('excel-convert-btn');
+    const uploadArea = document.getElementById('excel-upload-area');
+    const input = document.getElementById('excel-file-input');
+
+    input.value = ''; // Reset input
+    infoEl.classList.add('hidden');
+    infoEl.innerHTML = '';
+    uploadArea.classList.remove('hidden');
+    btn.disabled = true;
+};
+
+async function convertExcelToPDF() {
+    if (!excelFile) return;
+
+    const btn = document.getElementById('excel-convert-btn');
+
+    try {
+        btn.textContent = 'Preparing...';
+        btn.disabled = true;
+
+        const arrayBuffer = await excelFile.arrayBuffer();
+
+        // 1. Read Excel file using XLSX
+        const workbook = XLSX.read(arrayBuffer);
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+
+        // 2. Convert to HTML
+        const html = XLSX.utils.sheet_to_html(worksheet);
+
+        // 3. Create a hidden iframe
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = 'none';
+        document.body.appendChild(iframe);
+
+        // 4. Write HTML to iframe
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(`
+            <html>
+            <head>
+                <title>${excelFile.name.replace(/\.xls[x]?$/, '')}</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                        color: #000;
+                        padding: 20px;
+                        margin: 0 auto;
+                    }
+                    table { 
+                        border-collapse: collapse; 
+                        width: 100%; 
+                        margin-bottom: 1em; 
+                    }
+                    td, th { 
+                        border: 1px solid #ddd; 
+                        padding: 8px; 
+                        text-align: left;
+                    }
+                    @media print {
+                        body { padding: 0; margin: 1cm; }
+                        table { width: 100%; }
+                    }
+                </style>
+            </head>
+            <body>
+                <h2>${excelFile.name} - Sheet 1</h2>
+                ${html}
+                <script>
+                    window.onload = function() {
+                        setTimeout(function() {
+                            window.print();
+                            window.parent.document.body.removeChild(window.frameElement);
+                        }, 500);
+                    };
+                </script>
+            </body>
+            </html>
+        `);
+        doc.close();
+
+        showNotification('Print dialog opened. Please select "Save as PDF".', 'success');
+
+    } catch (err) {
+        console.error('Excel to PDF Error:', err);
+        showNotification('Error processing Excel file.', 'error');
     } finally {
         btn.textContent = 'Convert to PDF';
         btn.disabled = false;

@@ -29,6 +29,8 @@
     </script>
     <!-- Word to PDF Libs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <!-- Excel to PDF Libs -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -174,6 +176,13 @@
                                 <span class="option-desc">Convert DOCX to PDF</span>
                             </div>
                         </label>
+                        <label class="compress-option-card">
+                            <input type="radio" name="convert-to-type" value="excel-to-pdf">
+                            <div class="option-content">
+                                <span class="option-title">Excel to PDF</span>
+                                <span class="option-desc">Convert XLSX to PDF</span>
+                            </div>
+                        </label>
                     </div>
 
                     <!-- JPG TO PDF -->
@@ -203,6 +212,20 @@
                         <div id="word-file-info" class="file-info-display hidden"></div>
                         <div class="actions">
                             <button id="word-convert-btn" class="btn primary" disabled>Convert to PDF</button>
+                        </div>
+                    </div>
+
+                    <!-- EXCEL TO PDF -->
+                    <div id="excel-to-pdf-section" class="conversion-section hidden">
+                        <div class="upload-area" id="excel-upload-area">
+                            <p>Drag & Drop Excel file (.xlsx, .xls) here or</p>
+                            <input type="file" id="excel-file-input" accept=".xlsx, .xls" hidden>
+                            <button class="btn secondary"
+                                onclick="document.getElementById('excel-file-input').click()">Select Excel File</button>
+                        </div>
+                        <div id="excel-file-info" class="file-info-display hidden"></div>
+                        <div class="actions">
+                            <button id="excel-convert-btn" class="btn primary" disabled>Convert to PDF</button>
                         </div>
                     </div>
                 </div>
