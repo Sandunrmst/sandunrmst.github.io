@@ -1806,32 +1806,36 @@ async function saveEditedPdf() {
         saveBtn.disabled = false;
     }
 }
-
 // --- WATERMARK LOGIC ---
 let watermarkObject = null;
 let watermarkMode = 'text'; // 'text' or 'image'
 
 function setupWatermarkEvents() {
-    // Mode Switching (Edit vs Watermark)
+    // Mode Switching (Edit vs Watermark vs Rotate)
     const modeRadios = document.getElementsByName('edit-feature-mode');
 
     modeRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
             const mode = e.target.value;
-            const editorToolbar = document.getElementById('main-editor-toolbar');
-            const textProperties = document.getElementById('text-properties-toolbar'); // Ensure this exists in HTML or variable
-            const watermarkControls = document.getElementById('watermark-controls');
+            const editorContent = document.getElementById('edit-feature-content'); // Main Edit Container
+            const wmControls = document.getElementById('watermark-controls');
+            const rotateSection = document.getElementById('rotate-pdf-section');
 
-            if (mode === 'watermark') {
-                if (editorToolbar) editorToolbar.classList.add('hidden');
-                if (textProperties) textProperties.classList.add('hidden');
-                if (watermarkControls) watermarkControls.classList.remove('hidden');
+            // Hide all sub-sections first
+            // We do NOT hide editorContent blindly because Watermark mode uses it too
+            if (rotateSection) rotateSection.classList.add('hidden');
+            if (wmControls) wmControls.classList.add('hidden');
+
+            // Show selected
+            if (mode === 'edit') {
+                if (editorContent) editorContent.classList.remove('hidden');
+            } else if (mode === 'watermark') {
+                if (editorContent) editorContent.classList.remove('hidden'); // Need this for upload/canvas
+                if (wmControls) wmControls.classList.remove('hidden');
                 initWatermark();
-            } else {
-                if (editorToolbar) editorToolbar.classList.remove('hidden');
-                // textProperties should stay hidden until an object is selected
-                if (watermarkControls) watermarkControls.classList.add('hidden');
-                clearWatermark();
+            } else if (mode === 'rotate') {
+                if (editorContent) editorContent.classList.add('hidden'); // Rotate has its own area
+                if (rotateSection) rotateSection.classList.remove('hidden');
             }
         });
     });
@@ -2152,14 +2156,53 @@ function setupWelcomePopup() {
     };
 
     if (closeBtn) closeBtn.addEventListener('click', closePopup);
-    if (actionBtn) actionBtn.addEventListener('click', closePopup);
-
     // Close on click outside
     popup.addEventListener('click', (e) => {
         if (e.target === popup) {
             closePopup();
         }
     });
+
+    // Confetti Logic
+    if (actionBtn) {
+        actionBtn.addEventListener('click', (e) => {
+            const rect = actionBtn.getBoundingClientRect();
+            const center = {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2
+            };
+
+            // Fire Confetti
+            const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6'];
+
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('confetti');
+
+                // Random spread
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 100 + Math.random() * 200; // Distance
+                const dx = Math.cos(angle) * velocity + 'px';
+                const dy = Math.sin(angle) * velocity + 'px';
+                const rot = (Math.random() * 720 - 360) + 'deg';
+
+                particle.style.left = center.x + 'px';
+                particle.style.top = center.y + 'px';
+                particle.style.setProperty('--dx', dx);
+                particle.style.setProperty('--dy', dy);
+                particle.style.setProperty('--rot', rot);
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                document.body.appendChild(particle);
+
+                // Cleanup
+                setTimeout(() => particle.remove(), 1500);
+            }
+
+            // Close popup after burst starts
+            setTimeout(closePopup, 300);
+        });
+    }
 }
 
 // --- SECURITY TAB ---
@@ -2312,7 +2355,7 @@ function updatePasswordStrength(password) {
 /*
   This runs the qpdf CLI inside WASM. Example qpdf CLI encryption:
     qpdf --encrypt user-password owner-password 256 -- input.pdf output.pdf
-
+ 
   We'll:
     - load qpdf WASM module
     - create a virtual FS path /in.pdf and /out.pdf
@@ -2450,5 +2493,156 @@ document.addEventListener('click', function (e) {
         } else {
             console.log('No input found!'); // DEBUG
         }
+    }
+});
+
+// --- ROTATE PDF LOGIC ---
+let rotateFile = null;
+let rotationStates = []; // Array of angles (0, 90, 180, 270)
+
+function handleRotateFile(file) {
+    if (!file) return;
+    if (file.type !== 'application/pdf') {
+        if (typeof showNotification === 'function') showNotification("Please upload a PDF file", "warning");
+        return;
+    }
+
+    rotateFile = file;
+    const upArea = document.getElementById('rotate-upload-area');
+    const controls = document.getElementById('rotate-controls');
+    if (upArea) upArea.classList.add('hidden');
+    if (controls) controls.classList.remove('hidden');
+
+    // Render Previews
+    renderRotatePreviews(file);
+}
+
+async function renderRotatePreviews(file) {
+    const container = document.getElementById('rotate-previews');
+    if (!container) return;
+    container.innerHTML = '<p>Loading pages...</p>';
+
+    try {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+
+        container.innerHTML = '';
+        rotationStates = new Array(pdf.numPages).fill(0);
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 0.3 }); // Thumbnail scale
+
+            const div = document.createElement('div');
+            div.className = 'page-item';
+            div.innerHTML = `
+                <div class="page-canvas-container">
+                    <canvas id="rotate-canvas-${i}"></canvas>
+                </div>
+                <div class="rotate-actions">
+                    <button class="rotate-btn" onclick="rotatePage(${i - 1})" title="Rotate 90° Clockwise">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                    </button>
+                </div>
+                <div class="page-label">Page ${i}</div>
+            `;
+            container.appendChild(div);
+
+            const canvas = div.querySelector('canvas');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderContext = {
+                canvasContext: canvas.getContext('2d'),
+                viewport: viewport
+            };
+            page.render(renderContext);
+        }
+
+    } catch (err) {
+        console.error(err);
+        if (typeof showNotification === 'function') showNotification("Error loading PDF pages", "error");
+    }
+}
+
+window.rotatePage = (index) => {
+    rotationStates[index] = (rotationStates[index] + 90) % 360;
+    const canvas = document.getElementById(`rotate-canvas-${index + 1}`);
+    if (canvas) {
+        canvas.style.transform = `rotate(${rotationStates[index]}deg)`;
+    }
+};
+
+async function downloadRotatedPDF() {
+    if (!rotateFile) return;
+
+    const btn = document.getElementById('download-rotated-btn');
+    btn.disabled = true;
+    btn.textContent = 'Processing...';
+
+    try {
+        const arrayBuffer = await rotateFile.arrayBuffer();
+        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+
+        const pages = pdfDoc.getPages();
+
+        pages.forEach((page, idx) => {
+            const angle = rotationStates[idx] || 0;
+            if (angle > 0) {
+                // PDF-lib rotation is additive to existing rotation
+                const currentRotation = page.getRotation().angle;
+                page.setRotation(PDFLib.degrees(currentRotation + angle));
+            }
+        });
+
+        const pdfBytes = await pdfDoc.save();
+        if (typeof downloadFile === 'function') {
+            downloadFile(pdfBytes, `rotated_${rotateFile.name}`);
+        } else {
+            // Fallback
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `rotated_${rotateFile.name}`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
+
+        if (typeof showNotification === 'function') showNotification("Rotated PDF downloaded!", "success");
+
+    } catch (err) {
+        console.error(err);
+        if (typeof showNotification === 'function') showNotification("Failed to save PDF", "error");
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Download Rotated PDF';
+    }
+}
+
+// Add event listeners for Rotate Feature
+document.addEventListener('DOMContentLoaded', () => {
+    const rotateFileInput = document.getElementById('rotate-file-input');
+    const rotateUploadArea = document.getElementById('rotate-upload-area');
+    const downloadRotateBtn = document.getElementById('download-rotated-btn');
+
+    if (rotateFileInput) {
+        rotateFileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) handleRotateFile(e.target.files[0]);
+        });
+    }
+
+    if (rotateUploadArea) {
+        rotateUploadArea.addEventListener('dragover', (e) => { e.preventDefault(); rotateUploadArea.classList.add('dragover'); });
+        rotateUploadArea.addEventListener('dragleave', () => { rotateUploadArea.classList.remove('dragover'); });
+        rotateUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault(); rotateUploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) handleRotateFile(e.dataTransfer.files[0]);
+        });
+    }
+
+    if (downloadRotateBtn) {
+        downloadRotateBtn.addEventListener('click', downloadRotatedPDF);
     }
 });

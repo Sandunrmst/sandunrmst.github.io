@@ -266,9 +266,32 @@
                         <span>Edit PDF</span>
                     </label>
                     <label class="radio-tab">
+                        <input type="radio" name="edit-feature-mode" value="rotate">
+                        <span>Rotate PDF</span>
+                    </label>
+                    <label class="radio-tab">
                         <input type="radio" name="edit-feature-mode" value="watermark">
                         <span>Add Watermark</span>
                     </label>
+                </div>
+
+                <!-- Rotate PDF Section -->
+                <div id="rotate-pdf-section" class="conversion-section hidden">
+                    <div class="upload-area" id="rotate-upload-area">
+                        <p>Drag & Drop PDF to Rotate</p>
+                        <input type="file" id="rotate-file-input" accept="application/pdf" hidden>
+                        <button class="btn secondary"
+                            onclick="document.getElementById('rotate-file-input').click()">Select PDF File</button>
+                    </div>
+
+                    <div id="rotate-controls" class="hidden">
+                        <div id="rotate-previews" class="pages-grid">
+                            <!-- Page thumbnails will be injected here -->
+                        </div>
+                        <div class="actions">
+                            <button id="download-rotated-btn" class="btn primary">Download Rotated PDF</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Watermark Controls (Hidden by default) -->

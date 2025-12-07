@@ -1961,3 +1961,64 @@ body.modal-open {
     color: #666;
     font-weight: 500;
 }
+
+/* CONFETTI ANIMATION */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-color);
+    z-index: 9999;
+    pointer-events: none;
+    border-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    animation: confetti-explode 1.5s ease-out forwards;
+}
+
+@keyframes confetti-explode {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+        opacity: 0;
+    }
+}
+
+/* ROTATE PDF FEATURES */
+/* We reuse .pages-grid from Split PDF but add rotate specific actions */
+
+.rotate-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.rotate-btn {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+
+.rotate-btn:hover {
+    background: #f0f0f0;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: rotate(90deg);
+    /* Playful hover effect */
+}
+
+/* Add transition to canvas for smooth rotation */
+.page-canvas-container canvas {
+    transition: transform 0.3s ease;
+}
