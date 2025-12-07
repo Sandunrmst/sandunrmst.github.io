@@ -19,8 +19,8 @@
 
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="favicon.png">
-    <!-- Local PDF Lib -->
-    <script src="libs/pdf-lib.min.js"></script>
+    <!-- PDF Lib (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js?v=reload"></script>
     <!-- Local PDF.js for rendering -->
     <script src="libs/pdf.min.js"></script>
     <script>
@@ -33,6 +33,9 @@
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <!-- Fabric.js for PDF Editing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <!-- qpdf-wasm (community build via jsDelivr) -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@jspawn/qpdf-wasm/qpdf.mjs"></script>
+
 </head>
 
 <body>
@@ -51,6 +54,7 @@
             <button class="tab-btn" data-tab="compress-tab">Compress PDF</button>
             <button class="tab-btn" data-tab="convert-tab">Convert PDF</button>
             <button class="tab-btn" data-tab="edit-tab">Edit PDF</button>
+            <button class="tab-btn" data-tab="security-tab">Security</button>
         </div>
 
         <div class="tab-content">
@@ -329,7 +333,8 @@
                     </div>
 
                     <div class="wm-info">
-                        <span id="wm-file-info">Load PDF to see info</span>
+                        <span id="wm-file-info">Note: You can use the above controller to manage the watermark position
+                            in the PDF file. Load PDF to see info</span>
                     </div>
 
                     <button id="apply-watermark-btn" class="btn primary full-width">Add Watermark & Download</button>
@@ -508,6 +513,71 @@
                     </div>
                 </div>
             </div>
+
+            <!-- SECURITY SECTION -->
+            <div id="security-tab" class="tab-pane">
+                <div class="sub-tabs">
+                    <label class="radio-tab">
+                        <input type="radio" name="security-mode" value="protect-pdf" checked>
+                        <span>Protect PDF</span>
+                    </label>
+                    <label class="radio-tab">
+                        <input type="radio" name="security-mode" value="sign-pdf">
+                        <span>Sign PDF</span>
+                    </label>
+                </div>
+
+                <!-- Protect PDF Sub-section -->
+                <div id="protect-pdf-section" class="security-section">
+                    <div class="upload-area" id="protect-upload-area">
+                        <p>Drag & Drop a PDF file here or</p>
+                        <input type="file" id="protect-file-input" accept="application/pdf" hidden>
+                        <button class="btn secondary"
+                            onclick="document.getElementById('protect-file-input').click()">Select
+                            File</button>
+                    </div>
+
+                    <div id="protect-settings-container" class="hidden">
+                        <div id="protect-file-info" class="file-info-display"></div>
+
+                        <div class="protect-form">
+                            <div class="form-group">
+                                <label for="protect-password">Enter Password</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="protect-password" placeholder="Type a strong password">
+                                    <button type="button" class="toggle-password" tabindex="-1">👁️</button>
+                                </div>
+                            </div>
+
+                            <div class="strength-meter-container">
+                                <div class="strength-bar-bg">
+                                    <div id="password-strength-bar" class="strength-bar"></div>
+                                </div>
+                                <span id="password-strength-text">Password Strength: -</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="protect-password-confirm">Re-enter Password</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="protect-password-confirm" placeholder="Confirm password">
+                                </div>
+                            </div>
+
+                            <div class="actions">
+                                <button id="protect-btn" class="btn primary">Protect & Download PDF</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sign PDF Sub-section -->
+                <div id="sign-pdf-section" class="security-section hidden">
+                    <div class="upload-area">
+                        <p>Sign PDF Documents</p>
+                        <p class="small-text">(Coming Soon)</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -533,6 +603,34 @@
             reserved. PDF Surgeon by RMST
         </div>
     </footer>
+    <!-- WELCOME POPUP -->
+    <div id="welcome-popup" class="popup-overlay hidden">
+        <div class="popup-box">
+            <button id="popup-close-btn" class="popup-close">&times;</button>
+            <div class="popup-content">
+                <h2>Welcome to our all-in-one PDF tool!</h2>
+                <p>This platform is designed to be <strong>fast, simple, and user-friendly</strong> — unlike many
+                    complicated tools on the market. You can edit, convert, merge, and manage PDFs with ease.</p>
+
+                <div class="feature-highlight">
+                    <span class="highlight-icon">⚡</span>
+                    <div>
+                        <strong>100% Free — Online and Offline</strong>
+                        <p>Our tool works completely offline as well, so you can use all features even without an
+                            internet connection. No ads, no limitations, and no hidden fees.</p>
+                    </div>
+                </div>
+
+                <p class="future-note">We’re continuously working to bring you more powerful features. Stay with us for
+                    upcoming updates and improvements!</p>
+                <p class="future-note">PDF Surgeon by RMST</p>
+
+
+                <button id="popup-action-btn" class="btn primary pulse-btn">Let's Go 🚀</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 

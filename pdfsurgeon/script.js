@@ -43,6 +43,8 @@ function init() {
     setupCompressEvents();
     setupConvertEvents();
     setupEditEvents();
+    setupSecurityEvents();
+    setupWelcomePopup();
 }
 
 // --- TABS ---
@@ -1812,7 +1814,7 @@ let watermarkMode = 'text'; // 'text' or 'image'
 function setupWatermarkEvents() {
     // Mode Switching (Edit vs Watermark)
     const modeRadios = document.getElementsByName('edit-feature-mode');
-    console.log("Setting up watermark events, found radios:", modeRadios.length);
+
     modeRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
             const mode = e.target.value;
@@ -2121,3 +2123,332 @@ async function saveWatermarkedPDF() {
         btn.disabled = false;
     }
 }
+
+// --- WELCOME POPUP ---
+function setupWelcomePopup() {
+    const popup = document.getElementById('welcome-popup');
+    const closeBtn = document.getElementById('popup-close-btn');
+    const actionBtn = document.getElementById('popup-action-btn');
+
+    if (!popup) return;
+
+    // Show popup after page load
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            popup.classList.remove('hidden');
+            // Force reflow
+            void popup.offsetWidth;
+            popup.classList.add('show');
+            document.body.classList.add('modal-open'); // Lock scroll
+        }, 1000); // 1s delay for better UX
+    });
+
+    const closePopup = () => {
+        popup.classList.remove('show');
+        document.body.classList.remove('modal-open'); // Unlock scroll
+        setTimeout(() => {
+            popup.classList.add('hidden');
+        }, 400); // Match transition duration
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', closePopup);
+    if (actionBtn) actionBtn.addEventListener('click', closePopup);
+
+    // Close on click outside
+    popup.addEventListener('click', (e) => {
+        if (e.target === popup) {
+            closePopup();
+        }
+    });
+}
+
+// --- SECURITY TAB ---
+// let protectFile = null;
+
+function setupSecurityEvents() {
+    // Sub-tab switching
+    const securityModeRadios = document.getElementsByName('security-mode');
+    securityModeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const mode = e.target.value;
+            document.getElementById('protect-pdf-section').classList.add('hidden');
+            document.getElementById('sign-pdf-section').classList.add('hidden');
+
+            if (mode === 'protect-pdf') {
+                document.getElementById('protect-pdf-section').classList.remove('hidden');
+            } else if (mode === 'sign-pdf') {
+                document.getElementById('sign-pdf-section').classList.remove('hidden');
+            }
+        });
+    });
+
+    setupProtectPDFEvents();
+}
+
+let protectFile = null;
+let qpdfModulePromise = null;
+
+// Initialize (lazy) - returns a ready qpdf module
+async function getQpdfModule() {
+    if (qpdfModulePromise) return qpdfModulePromise;
+
+    // Dynamic import of the ESM loader from jsDelivr (ensure the same path as the <script> above)
+    qpdfModulePromise = (async () => {
+        // `@jspawn/qpdf-wasm` publishes qpdf.mjs which exports a default createModule function
+        const modUrl = 'https://cdn.jsdelivr.net/npm/@jspawn/qpdf-wasm/qpdf.mjs';
+        try {
+            const create = (await import(modUrl)).default;
+            // createModule expects locateFile to return the .wasm file URL
+            const qpdf = await create({
+                locateFile: () => 'https://cdn.jsdelivr.net/npm/@jspawn/qpdf-wasm/qpdf.wasm',
+                // noInitialRun: true  // not necessary for callMain usage
+            });
+            return qpdf;
+        } catch (err) {
+            console.error("qpdf-wasm load error:", err);
+            throw new Error("Failed to load qpdf WASM module. Check network / CDN availability.");
+        }
+    })();
+
+    return qpdfModulePromise;
+}
+
+/* ---------- UI wiring (IDs you confirmed earlier) ---------- */
+
+function setupProtectPDFEvents() {
+    const protectUploadArea = document.getElementById('protect-upload-area');
+    const protectFileInput = document.getElementById('protect-file-input');
+    const protectBtn = document.getElementById('protect-btn');
+    const passwordInput = document.getElementById('protect-password');
+    // Toggle password visibility listener has been moved to global scope
+
+
+    // Password strength (simple)
+    if (passwordInput) passwordInput.addEventListener('input', (e) => updatePasswordStrength(e.target.value));
+
+    // Drag & drop
+    if (protectUploadArea) {
+        protectUploadArea.addEventListener('dragover', (e) => { e.preventDefault(); protectUploadArea.classList.add('dragover'); });
+        protectUploadArea.addEventListener('dragleave', () => { protectUploadArea.classList.remove('dragover'); });
+        protectUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault(); protectUploadArea.classList.remove('dragover');
+            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) handleProtectFile(e.dataTransfer.files[0]);
+        });
+    }
+
+    if (protectFileInput) {
+        protectFileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) handleProtectFile(e.target.files[0]);
+        });
+    }
+
+    if (protectBtn) protectBtn.addEventListener('click', protectPDF);
+}
+
+function handleProtectFile(file) {
+    if (!file) return;
+    const isPdfMime = file.type === 'application/pdf';
+    const isPdfExt = /\.pdf$/i.test(file.name);
+    if (!isPdfMime && !isPdfExt) {
+        if (typeof showNotification === 'function') showNotification('Please upload a PDF file.', 'warning');
+        return;
+    }
+    protectFile = file;
+    const upArea = document.getElementById('protect-upload-area');
+    const settings = document.getElementById('protect-settings-container');
+    if (upArea) upArea.classList.add('hidden');
+    if (settings) settings.classList.remove('hidden');
+
+    // Create UI for selected file
+    const infoEl = document.getElementById('protect-file-info');
+    if (infoEl) {
+        infoEl.innerHTML = `
+        <div class="file-item" style="margin:0; border:var(--primary-color) 1px solid;">
+            <div class="file-info">${file.name}</div>
+            <div class="file-controls">
+                <button class="btn-icon remove" onclick="removeProtectFile()" title="Remove">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+        </div>
+    `;
+    }
+}
+
+window.removeProtectFile = () => {
+    protectFile = null;
+    const infoEl = document.getElementById('protect-file-info');
+    const upArea = document.getElementById('protect-upload-area');
+    const settings = document.getElementById('protect-settings-container');
+    const passwordInput = document.getElementById('protect-password');
+    const confirmInput = document.getElementById('protect-password-confirm');
+    const fileInput = document.getElementById('protect-file-input');
+
+    // Reset Inputs
+    if (fileInput) fileInput.value = '';
+    if (passwordInput) passwordInput.value = '';
+    if (confirmInput) confirmInput.value = '';
+    updatePasswordStrength('');
+
+    // Toggle Views
+    if (settings) settings.classList.add('hidden');
+    if (upArea) upArea.classList.remove('hidden');
+    if (infoEl) infoEl.innerHTML = '';
+};
+
+function updatePasswordStrength(password) {
+    const bar = document.getElementById('password-strength-bar');
+    const text = document.getElementById('password-strength-text');
+    if (!bar || !text) return;
+    bar.className = 'strength-bar';
+    if (!password) { bar.style.width = '0'; text.textContent = 'Password Strength: -'; return; }
+    let s = 0; if (password.length >= 6) s++; if (password.length >= 10) s++; if (/[A-Z]/.test(password)) s++; if (/[0-9]/.test(password)) s++; if (/[^A-Za-z0-9]/.test(password)) s++;
+    if (s < 2) { bar.classList.add('weak'); bar.style.width = '20%'; text.textContent = 'Weak'; }
+    else if (s < 4) { bar.classList.add('medium'); bar.style.width = '60%'; text.textContent = 'Medium'; }
+    else { bar.classList.add('strong'); bar.style.width = '100%'; text.textContent = 'Strong'; }
+}
+
+/* ---------- QPDF encrypt wrapper ---------- */
+/*
+  This runs the qpdf CLI inside WASM. Example qpdf CLI encryption:
+    qpdf --encrypt user-password owner-password 256 -- input.pdf output.pdf
+
+  We'll:
+    - load qpdf WASM module
+    - create a virtual FS path /in.pdf and /out.pdf
+    - write input bytes to FS
+    - call qpdf.callMain([...args...])
+    - read /out.pdf and download
+*/
+
+async function protectPDF() {
+    const protectBtn = document.getElementById('protect-btn');
+    try {
+        if (!protectFile) { if (typeof showNotification === 'function') showNotification('Please upload a PDF file.', 'warning'); return; }
+        const password = document.getElementById('protect-password').value;
+        const confirm = document.getElementById('protect-password-confirm').value;
+        if (!password) { if (typeof showNotification === 'function') showNotification('Please enter a password.', 'warning'); return; }
+        if (password !== confirm) { if (typeof showNotification === 'function') showNotification('Passwords do not match.', 'error'); return; }
+
+        if (protectBtn) { protectBtn.disabled = true; protectBtn.textContent = 'Encrypting...'; }
+
+        // Read bytes
+        const arrBuf = await protectFile.arrayBuffer();
+        const inBytes = new Uint8Array(arrBuf);
+
+        // Initialize qpdf (WASM)
+        const qpdf = await getQpdfModule();
+
+        // Create /work dir inside FS to avoid collisions
+        const IN_PATH = '/input.pdf';
+        const OUT_PATH = '/output.pdf';
+
+        // Ensure FS directories exist (Emscripten FS API)
+        try { if (!qpdf.FS.analyzePath('/').exists) { /* ignore */ } } catch (e) { /* ignore */ }
+
+        // Write file
+        try {
+            // Remove files if present
+            try { qpdf.FS.unlink(IN_PATH); } catch (e) { }
+            try { qpdf.FS.unlink(OUT_PATH); } catch (e) { }
+            qpdf.FS.writeFile(IN_PATH, inBytes);
+        } catch (fsErr) {
+            console.error("FS write error:", fsErr);
+            throw new Error("Failed to write file to qpdf virtual FS: " + fsErr.message);
+        }
+
+        // Build qpdf args:
+        // use same password for user & owner (you may change to separate ownerPW)
+        // key-length 256 (AES-256)
+        // Note: you can pass other qpdf CLI flags to set permissions.
+        const args = [
+            '--encrypt',
+            password,           // user password
+            password,           // owner password (same here)
+            '256',
+            '--',
+            IN_PATH,
+            OUT_PATH
+        ];
+
+        // Run qpdf CLI
+        try {
+            // callMain runs synchronously within WASM runtime and throws on qpdf CLI non-zero exit
+            qpdf.callMain(args);
+        } catch (qerr) {
+            console.error("qpdf callMain error:", qerr);
+            // Attempt to read stderr from the module if available
+            throw new Error("qpdf failed to encrypt PDF. See console for details.");
+        }
+
+        // Read output
+        let outBytes;
+        try {
+            outBytes = qpdf.FS.readFile(OUT_PATH);
+        } catch (readErr) {
+            console.error("qpdf read error:", readErr);
+            throw new Error("Encrypted output not found. qpdf may have failed.");
+        }
+
+        // Prepare Blob and download
+        const blob = new Blob([outBytes], { type: 'application/pdf' });
+        const outName = `protected_${protectFile.name.replace(/\.pdf$/i, '')}.pdf`;
+
+        try { if (typeof triggerDownloadAnimation === 'function') triggerDownloadAnimation(protectBtn); } catch (e) { }
+
+        // Use user downloadFile helper if present, otherwise fallback
+        if (typeof downloadFile === 'function') {
+            try { downloadFile(blob, outName); }
+            catch (e) { // fallback
+                const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = outName; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+            }
+        } else {
+            const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = outName; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+        }
+
+        if (typeof showNotification === 'function') showNotification('PDF encrypted successfully!', 'success');
+
+        // cleanup FS (optional)
+        try { qpdf.FS.unlink(IN_PATH); qpdf.FS.unlink(OUT_PATH); } catch (e) { }
+
+        // reset UI fields
+        try { document.getElementById('protect-password').value = ''; document.getElementById('protect-password-confirm').value = ''; updatePasswordStrength(''); } catch (e) { }
+
+    } catch (err) {
+        console.error('protectPDF error', err);
+        if (typeof showNotification === 'function') showNotification('Error protecting PDF. ' + (err && err.message ? err.message : err), 'error');
+    } finally {
+        if (protectBtn) { protectBtn.disabled = false; protectBtn.textContent = 'Protect & Download PDF'; }
+    }
+}
+
+// Auto-init wiring (same as previous code)
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setupProtectPDFEvents);
+else setupProtectPDFEvents();
+
+// --- GLOBAL EVENT LISTENERS ---
+// Toggle Password Visibility
+document.addEventListener('click', function (e) {
+    if (e.target.matches('.toggle-password') || e.target.closest('.toggle-password')) {
+        console.log('Toggle password clicked!'); // DEBUG
+        e.preventDefault();
+
+        const btn = e.target.matches('.toggle-password') ? e.target : e.target.closest('.toggle-password');
+        const wrapper = btn.closest('.password-input-wrapper');
+        const input = wrapper ? wrapper.querySelector('input') : null;
+
+        if (input) {
+            console.log('Input found, current type:', input.type); // DEBUG
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈'; // Change to "Hide" icon
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️'; // Change to "Show" icon
+            }
+        } else {
+            console.log('No input found!'); // DEBUG
+        }
+    }
+});

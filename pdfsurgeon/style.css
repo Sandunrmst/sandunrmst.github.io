@@ -157,6 +157,13 @@ header h1 {
     background-color: #d0d0d0;
 }
 
+/* ACTIONS */
+.actions {
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+}
+
 /* FILE LIST (MERGE) */
 .file-list {
     list-style: none;
@@ -1488,6 +1495,7 @@ footer {
 /* Color Picker */
 input[type="color"]#wm-color {
     -webkit-appearance: none;
+    appearance: none;
     border: none;
     width: 44px;
     height: 44px;
@@ -1575,6 +1583,7 @@ input[type="color"]#wm-color::-webkit-color-swatch {
 /* Range Input Styling */
 .watermark-panel input[type="range"] {
     -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     height: 6px;
     background: #eef1f5;
@@ -1661,4 +1670,294 @@ input[type="color"]#wm-color::-webkit-color-swatch {
 
 .wm-divider {
     display: none;
+}
+
+/* WELCOME POPUP */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.popup-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup-overlay.hidden {
+    display: none;
+}
+
+.popup-box {
+    background: #ffffff;
+    width: 90%;
+    max-width: 500px;
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transform: translateY(30px) scale(0.95);
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.popup-overlay.show .popup-box {
+    transform: translateY(0) scale(1);
+}
+
+.popup-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #f0f0f0;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-close:hover {
+    background: #e74c3c;
+    color: white;
+    transform: rotate(90deg);
+}
+
+.popup-content h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #4a90e2, #9013fe);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.popup-content p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.feature-highlight {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: left;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    border: 1px solid #eee;
+}
+
+.highlight-icon {
+    font-size: 1.5rem;
+    background: #fff;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.feature-highlight strong {
+    display: block;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.feature-highlight p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.future-note {
+    font-size: 0.9rem;
+    color: #888;
+    font-style: italic;
+}
+
+.btn.pulse-btn {
+    padding: 12px 40px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn.pulse-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 144, 226, 0.6);
+}
+
+@media (max-width: 600px) {
+    .popup-box {
+        padding: 1.5rem;
+        width: 90%;
+        max-height: 85vh;
+        /* Ensure it fits on small screens */
+        overflow-y: auto;
+        /* Allow scrolling within modal if content is long */
+    }
+
+    .popup-content h2 {
+        font-size: 1.4rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .feature-highlight {
+        padding: 12px;
+        flex-direction: column;
+        /* Stack on very small screens */
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .highlight-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+    }
+
+    .btn.pulse-btn {
+        width: 100%;
+        /* Full width button on mobile */
+        padding: 14px;
+    }
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+
+/* SECURITY TAB STYLES */
+.security-section {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.protect-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: left;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #444;
+}
+
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding: 12px;
+    padding-right: 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.password-input-wrapper input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+.toggle-password:hover {
+    opacity: 1;
+}
+
+/* Strength Meter */
+.strength-meter-container {
+    margin-bottom: 20px;
+}
+
+.strength-bar-bg {
+    height: 6px;
+    background: #eef1f5;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+.strength-bar.weak {
+    width: 33%;
+    background-color: #e74c3c;
+}
+
+.strength-bar.medium {
+    width: 66%;
+    background-color: #f1c40f;
+}
+
+.strength-bar.strong {
+    width: 100%;
+    background-color: #2ecc71;
+}
+
+#password-strength-text {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 500;
 }
