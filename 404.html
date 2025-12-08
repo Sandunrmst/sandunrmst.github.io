@@ -299,7 +299,7 @@
             <h1 class="error-code">404</h1>
             <p class="message"><strong>Hello astronaut! You missed the planet, Let’s turn around before aliens
                     find you. Wanna go back? </strong> </p>
-            <a href="https://sandunrmst.com/snaptranslator" class="btn-home">Escape Before 👽 Aliens Spot You!</a>
+            <a href="#" class="btn-home">Escape Before 👽 Aliens Spot You!</a>
         </div>
     </div>
 
@@ -419,8 +419,20 @@
                 const depth = (index + 1) * 20;
                 planet.style.transform = `translate(${(0.5 - mouseX) * depth}px, ${(0.5 - mouseY) * depth}px)`;
             });
+        });
 
+        // Dynamic Back Button Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const path = window.location.pathname;
+            const backBtn = document.querySelector('.btn-home');
 
+            if (path.includes('/pdfsurgeon/')) {
+                backBtn.href = 'https://sandunrmst.com/pdfsurgeon/';
+            } else if (path.includes('/snaptranslator/')) {
+                backBtn.href = 'https://sandunrmst.com/snaptranslator/';
+            } else {
+                backBtn.href = 'index.html';
+            }
         });
     </script>
 </body>
