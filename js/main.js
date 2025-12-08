@@ -262,3 +262,23 @@ function addAnimation() {
         });
     });
 }
+
+/* Premium Tools Modal Logic */
+document.addEventListener('DOMContentLoaded', function () {
+    var modal = document.getElementById("tools-modal");
+
+    // Event delegation for opening modal
+    document.addEventListener('click', function (e) {
+        // Check if the clicked element is the button or inside it
+        var targetBtn = e.target.closest('#open-tools-modal');
+        if (targetBtn) {
+            e.preventDefault();
+            if (modal) modal.style.display = "block";
+        }
+
+        // Closing modal
+        if (e.target.classList.contains('close-modal') || e.target == modal) {
+            if (modal) modal.style.display = "none";
+        }
+    });
+});
