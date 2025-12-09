@@ -279,7 +279,7 @@ header h1 {
 
 /* SPLIT PREVIEW */
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .pages-grid {
@@ -2039,4 +2039,398 @@ body.modal-open {
 /* Add transition to canvas for smooth rotation */
 .page-canvas-container canvas {
     transition: transform 0.3s ease;
+}
+
+/* Multi-page Editor Layout */
+.editor-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.page-sidebar {
+    width: 160px;
+    height: 600px;
+    /* Fixed height for consistent layout */
+    overflow-y: auto;
+    background: #f1f3f4;
+    border-right: 1px solid #e0e0e0;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-shrink: 0;
+    box-shadow: inset -2px 0 5px rgba(0, 0, 0, 0.02);
+}
+
+/* Custom Scrollbar for sidebar */
+.page-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.page-sidebar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.page-sidebar::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.page-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #bbb;
+}
+
+.page-sidebar .page-thumbnail {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.2s;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    /* Aspect ratio fallback or min-height */
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-sidebar .page-thumbnail:hover {
+    border-color: #4a90e2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.page-sidebar .page-thumbnail.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+}
+
+.page-sidebar .page-thumbnail canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.page-sidebar .page-number {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+.editor-main-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding-left: 10px;
+}
+
+/* Adjust canvas wrapper to fit in the new layout */
+.canvas-wrapper {
+    width: 100%;
+    overflow: auto;
+    background: #525659;
+    padding: 30px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    max-height: 700px;
+    /* Aligned with sidebar roughly */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive adjust for small screens */
+/* Responsive adjust for small screens */
+@media (max-width: 768px) {
+    .editor-layout {
+        flex-direction: column;
+    }
+
+    .page-sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 140px;
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 10px;
+        box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.02);
+    }
+
+    .page-sidebar::-webkit-scrollbar {
+        height: 6px;
+        width: auto;
+    }
+
+    .page-sidebar .page-thumbnail {
+        width: 100px;
+        /* Fixed width for horizontal scroll */
+        height: 120px;
+        flex-shrink: 0;
+        min-height: auto;
+    }
+
+    .editor-main-area {
+        padding-left: 0;
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Sticky Toolbar for Mobile */
+    .editor-toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: white;
+        border-bottom: 2px solid #eee;
+        padding: 5px;
+        overflow-x: auto;
+        justify-content: flex-start;
+        /* items align left to allow scroll */
+        flex-wrap: nowrap;
+        /* Prevent wrapping so it scrolls */
+        white-space: nowrap;
+        gap: 8px;
+    }
+
+    .editor-toolbar::-webkit-scrollbar {
+        height: 0px;
+        /* Hidden scrollbar for cleaner look */
+        background: transparent;
+    }
+
+    /* Make canvas wrapper vertically smaller but scrollable */
+    .canvas-wrapper {
+        padding: 10px;
+        max-height: 60vh;
+        overflow: auto;
+        /* allow both directions */
+        -webkit-overflow-scrolling: touch;
+        /* smooth scroll on iOS */
+    }
+
+    /* Action Buttons Sticky Bottom */
+    .editor-actions {
+        position: sticky;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.95);
+        border-top: 1px solid #ddd;
+        padding: 10px;
+        z-index: 101;
+        backdrop-filter: blur(5px);
+        margin-top: 0;
+        /* Override default margin */
+        display: flex;
+        justify-content: space-around;
+        gap: 10px;
+    }
+
+    .editor-actions button {
+        flex-grow: 1;
+        font-size: 0.9rem;
+        padding: 12px;
+    }
+
+    /* Fix Emoji Picker on Mobile */
+    .emoji-dropdown {
+        position: static;
+        /* Allow breaking out */
+    }
+
+    .emoji-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 280px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        z-index: 2000;
+        /* High z-index */
+        padding: 15px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        max-height: 40vh;
+        overflow-y: auto;
+        /* Ensure it's not hidden by display: none from .hidden class override if specific */
+    }
+
+    /* Style the emojis inside for better touch targets */
+    .emoji-content span {
+        font-size: 1.5rem;
+        padding: 8px;
+        background: #f9f9f9;
+        border-radius: 4px;
+        text-align: center;
+    }
+}
+
+/* EDITOR ZOOM & PAN */
+.editor-viewport {
+    width: 100%;
+    height: 600px;
+    background-color: #525659;
+    overflow: hidden;
+    position: relative;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    user-select: none;
+}
+
+.editor-viewport.hand-mode {
+    cursor: grab;
+}
+
+.editor-viewport.hand-mode.grabbing {
+    cursor: grabbing;
+}
+
+.editor-transform-layer {
+    transform-origin: center center;
+    transition: transform 0.1s ease-out;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    will-change: transform;
+}
+
+.canvas-wrapper {
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+}
+
+/* ZOOM CONTROLS */
+.zoom-controls {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.zoom-controls.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 20px);
+    display: flex !important;
+}
+
+.zoom-btn {
+    background: transparent;
+    border: none;
+    color: #444;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.zoom-btn:hover {
+    background-color: #f0f0f0;
+    color: var(--primary-color);
+}
+
+.zoom-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+#zoom-level {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    min-width: 50px;
+    text-align: center;
+}
+
+.zoom-separator {
+    width: 1px;
+    height: 15px;
+    background-color: #ccc;
+    margin: 0 5px;
+}
+
+.author-link {
+    background: linear-gradient(45deg, #1a73e8, #8e44ad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: none;
+    font-weight: 400;
+    position: relative;
+    transition: all 0.3s ease;
+    padding: 0 4px;
+    letter-spacing: 0.5px;
+}
+
+.author-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background: linear-gradient(90deg, #1a73e8, #8e44ad);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s cubic-bezier(0.65, 0.05, 0.36, 1);
+    border-radius: 2px;
+}
+
+.author-link:hover {
+    filter: drop-shadow(0 0 5px rgba(142, 68, 173, 0.3));
+}
+
+.author-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* MOBILE RESPONSIVE TWEAKS */
+@media (max-width: 768px) {
+    .editor-viewport {
+        height: 50vh;
+        min-height: 400px;
+    }
+
+    .zoom-controls {
+        bottom: 15px;
+        padding: 5px 10px;
+    }
+
+    #zoom-level {
+        min-width: 40px;
+    }
 }

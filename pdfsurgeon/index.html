@@ -422,166 +422,216 @@
                             File</button>
                     </div>
 
-                    <div id="editor-container" class="hidden">
-                        <div class="editor-toolbar hidden" id="main-editor-toolbar">
-                            <button id="tool-select" class="tool-btn active" title="Select">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
-                                </svg>
-                            </button>
-                            <button id="tool-text" class="tool-btn" title="Add Text">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M4 7V4h16v3M9 20h6M12 4v16"></path>
-                                </svg>
-                            </button>
-                            <button id="tool-draw" class="tool-btn" title="Free Draw">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                                    <path d="M2 2l7.586 7.586"></path>
-                                    <circle cx="11" cy="11" r="2"></circle>
-                                </svg>
-                            </button>
-                            <div class="tool-divider"></div>
-                            <button id="tool-rect" class="tool-btn" title="Rectangle">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                </svg>
-                            </button>
-                            <button id="tool-circle" class="tool-btn" title="Circle">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                </svg>
-                            </button>
-                            <button id="tool-line" class="tool-btn" title="Line">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <line x1="4" y1="20" x2="20" y2="4"></line>
-                                </svg>
-                            </button>
+                    <div id="editor-container" class="hidden editor-layout">
+                        <!-- Sidebar for Page Thumbnails -->
+                        <div id="edit-page-list" class="page-sidebar">
+                            <!-- Thumbnails injected here -->
+                        </div>
 
-                            <div class="tool-divider"></div>
-
-                            <div class="emoji-dropdown">
-                                <button id="tool-emoji" class="tool-btn" title="Insert Emoji">
-                                    <span>😀</span>
+                        <!-- Main Editor Workspace -->
+                        <div class="editor-main-area">
+                            <div class="editor-toolbar hidden" id="main-editor-toolbar">
+                                <button id="tool-select" class="tool-btn active" title="Select">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+                                    </svg>
                                 </button>
-                                <div class="emoji-content hidden">
-                                    <span data-emoji="😀">😀</span>
-                                    <span data-emoji="😂">😂</span>
-                                    <span data-emoji="😍">😍</span>
-                                    <span data-emoji="🤔">🤔</span>
-                                    <span data-emoji="👍">👍</span>
-                                    <span data-emoji="👎">👎</span>
-                                    <span data-emoji="✅">✅</span>
-                                    <span data-emoji="❌">❌</span>
-                                    <span data-emoji="🔥">🔥</span>
-                                    <span data-emoji="⭐">⭐</span>
-                                    <span data-emoji="🚩">🚩</span>
-                                    <span data-emoji="💡">💡</span>
-                                    <!-- New Emojis -->
-                                    <span data-emoji="🇱🇰">🇱🇰</span>
-                                    <span data-emoji="❤️">❤️</span>
-                                    <span data-emoji="💲">💲</span>
-                                    <span data-emoji="⚠️">⚠️</span>
-                                    <span data-emoji="📍">📍</span>
-                                    <span data-emoji="📞">📞</span>
-                                    <span data-emoji="✉️">✉️</span>
-                                    <span data-emoji="➡️">➡️</span>
+                                <button id="tool-hand" class="tool-btn" title="Hand Tool (Pan)">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                                        <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                                        <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                                        <path
+                                            d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a.9.9 0 0 1 0-1.27l2.49-2.49a.9.9 0 0 1 1.28 0l1.72 1.72H13">
+                                        </path>
+                                    </svg>
+                                </button>
+                                <button id="tool-text" class="tool-btn" title="Add Text">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M4 7V4h16v3M9 20h6M12 4v16"></path>
+                                    </svg>
+                                </button>
+                                <button id="tool-draw" class="tool-btn" title="Free Draw">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                                        <path d="M2 2l7.586 7.586"></path>
+                                        <circle cx="11" cy="11" r="2"></circle>
+                                    </svg>
+                                </button>
+                                <div class="tool-divider"></div>
+                                <button id="tool-rect" class="tool-btn" title="Rectangle">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    </svg>
+                                </button>
+                                <button id="tool-circle" class="tool-btn" title="Circle">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                    </svg>
+                                </button>
+                                <button id="tool-line" class="tool-btn" title="Line">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <line x1="4" y1="20" x2="20" y2="4"></line>
+                                    </svg>
+                                </button>
+
+                                <div class="tool-divider"></div>
+
+                                <div class="emoji-dropdown">
+                                    <button id="tool-emoji" class="tool-btn" title="Insert Emoji">
+                                        <span>😀</span>
+                                    </button>
+                                    <div class="emoji-content hidden">
+                                        <span data-emoji="😀">😀</span>
+                                        <span data-emoji="😂">😂</span>
+                                        <span data-emoji="😍">😍</span>
+                                        <span data-emoji="🤔">🤔</span>
+                                        <span data-emoji="👍">👍</span>
+                                        <span data-emoji="👎">👎</span>
+                                        <span data-emoji="✅">✅</span>
+                                        <span data-emoji="❌">❌</span>
+                                        <span data-emoji="🔥">🔥</span>
+                                        <span data-emoji="⭐">⭐</span>
+                                        <span data-emoji="🚩">🚩</span>
+                                        <span data-emoji="💡">💡</span>
+                                        <!-- New Emojis -->
+                                        <span data-emoji="🇱🇰">🇱🇰</span>
+                                        <span data-emoji="❤️">❤️</span>
+                                        <span data-emoji="💲">💲</span>
+                                        <span data-emoji="⚠️">⚠️</span>
+                                        <span data-emoji="📍">📍</span>
+                                        <span data-emoji="📞">📞</span>
+                                        <span data-emoji="✉️">✉️</span>
+                                        <span data-emoji="➡️">➡️</span>
+                                    </div>
+                                </div>
+                                <div class="tool-divider"></div>
+                                <button id="tool-image" class="tool-btn" title="Add Image"
+                                    onclick="document.getElementById('edit-image-input').click()">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                        <polyline points="21 15 16 10 5 21"></polyline>
+                                    </svg>
+                                </button>
+                                <input type="file" id="edit-image-input" accept="image/*" hidden>
+
+                                <div class="tool-divider"></div>
+                                <input type="color" id="tool-color" value="#000000" title="Color">
+                                <button id="tool-delete" class="tool-btn text-danger" title="Delete Selected">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path
+                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- TEXT PROPERTIES TOOLBAR (Hidden by default) -->
+                            <div id="text-properties-toolbar" class="editor-toolbar secondary-toolbar hidden">
+                                <select id="font-family" title="Font Family">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Verdana">Verdana</option>
+                                </select>
+
+                                <div class="tool-divider"></div>
+
+                                <select id="font-size" title="Font Size">
+                                    <option value="12">12</option>
+                                    <option value="14">14</option>
+                                    <option value="16">16</option>
+                                    <option value="18">18</option>
+                                    <option value="20" selected>20</option>
+                                    <option value="24">24</option>
+                                    <option value="30">30</option>
+                                    <option value="36">36</option>
+                                    <option value="48">48</option>
+                                    <option value="60">60</option>
+                                    <option value="72">72</option>
+                                </select>
+
+                                <div class="tool-divider"></div>
+
+                                <button id="text-bold" class="tool-btn" title="Bold">
+                                    <strong>B</strong>
+                                </button>
+                                <button id="text-italic" class="tool-btn" title="Italic">
+                                    <em>I</em>
+                                </button>
+                                <button id="text-underline" class="tool-btn" title="Underline">
+                                    <u>U</u>
+                                </button>
+
+                                <div class="tool-divider"></div>
+
+                                <button id="text-align-left" class="tool-btn" title="Align Left">
+                                    <span style="font-size: 14px;">&#9776;</span>
+                                </button>
+                                <button id="text-align-center" class="tool-btn" title="Align Center">
+                                    <span style="font-size: 14px;">&#9778;</span>
+                                </button>
+                                <button id="text-align-right" class="tool-btn" title="Align Right">
+                                    <span style="font-size: 14px;">&#9779;</span>
+                                </button>
+
+                                <div class="tool-divider"></div>
+
+                                <!-- Reusing the color input logic, but specific for text updating -->
+                                <!-- We will sync this with the main color picker -->
+                            </div>
+
+                            <div id="editor-viewport" class="editor-viewport">
+                                <div id="editor-transform-layer" class="editor-transform-layer">
+                                    <div id="canvas-wrapper" class="canvas-wrapper">
+                                        <canvas id="pdf-editor-canvas"></canvas>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="tool-divider"></div>
-                            <button id="tool-image" class="tool-btn" title="Add Image"
-                                onclick="document.getElementById('edit-image-input').click()">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                    <polyline points="21 15 16 10 5 21"></polyline>
-                                </svg>
-                            </button>
-                            <input type="file" id="edit-image-input" accept="image/*" hidden>
 
-                            <div class="tool-divider"></div>
-                            <input type="color" id="tool-color" value="#000000" title="Color">
-                            <button id="tool-delete" class="tool-btn text-danger" title="Delete Selected">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path
-                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
+                            <!-- Zoom Controls Floating Bar -->
+                            <div id="zoom-controls" class="zoom-controls hidden">
+                                <button id="zoom-out" class="zoom-btn" title="Zoom Out">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </button>
+                                <span id="zoom-level">100%</span>
+                                <button id="zoom-in" class="zoom-btn" title="Zoom In">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </button>
+                                <div class="zoom-separator"></div>
+                                <button id="zoom-fit" class="zoom-btn" title="Fit to Screen">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path
+                                            d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </div>
 
-                        <!-- TEXT PROPERTIES TOOLBAR (Hidden by default) -->
-                        <div id="text-properties-toolbar" class="editor-toolbar secondary-toolbar hidden">
-                            <select id="font-family" title="Font Family">
-                                <option value="Arial">Arial</option>
-                                <option value="Times New Roman">Times New Roman</option>
-                                <option value="Courier New">Courier New</option>
-                                <option value="Georgia">Georgia</option>
-                                <option value="Verdana">Verdana</option>
-                            </select>
-
-                            <div class="tool-divider"></div>
-
-                            <select id="font-size" title="Font Size">
-                                <option value="12">12</option>
-                                <option value="14">14</option>
-                                <option value="16">16</option>
-                                <option value="18">18</option>
-                                <option value="20" selected>20</option>
-                                <option value="24">24</option>
-                                <option value="30">30</option>
-                                <option value="36">36</option>
-                                <option value="48">48</option>
-                                <option value="60">60</option>
-                                <option value="72">72</option>
-                            </select>
-
-                            <div class="tool-divider"></div>
-
-                            <button id="text-bold" class="tool-btn" title="Bold">
-                                <strong>B</strong>
-                            </button>
-                            <button id="text-italic" class="tool-btn" title="Italic">
-                                <em>I</em>
-                            </button>
-                            <button id="text-underline" class="tool-btn" title="Underline">
-                                <u>U</u>
-                            </button>
-
-                            <div class="tool-divider"></div>
-
-                            <button id="text-align-left" class="tool-btn" title="Align Left">
-                                <span style="font-size: 14px;">&#9776;</span>
-                            </button>
-                            <button id="text-align-center" class="tool-btn" title="Align Center">
-                                <span style="font-size: 14px;">&#9778;</span>
-                            </button>
-                            <button id="text-align-right" class="tool-btn" title="Align Right">
-                                <span style="font-size: 14px;">&#9779;</span>
-                            </button>
-
-                            <div class="tool-divider"></div>
-
-                            <!-- Reusing the color input logic, but specific for text updating -->
-                            <!-- We will sync this with the main color picker -->
-                        </div>
-
-                        <div id="canvas-wrapper" class="canvas-wrapper">
-                            <canvas id="pdf-editor-canvas"></canvas>
-                        </div>
-
-                        <div class="actions">
-                            <button id="save-pdf-btn" class="btn primary">Save & Download PDF</button>
-                            <button id="clear-pdf-btn" class="btn secondary">Clear All</button>
+                            <div class="actions">
+                                <button id="save-pdf-btn" class="btn primary">Save & Download PDF</button>
+                                <button id="clear-pdf-btn" class="btn secondary">Clear All</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -618,7 +668,7 @@
                                 <label for="protect-password">Enter Password</label>
                                 <div class="password-input-wrapper">
                                     <input type="password" id="protect-password" placeholder="Type a strong password">
-                                    <button type="button" class="toggle-password" tabindex="-1">👁️</button>
+                                    <button type="button" class="toggle-password" tabindex="-1">🙈</button>
                                 </div>
                             </div>
 
@@ -626,7 +676,7 @@
                                 <div class="strength-bar-bg">
                                     <div id="password-strength-bar" class="strength-bar"></div>
                                 </div>
-                                <span id="password-strength-text">Password Strength: -</span>
+                                <span id="password-strength-text">Password Strength: </span>
                             </div>
 
                             <div class="form-group">
@@ -673,7 +723,8 @@
     <footer>
         <div class="copyrights">&copy;
             <script>document.currentScript.parentElement.innerHTML += new Date().getFullYear();</script> All rights
-            reserved. PDF Surgeon by RMST
+            reserved. PDF Surgeon by <a href="https://sandunrmst.com" target="_blank" rel="noopener noreferrer"
+                class="author-link">RMST</a>
         </div>
     </footer>
     <!-- WELCOME POPUP -->
