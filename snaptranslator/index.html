@@ -256,9 +256,14 @@
     </main>
 
     <footer class="app-footer">
-      <p>
-        <strong>© 2025 All rights reserved. The Snap Translator by RMST</strong>
-      </p>
+      <div class="copyrights">
+        &copy;
+        <script>
+          document.currentScript.parentElement.innerHTML +=
+            new Date().getFullYear();
+        </script>
+        The Snap Translator RMST. All rights reserved.
+      </div>
     </footer>
 
     <script src="app.js"></script>
