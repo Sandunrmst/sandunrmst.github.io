@@ -1,428 +1,841 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>404 - You Lost in Space</title>
     <style>
-        :root {
-            --bg-color: #050510;
-            --primary-glow: #7b2cbf;
-            --secondary-glow: #3a86ff;
-            --text-color: #ffffff;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+      :root {
+        --bg-color: #050510;
+        --primary-glow: #7b2cbf;
+        --secondary-glow: #3a86ff;
+        --text-color: #ffffff;
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      /* Ambient Background */
+      .space-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: radial-gradient(
+          circle at 50% 120%,
+          #1a0b2e 0%,
+          #000000 100%
+        );
+        overflow: hidden;
+      }
+
+      .star {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.8;
+        animation: twinkle 3s infinite ease-in-out;
+      }
+
+      @keyframes twinkle {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scale(0.8);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        50% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+      }
+
+      /* Main Container */
+      .container {
+        text-align: center;
+        z-index: 10;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        position: relative;
+      }
+
+      /* Glass Card Effect */
+      .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 3rem 2rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        position: relative;
+        overflow: hidden;
+        animation: float-card 6s ease-in-out infinite;
+      }
+
+      @keyframes float-card {
+        0%,
+        100% {
+          transform: translateY(0);
         }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Typography */
+      h1.error-code {
+        font-size: 8rem;
+        font-weight: 800;
+        line-height: 1;
+        background: linear-gradient(135deg, #ff00cc, #333399);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0px;
+        text-shadow: 0 10px 30px rgba(123, 44, 191, 0.3);
+        position: relative;
+        display: inline-block;
+      }
+
+      h1.error-code::after {
+        content: "404";
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        background: inherit;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: blur(20px);
+        opacity: 0.5;
+      }
+
+      p.message {
+        font-size: 1.5rem;
+        margin: 1rem 0 2rem;
+        color: rgba(240 240 240 / 80%);
+        font-weight: 300;
+        letter-spacing: 1px;
+      }
+
+      /* Mascot */
+      .mascot-container {
+        margin: -2rem auto 2rem;
+        position: relative;
+        width: 200px;
+        height: 200px;
+      }
+
+      .mascot {
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 0 20px rgba(58, 134, 255, 0.5));
+        animation: float-mascot 4s ease-in-out infinite;
+      }
+
+      @keyframes float-mascot {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
         }
 
-        /* Ambient Background */
-        .space-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at 50% 120%, #1a0b2e 0%, #000000 100%);
-            overflow: hidden;
+        50% {
+          transform: translateY(-15px) rotate(2deg);
+        }
+      }
+
+      /* Button */
+      .btn-home {
+        display: inline-block;
+        padding: 12px 32px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(90deg, #4361ee, #7209b7);
+        border: none;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .btn-home:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(114, 9, 183, 0.6);
+      }
+
+      .btn-home::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: 0.5s;
+        z-index: -1;
+      }
+
+      /* Decorative Planets */
+      .planet-wrapper {
+        position: absolute;
+        z-index: -1;
+      }
+
+      .planet-w-1 {
+        top: 10%;
+        left: 10%;
+      }
+
+      .planet-w-2 {
+        bottom: 15%;
+        right: 15%;
+      }
+
+      .planet {
+        border-radius: 50%;
+        opacity: 0.6;
+      }
+
+      .planet-1 {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(45deg, #ff00cc, #333399);
+        box-shadow: 0 0 30px rgba(255, 0, 204, 0.3);
+        animation: orbit 20s linear infinite;
+      }
+
+      .planet-2 {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(45deg, #4cc9f0, #4361ee);
+        box-shadow: 0 0 20px rgba(76, 201, 240, 0.3);
+        animation: float-planet 8s ease-in-out infinite;
+      }
+
+      @keyframes orbit {
+        0% {
+          transform: rotate(0deg) translateX(20px) rotate(0deg);
         }
 
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: twinkle 3s infinite ease-in-out;
+        100% {
+          transform: rotate(360deg) translateX(20px) rotate(-360deg);
+        }
+      }
+
+      @keyframes float-planet {
+        0%,
+        100% {
+          transform: translateY(0);
         }
 
-        @keyframes twinkle {
+        50% {
+          transform: translateY(-20px);
+        }
+      }
 
-            0%,
-            100% {
-                opacity: 0.3;
-                transform: scale(0.8);
-            }
+      /* --- Alien Encounter --- */
 
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
+      /* Radar Scan */
+      .radar-scan {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200vmax;
+        height: 200vmax;
+        transform: translate(-50%, -50%);
+        background: conic-gradient(
+          from 0deg,
+          transparent 0%,
+          transparent 320deg,
+          rgba(0, 255, 0, 0.05) 360deg
+        );
+        border-radius: 50%;
+        animation: radar-spin 5s linear infinite;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.6;
+      }
+
+      @keyframes radar-spin {
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
         }
 
-        /* Main Container */
-        .container {
-            text-align: center;
-            z-index: 10;
-            padding: 2rem;
-            max-width: 600px;
-            width: 90%;
-            position: relative;
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      /* UFOs */
+      .ufo-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 5;
+        overflow: hidden;
+      }
+
+      .ufo {
+        position: absolute;
+        width: 80px;
+        height: 35px;
+        background: radial-gradient(
+          circle at 50% 0%,
+          #eceff1,
+          #90a4ae 45%,
+          #455a64 100%
+        );
+        border-radius: 50%;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6),
+          inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+          inset 0 3px 5px rgba(255, 255, 255, 0.9);
+        transition: all 1s ease-in-out;
+        border-bottom: 2px solid #263238;
+      }
+
+      .ufo-dome {
+        position: absolute;
+        top: -16px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 44px;
+        height: 28px;
+        background: linear-gradient(
+          135deg,
+          rgba(224, 247, 250, 0.8) 0%,
+          rgba(128, 222, 234, 0.3) 50%,
+          rgba(0, 188, 212, 0.1) 100%
+        );
+        border-radius: 50% 50% 40% 40%;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: inset 4px 4px 8px rgba(255, 255, 255, 0.7),
+          0 0 15px rgba(77, 208, 225, 0.4);
+        backdrop-filter: blur(2px);
+      }
+
+      .ufo-lights {
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .ufo-lights span {
+        width: 5px;
+        height: 5px;
+        background: #00ff00;
+        border-radius: 50%;
+        box-shadow: 0 0 5px #00ff00;
+        animation: blink-light 1s infinite alternate;
+      }
+
+      .ufo-lights span:nth-child(2) {
+        animation-delay: 0.3s;
+      }
+
+      .ufo-lights span:nth-child(3) {
+        animation-delay: 0.6s;
+      }
+
+      @keyframes blink-light {
+        0% {
+          opacity: 0.3;
         }
 
-        /* Glass Card Effect */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 3rem 2rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            position: relative;
-            overflow: hidden;
-            animation: float-card 6s ease-in-out infinite;
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* UFO Positioning & Initial Motion */
+      .ufo-1 {
+        top: 10%;
+        left: -100px;
+        animation: fly-in-1 20s infinite linear;
+      }
+
+      .ufo-2 {
+        top: 20%;
+        right: -100px;
+        animation: fly-in-2 25s infinite linear;
+        animation-delay: 2s;
+      }
+
+      .ufo-3 {
+        bottom: 20%;
+        left: -100px;
+        animation: fly-in-3 18s infinite linear;
+        animation-delay: 5s;
+      }
+
+      @keyframes fly-in-1 {
+        0% {
+          transform: translate(0, 0) rotate(-5deg);
+          left: -100px;
         }
 
-        @keyframes float-card {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
+        50% {
+          transform: translate(110vw, 50px) rotate(5deg);
         }
 
-        /* Typography */
+        100% {
+          transform: translate(-100px, 0) rotate(-5deg);
+          left: 100%;
+        }
+      }
+
+      /* UFO Animations */
+
+      /* Phase 1: Scouting (0-12s) */
+      .ufo-1 {
+        animation: scout-1 12s linear forwards;
+      }
+
+      .ufo-2 {
+        animation: scout-2 12s linear forwards;
+      }
+
+      .ufo-3 {
+        animation: scout-3 12s linear forwards;
+      }
+
+      @keyframes scout-1 {
+        0% {
+          left: -10%;
+          top: 20%;
+          transform: scale(0.5) rotate(10deg);
+        }
+
+        30% {
+          left: 40%;
+          top: 10%;
+          transform: scale(0.4) rotate(-5deg);
+        }
+
+        60% {
+          left: 80%;
+          top: 60%;
+          transform: scale(0.6) rotate(5deg);
+        }
+
+        100% {
+          left: 110%;
+          top: 30%;
+          transform: scale(0.5) rotate(10deg);
+        }
+      }
+
+      @keyframes scout-2 {
+        0% {
+          right: -10%;
+          top: 60%;
+          transform: scale(0.6) rotate(-10deg);
+        }
+
+        40% {
+          right: 50%;
+          top: 80%;
+          transform: scale(0.5) rotate(5deg);
+        }
+
+        70% {
+          right: 90%;
+          top: 20%;
+          transform: scale(0.4) rotate(-5deg);
+        }
+
+        100% {
+          right: 110%;
+          top: 50%;
+          transform: scale(0.5) rotate(10deg);
+        }
+      }
+
+      @keyframes scout-3 {
+        0% {
+          left: 20%;
+          bottom: -10%;
+          transform: scale(0.5) rotate(0deg);
+        }
+
+        50% {
+          left: 60%;
+          bottom: 110%;
+          transform: scale(0.4) rotate(10deg);
+        }
+
+        100% {
+          left: 20%;
+          bottom: -10%;
+          transform: scale(0.5) rotate(0deg);
+        }
+      }
+
+      /* Phase 2: Attack (12s+) - Corner Peeking */
+      body.attack-mode .ufo-1 {
+        left: 5%;
+        top: -100px;
+        animation: ufo-hover 6s ease-in-out infinite, peek-top 8s forwards;
+      }
+
+      body.attack-mode .ufo-2 {
+        right: -100px;
+        top: 15%;
+        animation: ufo-hover 5s ease-in-out infinite reverse,
+          peek-right 8s forwards 1s;
+      }
+
+      body.attack-mode .ufo-3 {
+        left: -100px;
+        bottom: 30%;
+        animation: ufo-hover 7s ease-in-out infinite, peek-left 8s forwards 2s;
+      }
+
+      /* Hover animation used in Attack Mode */
+      @keyframes ufo-hover {
+        0%,
+        100% {
+          margin-top: 0;
+        }
+
+        50% {
+          margin-top: -20px;
+        }
+      }
+
+      @keyframes peek-top {
+        to {
+          top: 15%;
+        }
+      }
+
+      @keyframes peek-right {
+        to {
+          right: 10%;
+        }
+      }
+
+      @keyframes peek-left {
+        to {
+          left: 10%;
+        }
+      }
+
+      /* ALERT MODE styles */
+      body.alert-mode .ufo-lights span {
+        background: #ff0000;
+        box-shadow: 0 0 8px #ff0000;
+        animation-duration: 0.2s;
+        /* Panic blinking */
+      }
+
+      body.alert-mode .ufo {
+        transition: all 0.5s ease;
+      }
+
+      /* Orient UFOs towards center in alert mode - approximation */
+      body.alert-mode .ufo-1 {
+        transform: rotate(20deg) scale(1.1);
+      }
+
+      body.alert-mode .ufo-2 {
+        transform: rotate(-20deg) scale(1.1);
+      }
+
+      body.alert-mode .ufo-3 {
+        transform: rotate(10deg) scale(1.1);
+      }
+
+      /* Shake Button */
+      .btn-home.shake-pulse {
+        animation: shake-pulse 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97)
+          infinite;
+        background: linear-gradient(90deg, #d90429, #ef233c);
+        /* Redder */
+        box-shadow: 0 0 20px rgba(239, 35, 60, 0.6);
+      }
+
+      @keyframes shake-pulse {
+        0% {
+          transform: translate(1px, 1px) scale(1);
+        }
+
+        50% {
+          transform: translate(-1px, -2px) scale(1.05);
+        }
+
+        100% {
+          transform: translate(-3px, 1px) scale(1);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 600px) {
         h1.error-code {
-            font-size: 8rem;
-            font-weight: 800;
-            line-height: 1;
-            background: linear-gradient(135deg, #ff00cc, #333399);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0px;
-            text-shadow: 0 10px 30px rgba(123, 44, 191, 0.3);
-            position: relative;
-            display: inline-block;
-        }
-
-        h1.error-code::after {
-            content: '404';
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            background: inherit;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: blur(20px);
-            opacity: 0.5;
+          font-size: 4rem;
         }
 
         p.message {
-            font-size: 1.5rem;
-            margin: 1rem 0 2rem;
-            color: rgba(240 240 240 / 80%);
-            font-weight: 300;
-            letter-spacing: 1px;
+          font-size: 1rem;
         }
 
-        /* Mascot */
-        .mascot-container {
-            margin: -2rem auto 2rem;
-            position: relative;
-            width: 200px;
-            height: 200px;
-        }
-
-        .mascot {
-            width: 100%;
-            height: auto;
-            filter: drop-shadow(0 0 20px rgba(58, 134, 255, 0.5));
-            animation: float-mascot 4s ease-in-out infinite;
-        }
-
-        @keyframes float-mascot {
-
-            0%,
-            100% {
-                transform: translateY(0) rotate(0deg);
-            }
-
-            50% {
-                transform: translateY(-15px) rotate(2deg);
-            }
-        }
-
-        /* Button */
         .btn-home {
-            display: inline-block;
-            padding: 12px 32px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            background: linear-gradient(90deg, #4361ee, #7209b7);
-            border: none;
-            border-radius: 50px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
+          font-size: 1rem;
+          padding: 10px 25px;
         }
 
-        .btn-home:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(114, 9, 183, 0.6);
+        .mascot-container {
+          width: 120px;
+          height: 120px;
         }
 
-        .btn-home::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-            z-index: -1;
+        .glass-card {
+          padding: 2rem 1rem;
         }
-
-        /* Decorative Planets */
-        .planet-wrapper {
-            position: absolute;
-            z-index: -1;
-        }
-
-        .planet-w-1 {
-            top: 10%;
-            left: 10%;
-        }
-
-        .planet-w-2 {
-            bottom: 15%;
-            right: 15%;
-        }
-
-        .planet {
-            border-radius: 50%;
-            opacity: 0.6;
-        }
-
-        .planet-1 {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(45deg, #ff00cc, #333399);
-            box-shadow: 0 0 30px rgba(255, 0, 204, 0.3);
-            animation: orbit 20s linear infinite;
-        }
-
-        .planet-2 {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #4cc9f0, #4361ee);
-            box-shadow: 0 0 20px rgba(76, 201, 240, 0.3);
-            animation: float-planet 8s ease-in-out infinite;
-        }
-
-        @keyframes orbit {
-            0% {
-                transform: rotate(0deg) translateX(20px) rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg) translateX(20px) rotate(-360deg);
-            }
-        }
-
-        @keyframes float-planet {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            h1.error-code {
-                font-size: 6rem;
-            }
-
-            .mascot-container {
-                width: 150px;
-                height: 150px;
-            }
-
-            .glass-card {
-                padding: 2rem 1rem;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div class="space-bg" id="starfield">
-        <!-- Stars will be generated by JS -->
-        <div class="planet-wrapper planet-w-1">
-            <div class="planet planet-1"></div>
-        </div>
-        <div class="planet-wrapper planet-w-2">
-            <div class="planet planet-2"></div>
-        </div>
+      <!-- Radar Scan Effect -->
+      <div class="radar-scan"></div>
+
+      <div class="planet-wrapper planet-w-1">
+        <div class="planet planet-1"></div>
+      </div>
+      <div class="planet-wrapper planet-w-2">
+        <div class="planet planet-2"></div>
+      </div>
+    </div>
+
+    <!-- Alien UFO Fleet -->
+    <div class="ufo-container">
+      <div class="ufo ufo-1">
+        <div class="ufo-dome"></div>
+        <div class="ufo-lights"><span></span><span></span><span></span></div>
+      </div>
+      <div class="ufo ufo-2">
+        <div class="ufo-dome"></div>
+        <div class="ufo-lights"><span></span><span></span><span></span></div>
+      </div>
+      <div class="ufo ufo-3">
+        <div class="ufo-dome"></div>
+        <div class="ufo-lights"><span></span><span></span><span></span></div>
+      </div>
     </div>
 
     <div class="container">
-        <div class="glass-card">
-            <div class="mascot-container">
-                <img src="images/space_mascot.png" alt="Lost Astronaut" class="mascot">
-            </div>
-            <h1 class="error-code">404</h1>
-            <p class="message"><strong>Hello astronaut! You missed the planet, Let’s turn around before aliens
-                    find you. Wanna go back? </strong> </p>
-            <a href="https://sandunrmst.com/#home" class="btn-home">Escape Before 👽 Aliens Spot You!</a>
+      <div class="glass-card">
+        <div class="mascot-container">
+          <img
+            src="../images/space_mascot.png"
+            alt="Lost Astronaut"
+            class="mascot"
+          />
         </div>
+        <h1 class="error-code">404</h1>
+        <p class="message">
+          <strong
+            >Hello astronaut! You missed the planet, Let’s turn around before
+            aliens find you. Wanna go back?
+          </strong>
+        </p>
+        <a href="https://sandunrmst.com/#home" class="btn-home"
+          >Escape Before 👽 Aliens Spot You!</a
+        >
+      </div>
     </div>
 
     <div class="earth-container">
-        <div class="earth"></div>
+      <div class="earth"></div>
     </div>
 
     <style>
-        /* Earth Background */
-        .earth-container {
-            position: absolute;
-            bottom: -20%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            height: 60vh;
-            z-index: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
-            filter: blur(4px);
-            /* Slight blur for depth */
-            opacity: 0.8;
+      /* Earth Background */
+      .earth-container {
+        position: absolute;
+        bottom: -20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        height: 60vh;
+        z-index: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        filter: blur(4px);
+        /* Slight blur for depth */
+        opacity: 0.8;
+      }
+
+      .earth {
+        width: 80vw;
+        height: 80vw;
+        max-width: 800px;
+        max-height: 800px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 30% 30%,
+          #4facfe,
+          #43e97b,
+          #00f2fe,
+          #0575e6,
+          #021b79
+        );
+        box-shadow: inset 10px 10px 50px rgba(255, 255, 255, 0.2),
+          /* Atmosphere highlight */ inset -20px -20px 80px rgba(0, 0, 0, 0.9),
+          /* Shadow side */ 0 0 50px rgba(5, 117, 230, 0.4),
+          /* Inner glow */ 0 0 100px rgba(0, 242, 254, 0.2);
+        /* Outer atmosphere glow */
+        position: relative;
+        animation: rotate-earth 60s linear infinite;
+      }
+
+      /* Stylized continents/clouds via pseudo-elements for texture */
+      .earth::before {
+        content: "";
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        width: 60%;
+        height: 60%;
+        border-radius: 50%;
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
+        filter: contrast(150%) brightness(100%);
+        mix-blend-mode: overlay;
+        opacity: 0.3;
+        animation: spin-texture 100s linear infinite;
+      }
+
+      @keyframes rotate-earth {
+        0% {
+          transform: rotate(0deg);
         }
 
-        .earth {
-            width: 80vw;
-            height: 80vw;
-            max-width: 800px;
-            max-height: 800px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #4facfe, #43e97b, #00f2fe, #0575E6, #021B79);
-            box-shadow:
-                inset 10px 10px 50px rgba(255, 255, 255, 0.2),
-                /* Atmosphere highlight */
-                inset -20px -20px 80px rgba(0, 0, 0, 0.9),
-                /* Shadow side */
-                0 0 50px rgba(5, 117, 230, 0.4),
-                /* Inner glow */
-                0 0 100px rgba(0, 242, 254, 0.2);
-            /* Outer atmosphere glow */
-            position: relative;
-            animation: rotate-earth 60s linear infinite;
+        100% {
+          transform: rotate(360deg);
         }
-
-        /* Stylized continents/clouds via pseudo-elements for texture */
-        .earth::before {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
-            border-radius: 50%;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
-            filter: contrast(150%) brightness(100%);
-            mix-blend-mode: overlay;
-            opacity: 0.3;
-            animation: spin-texture 100s linear infinite;
-        }
-
-        @keyframes rotate-earth {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+      }
     </style>
 
     <script>
+      const starfield = document.getElementById("starfield");
+      const starCount = 100;
 
+      for (let i = 0; i < starCount; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
 
-        const starfield = document.getElementById('starfield');
-        const starCount = 100;
+        // Random position
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
 
-        for (let i = 0; i < starCount; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
+        // Random size
+        const size = Math.random() * 3 + 1;
 
-            // Random position
-            const x = Math.random() * 100;
-            const y = Math.random() * 100;
+        // Random animation delay
+        const delay = Math.random() * 3;
 
-            // Random size
-            const size = Math.random() * 3 + 1;
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.animationDelay = `${delay}s`;
 
-            // Random animation delay
-            const delay = Math.random() * 3;
+        starfield.appendChild(star);
+      }
 
-            star.style.left = `${x}%`;
-            star.style.top = `${y}%`;
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            star.style.animationDelay = `${delay}s`;
+      // Parallax Effect on Mouse Move
+      document.addEventListener("mousemove", (e) => {
+        const mouseX = e.clientX / window.innerWidth;
+        const mouseY = e.clientY / window.innerHeight;
 
-            starfield.appendChild(star);
-        }
+        const mascot = document.querySelector(".mascot-container");
+        const planets = document.querySelectorAll(".planet-wrapper");
+        const stars = document.querySelectorAll(".star");
 
-        // Parallax Effect on Mouse Move
-        document.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX / window.innerWidth;
-            const mouseY = e.clientY / window.innerHeight;
+        // Move mascot slightly opposite to mouse
+        if (mascot)
+          mascot.style.transform = `translate(${(0.5 - mouseX) * 30}px, ${
+            (0.5 - mouseY) * 30
+          }px)`;
 
-            const mascot = document.querySelector('.mascot-container');
-            const planets = document.querySelectorAll('.planet-wrapper');
-            const stars = document.querySelectorAll('.star');
-
-            // Move mascot slightly opposite to mouse
-            if (mascot) mascot.style.transform = `translate(${(0.5 - mouseX) * 30}px, ${(0.5 - mouseY) * 30}px)`;
-
-            // Move planets
-            planets.forEach((planet, index) => {
-                const depth = (index + 1) * 20;
-                planet.style.transform = `translate(${(0.5 - mouseX) * depth}px, ${(0.5 - mouseY) * depth}px)`;
-            });
-
-
+        // Move planets
+        planets.forEach((planet, index) => {
+          const depth = (index + 1) * 20;
+          planet.style.transform = `translate(${(0.5 - mouseX) * depth}px, ${
+            (0.5 - mouseY) * depth
+          }px)`;
         });
-    </script>
-</body>
+      });
 
+      // Dynamic Back Button Logic
+      document.addEventListener("DOMContentLoaded", () => {
+        const path = window.location.pathname;
+        const backBtn = document.querySelector(".btn-home");
+        const messageEl = document.querySelector(".message");
+
+        // 2. Attack Phase Initialization (12s)
+        setTimeout(() => {
+          document.body.classList.add("attack-mode");
+        }, 12000);
+
+        // 3. Alert/Panic Phase (16s - 4s after attack starts)
+        setTimeout(() => {
+          // Text Update
+          messageEl.innerHTML =
+            "<strong>Warning! Alien radar just locked onto you 👽</strong>";
+          messageEl.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.8)";
+
+          // Trigger Alert Mode
+          document.body.classList.add("alert-mode");
+
+          // Button Panic
+          backBtn.classList.add("shake-pulse");
+          backBtn.textContent = "Escape Before 👽 Aliens Spot You!";
+        }, 16000);
+      });
+    </script>
+  </body>
 </html>
