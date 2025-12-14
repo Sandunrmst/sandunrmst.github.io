@@ -1611,6 +1611,10 @@ async function handleEditFile(file) {
     document.getElementById('editor-container').classList.remove('hidden');
 
     // Reset State
+    if (fabricCanvas) {
+        fabricCanvas.dispose();
+        fabricCanvas = null;
+    }
     loadedPdf = null;
     totalEditPages = 0;
     editPageAnnotations = {};
@@ -1712,11 +1716,11 @@ async function switchEditPage(newPageIndex) {
 async function loadEditPage(pageNum) {
     const pageIndex = pageNum - 1;
     currentEditPageIndex = pageIndex;
+    // console.log(`Loading Edit Page ${pageNum} (Index: ${pageIndex})`);
 
     // Update UI Active State
     document.querySelectorAll('.page-sidebar .page-thumbnail').forEach(el => el.classList.remove('active'));
 
-    // Add null check in case thumbnails aren't ready or something
     const activeThumb = document.getElementById(`edit-thumb-${pageNum}`);
     if (activeThumb) activeThumb.classList.add('active');
 
@@ -1726,14 +1730,40 @@ async function loadEditPage(pageNum) {
         const page = await loadedPdf.getPage(pageNum);
         const viewport = page.getViewport({ scale: 1.5 });
 
-        // Initialize Fabric Canvas if needed (or clear it)
-        if (fabricCanvas) {
-            fabricCanvas.dispose();
-        }
+        // Update canvas dimensions (Create or Resize)
+        if (!fabricCanvas) {
+            console.log('Initializing new Fabric Canvas');
+            canvasEl.width = viewport.width;
+            canvasEl.height = viewport.height;
 
-        // Set dimensions
-        canvasEl.width = viewport.width;
-        canvasEl.height = viewport.height;
+            fabricCanvas = new fabric.Canvas('pdf-editor-canvas', {
+                width: viewport.width,
+                height: viewport.height,
+                isDrawingMode: false,
+                selection: true
+            });
+
+            // Initialize Brush ONCE
+            fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(fabricCanvas);
+            fabricCanvas.freeDrawingBrush.width = 3;
+
+            // Attach Events ONCE
+            setupFabricEvents();
+
+        } else {
+            console.log('Reusing existing Fabric Canvas');
+            // We do NOT clear properly here if we are about to load JSON, 
+            // because loadFromJSON will clear. 
+            // But if we don't have JSON, we must clear.
+            // We'll handle this in the restore block.
+
+            // Update dimensions to match new page
+            fabricCanvas.setDimensions({
+                width: viewport.width,
+                height: viewport.height
+            });
+            fabricCanvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        }
 
         // Render PDF page for background
         const tempCanvas = document.createElement('canvas');
@@ -1744,45 +1774,36 @@ async function loadEditPage(pageNum) {
         await page.render({ canvasContext: tempContext, viewport }).promise;
         const bgDataUrl = tempCanvas.toDataURL('image/png');
 
-        // Create New Fabric Canvas
-        fabricCanvas = new fabric.Canvas('pdf-editor-canvas', {
-            width: viewport.width,
-            height: viewport.height,
-            isDrawingMode: false,
-            selection: true
-        });
-
-        // Set Background
-        fabricCanvas.setBackgroundImage(bgDataUrl, () => {
-            // 3. Restore Annotations if any
-            if (editPageAnnotations[pageIndex]) {
-                fabricCanvas.loadFromJSON(editPageAnnotations[pageIndex], () => {
-                    fabricCanvas.renderAll();
-                    // Re-apply brush settings if needed
-                    const colorPicker = document.getElementById('tool-color');
-                    if (colorPicker) {
-                        fabricCanvas.freeDrawingBrush.color = colorPicker.value;
-                        fabricCanvas.freeDrawingBrush.width = 3;
-                    }
-                });
-            } else {
+        // Restore State Helper
+        const applyBackgroundAndRender = () => {
+            fabricCanvas.setBackgroundImage(bgDataUrl, () => {
                 fabricCanvas.renderAll();
-            }
-        }, {
-            originX: 'left',
-            originY: 'top'
-        });
 
-        // Setup Brush
-        fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(fabricCanvas);
-        fabricCanvas.freeDrawingBrush.width = 3;
-        const colorPicker = document.getElementById('tool-color');
-        if (colorPicker) {
-            fabricCanvas.freeDrawingBrush.color = colorPicker.value;
+                // Brush Sync
+                const colorPicker = document.getElementById('tool-color');
+                if (colorPicker && fabricCanvas.freeDrawingBrush) {
+                    fabricCanvas.freeDrawingBrush.color = colorPicker.value;
+                }
+                console.log('Page loaded and rendered.');
+            }, {
+                originX: 'left',
+                originY: 'top'
+            });
+        };
+
+        // Execution Flow: Load JSON -> Then Background
+        if (editPageAnnotations[pageIndex]) {
+            // console.log('Found annotations for this page, loading JSON...');
+            // loadFromJSON clears the canvas automatically
+            fabricCanvas.loadFromJSON(editPageAnnotations[pageIndex], () => {
+                // console.log('JSON loaded from state.');
+                applyBackgroundAndRender();
+            });
+        } else {
+            // console.log('No annotations found, clearing canvas.');
+            fabricCanvas.clear();
+            applyBackgroundAndRender();
         }
-
-        // Re-attach Events
-        setupFabricEvents();
 
     } catch (err) {
         console.error('Error loading page into editor:', err);
@@ -2071,12 +2092,17 @@ async function saveEditedPdf() {
                 });
 
                 // Scale all objects up by multiplier so they render high res
+                // Editor runs at 1.5 scale. Output runs at 'multiplier' (2) scale.
+                // We must adjust object coordinates/scale (2 / 1.5)
+                const editorScale = 1.5;
+                const scaleAdjustment = multiplier / editorScale;
+
                 const objects = fCanvas.getObjects();
                 objects.forEach(obj => {
-                    obj.scaleX *= multiplier;
-                    obj.scaleY *= multiplier;
-                    obj.left *= multiplier;
-                    obj.top *= multiplier;
+                    obj.scaleX *= scaleAdjustment;
+                    obj.scaleY *= scaleAdjustment;
+                    obj.left *= scaleAdjustment;
+                    obj.top *= scaleAdjustment;
                     obj.setCoords();
                 });
                 fCanvas.renderAll();
