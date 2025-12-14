@@ -1105,20 +1105,48 @@ async function convertWordToPDF() {
                         font-family: Arial, sans-serif;
                         line-height: 1.6;
                         color: #000;
-                        padding: 20px;
-                        max-width: 800px;
-                        margin: 0 auto;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    @page {
+                        size: auto;
+                        margin: 0mm;
+                    }
+                    @media print {
+                        body { margin: 0 !important; padding: 0 !important; }
+                        table.layout-table { width: 100%; border: none; border-spacing: 0; border-collapse: collapse; }
+                        thead { display: table-header-group; }
+                        tfoot { display: table-footer-group; }
+                        .header-space, .footer-space { height: 20mm; }
+                        tfoot { display: table-footer-group; }
+                        .header-space, .footer-space { height: 20mm; }
+                        .content-wrapper { padding: 0 20mm; }
+                        /* Ensure layout table cells have no border */
+                        table.layout-table td { border: none !important; padding: 0 !important; }
                     }
                     img { max-width: 100%; height: auto; }
                     table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
                     td, th { border: 1px solid #ddd; padding: 8px; }
-                    @media print {
-                        body { padding: 0; margin: 2cm; }
-                    }
                 </style>
             </head>
             <body>
-                ${html}
+                <table class="layout-table">
+                    <thead>
+                        <tr><td><div class="header-space">&nbsp;</div></td></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="content-wrapper">
+                                    ${html}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr><td><div class="footer-space">&nbsp;</div></td></tr>
+                    </tfoot>
+                </table>
                 <script>
                     window.onload = function() {
                         setTimeout(function() {
@@ -1223,9 +1251,26 @@ async function convertExcelToPDF() {
                         font-family: Arial, sans-serif;
                         line-height: 1.6;
                         color: #000;
-                        padding: 20px;
-                        margin: 0 auto;
+                        margin: 0;
+                        padding: 0;
                     }
+                    @page {
+                        size: auto;
+                        margin: 0mm;
+                    }
+                    @media print {
+                        body { margin: 0 !important; padding: 0 !important; }
+                        table.layout-table { width: 100%; border: none; border-spacing: 0; border-collapse: collapse; }
+                        thead { display: table-header-group; }
+                        tfoot { display: table-footer-group; }
+                        .header-space, .footer-space { height: 20mm; }
+                        tfoot { display: table-footer-group; }
+                        .header-space, .footer-space { height: 20mm; }
+                        .content-wrapper { padding: 0 20mm; }
+                        /* Ensure layout table cells have no border */
+                        table.layout-table td { border: none !important; padding: 0 !important; }
+                    }
+                    /* Excel Content Styles */
                     table { 
                         border-collapse: collapse; 
                         width: 100%; 
@@ -1236,15 +1281,26 @@ async function convertExcelToPDF() {
                         padding: 8px; 
                         text-align: left;
                     }
-                    @media print {
-                        body { padding: 0; margin: 1cm; }
-                        table { width: 100%; }
-                    }
                 </style>
             </head>
             <body>
-                <h2>${excelFile.name} - Sheet 1</h2>
-                ${html}
+                <table class="layout-table">
+                    <thead>
+                        <tr><td><div class="header-space">&nbsp;</div></td></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="content-wrapper">
+                                    ${html}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr><td><div class="footer-space">&nbsp;</div></td></tr>
+                    </tfoot>
+                </table>
                 <script>
                     window.onload = function() {
                         setTimeout(function() {
