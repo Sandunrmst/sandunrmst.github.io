@@ -2423,6 +2423,23 @@ body.modal-open {
     .editor-viewport {
         height: 50vh;
         min-height: 400px;
+        overflow: auto; /* Enable scrolling */
+        display: block; /* Remove flex centering constraint */
+        /* Ensure scrolling context */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .editor-transform-layer {
+        transform-origin: top left !important; /* Scale from top-left to avoid negative margins */
+        margin: 0;
+        width: fit-content;
+        height: fit-content;
+    }
+
+    .canvas-wrapper {
+        overflow: visible; /* Let viewport handle scroll */
+        width: fit-content;
+        height: fit-content;
     }
 
     .zoom-controls {

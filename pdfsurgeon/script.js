@@ -1882,7 +1882,7 @@ function addText() {
     if (!fabricCanvas) return;
     const text = new fabric.IText('Type here', {
         left: 100,
-        top: 100,
+        top: 200,
         fontFamily: 'Arial',
         fill: document.getElementById('tool-color').value,
         fontSize: 20
