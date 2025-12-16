@@ -18,7 +18,7 @@
         msg.innerHTML = "Message sent successfully! 😊";
         setTimeout(function () {
           msg.innerHTML = "";
-        }, 4000);
+        }, 2000);
         form.reset();
       })
       .catch(error => {
