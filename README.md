@@ -11,7 +11,7 @@
 
   💬 Ask me about **Python**
 
-  📫 How to reach me **sandunrmst@gmail.com**
+  📫 How to reach me **info@sandunrmst.com**
   
 <h3 align="left">Connect with me:</h3>
 <p align="left">
