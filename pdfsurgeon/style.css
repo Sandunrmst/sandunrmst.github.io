@@ -15,6 +15,12 @@
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg-color);
@@ -25,12 +31,14 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 .container {
     background: var(--white);
-    width: 90%;
-    max-width: 1000px;
+    width: 100%;
+    max-width: 1100px;
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -388,6 +396,7 @@ header h1 {
     /* Nice readable yellow/gold */
     font-size: 0.9rem;
     margin-bottom: 15px;
+    margin-top: 15px;
     font-style: italic;
     min-height: 1.2em;
     /* Prevent layout shift */
@@ -541,7 +550,7 @@ header h1 {
 .compress-option-card {
     flex: 1;
     min-width: 200px;
-    max-width: 250px;
+    max-width: 300px;
     background: #fff;
     border: 2px solid #e0e0e0;
     border-radius: 12px;
@@ -736,7 +745,7 @@ header h1 {
 .compress-option-card {
     flex: 1;
     min-width: 200px;
-    max-width: 250px;
+    max-width: 300px;
     background: #fff;
     border: 2px solid #e0e0e0;
     border-radius: 12px;
@@ -931,7 +940,7 @@ header h1 {
 .compress-option-card {
     flex: 1;
     min-width: 200px;
-    max-width: 250px;
+    max-width: 300px;
     background: #fff;
     border: 2px solid #e0e0e0;
     border-radius: 12px;
@@ -1720,7 +1729,7 @@ input[type="color"]#wm-color::-webkit-color-swatch {
 .popup-box {
     background: #ffffff;
     width: 90%;
-    max-width: 500px;
+    max-width: 600px;
     padding: 2.5rem 2rem;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -2246,11 +2255,7 @@ body.modal-open {
         padding: 12px;
     }
 
-    /* Fix Emoji Picker on Mobile */
-    .emoji-dropdown {
-        position: static;
-        /* Allow breaking out */
-    }
+
 
     .emoji-content {
         position: fixed;
@@ -2280,6 +2285,12 @@ body.modal-open {
         background: #f9f9f9;
         border-radius: 4px;
         text-align: center;
+    }
+
+    /* Fix Emoji Picker on Mobile */
+    .emoji-dropdown {
+        position: static;
+        /* Allow breaking out */
     }
 }
 
@@ -2325,9 +2336,9 @@ body.modal-open {
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.9);
+    background: #e6f0fa;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--primary-hover);
     border-radius: 20px;
     padding: 5px 15px;
     display: flex;
@@ -2418,36 +2429,313 @@ body.modal-open {
     transform-origin: left;
 }
 
-/* MOBILE RESPONSIVE TWEAKS */
+/* =========================================
+   PREMIUM MOBILE RESPONSIVEOVERRIDES
+   ========================================= */
 @media (max-width: 768px) {
+
+    /* --- 1. GLOBAL LAYOUT & TYPOGRAPHY --- */
+    body {
+        width: 100%;
+        overflow-x: hidden;
+        background-color: #fff;
+        /* Unified white background */
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding: 1rem;
+        border-radius: 0;
+        box-shadow: none;
+        overflow: hidden;
+        /* Contain inner floats */
+    }
+
+    header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .logo {
+        height: 36px;
+    }
+
+    /* --- 2. PREMIUM NAVIGATION TABS --- */
+    /* Horizontal scroll with clean indicators */
+    .tabs {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        /* overflow-x: auto; */
+        /* justify-content: flex-start; */
+        /* -webkit-overflow-scrolling: touch; */
+        gap: 5px;
+        background: #f9f9f9;
+        border-radius: 12px;
+        padding: 4px;
+        /* scrollbar-width: none; */
+        /* Hide scrollbar Firefox */
+        margin-bottom: 1.5rem;
+    }
+
+    .tabs::-webkit-scrollbar {
+        display: none;
+        /* UI Cleanliness */
+    }
+
+    .tab-btn {
+        /* flex: 0 0 auto; */
+        padding: 10px 16px;
+        font-size: 0.95rem;
+        border: none;
+        border-radius: 8px;
+        background: transparent;
+        box-shadow: none;
+        margin: 0;
+    }
+
+    .tab-btn.active {
+        background: #e6f0fa;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        color: var(--primary-color);
+        font-weight: 600;
+        border: 2px solid var(--primary-color);
+        /* border: none; */
+    }
+
+    .tab-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* --- 3. FEATURE STACKS --- */
+    .upload-area {
+        padding: 2rem 1rem;
+        border-width: 2px;
+    }
+
+    /* Compress Options - Stacked Cards */
+    .compress-options {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .compress-option-card {
+        width: 100%;
+        max-width: 100%;
+        min-height: 80px;
+        /* flex-direction: row; */
+        /* Horizontal card on mobile */
+        align-items: center;
+        /* text-align: left; */
+        padding: 1rem;
+        gap: 15px;
+    }
+
+    .compress-option-card .option-content {
+        /* align-items: flex-start; */
+    }
+
+    /* Split Grid - 2 Column Clean */
+    .pages-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .page-canvas-container {
+        height: 140px;
+        background: #f5f5f5;
+    }
+
+    /* Converter Selectors */
+    .conversion-type-selector {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* --- 4. EDITOR UI (The Complex Part) --- */
+
+    /* Layout: Fixed Header -> Scrollable Canvas -> Fixed Bottom Actions */
+    .editor-layout {
+        display: flex;
+        flex-direction: column;
+        height: 75vh;
+        /* Dedicated editor space */
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* 4a. Top Toolbar - Horizontal Scroll */
+    .editor-toolbar {
+        position: relative;
+        /* Not fixed globally, fixed to container top */
+        top: 0;
+        z-index: 10;
+        background: #fff;
+        border-bottom: 1px solid #ddd;
+        padding: 8px;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        border-radius: 0;
+        margin: 0;
+        gap: 12px;
+    }
+
+    .tool-btn {
+        min-width: 44px;
+        /* Touch target standard */
+        min-height: 44px;
+        padding: 0;
+        border-radius: 8px;
+    }
+
+    /* Secondary Toolbar (Text Settings) */
+    .secondary-toolbar {
+        position: absolute;
+        top: 60px;
+        /* Below main toolbar */
+        left: 0;
+        width: 100%;
+        z-index: 9;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid #eee;
+    }
+
+    /* 4b. Sidebar as Bottom Filmstrip */
+    .page-sidebar {
+        order: 3;
+        /* Move to bottom */
+        width: 100%;
+        height: 90px;
+        border-right: none;
+        border-top: 1px solid #ddd;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 8px;
+        background: #f8f9fa;
+        flex-shrink: 0;
+    }
+
+    .page-sidebar .page-thumbnail {
+        width: 60px;
+        height: 74px;
+        /* Aspect similar to A4 */
+        min-height: auto;
+    }
+
+    /* 4c. Main Canvas Area */
+    .editor-main-area {
+        padding: 0;
+        flex-grow: 1;
+        background: #525659;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* The Scrollable Viewport */
     .editor-viewport {
-        height: 50vh;
-        min-height: 400px;
-        overflow: auto; /* Enable scrolling */
-        display: block; /* Remove flex centering constraint */
-        /* Ensure scrolling context */
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        overflow: auto;
+        /* Allow native scrolling */
         -webkit-overflow-scrolling: touch;
+        display: flex;
+        align-items: flex-start;
+        /* Do not center, let it flow */
+        justify-content: center;
     }
 
     .editor-transform-layer {
-        transform-origin: top left !important; /* Scale from top-left to avoid negative margins */
-        margin: 0;
-        width: fit-content;
-        height: fit-content;
+        margin: 20px;
+        /* Give some breathing room */
+        transform-origin: center top;
     }
 
+    /* Canvas Wrapper */
     .canvas-wrapper {
-        overflow: visible; /* Let viewport handle scroll */
-        width: fit-content;
-        height: fit-content;
+        padding: 0;
+        background: transparent;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        margin: auto;
     }
 
+    /* Zoom Controls */
     .zoom-controls {
-        bottom: 15px;
-        padding: 5px 10px;
+        bottom: auto;
+        top: 105px;
+        right: 10px;
+        left: auto;
+        transform: none;
     }
 
-    #zoom-level {
-        min-width: 40px;
+    /* 4d. Bottom Actions (Sticky bottom of editor) */
+    .editor-main-area .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: sticky;
+        bottom: 0;
+        background: #fff;
+        padding: 1rem;
+        border-top: 1px solid #eee;
+        z-index: 100;
+        width: 100%;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
     }
+
+    /* Remove generic override if it conflicts, or just ensure specific one takes precedence */
+    .tab-content .actions {
+        position: relative;
+        bottom: auto;
+        box-shadow: none;
+        padding: 20px;
+        margin-top: 1rem;
+    }
+
+
+
+    .btn {
+        width: 100%;
+        padding: 14px;
+        /* Larger touch target */
+        font-size: 1.05rem;
+    }
+
+    /* --- 5. WATERMARK PANEL --- */
+    .watermark-panel {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+
+    .wm-group,
+    .wm-grid-box {
+        width: 100%;
+    }
+
+    .wm-row {
+        justify-content: space-between;
+    }
+
+    .wm-row input[type="range"] {
+        flex-grow: 1;
+        margin-left: 10px;
+    }
+
+    /* Position Grid */
+    .wm-position-grid {
+        margin: 0 auto;
+    }
+
 }

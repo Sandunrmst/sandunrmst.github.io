@@ -115,13 +115,13 @@
                     <input type="file" id="merge-file-input" multiple accept="application/pdf" hidden>
                     <button class="btn secondary" onclick="document.getElementById('merge-file-input').click()">Select
                         Files</button>
+
+                    <div id="merge-help-text" class="help-text hidden"></div>
+
+                    <ul id="file-list" class="file-list">
+                        <!-- File items will be added here dynamically -->
+                    </ul>
                 </div>
-
-                <div id="merge-help-text" class="help-text hidden"></div>
-
-                <ul id="file-list" class="file-list">
-                    <!-- File items will be added here dynamically -->
-                </ul>
 
                 <div class="actions">
                     <button id="merge-btn" class="btn primary" disabled>Merge PDF</button>
@@ -736,13 +736,14 @@
             <button id="popup-close-btn" class="popup-close">&times;</button>
             <div class="popup-content">
                 <h2>Welcome to our all-in-one PDF tool!</h2>
-                <p>This platform is designed to be <strong>fast, simple, and user-friendly</strong> — unlike many
-                    complicated tools on the market. You can edit, convert, merge, and manage PDFs with ease.</p>
+                <p>This platform is designed to be <strong>fast, simple, and user-friendly.</strong> You can easily
+                    edit,
+                    convert, merge, and manage PDFs in one place.</p>
 
                 <div class="feature-highlight">
                     <span class="highlight-icon">⚡</span>
                     <div>
-                        <strong>100% Free — Online and Offline</strong>
+                        <strong>100% Free - Online and Offline</strong>
                         <p>Our tool works completely offline as well, so you can use all features even without an
                             internet connection. No ads, no limitations, and no hidden fees.</p>
                     </div>

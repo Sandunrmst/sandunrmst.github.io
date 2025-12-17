@@ -1728,7 +1728,24 @@ async function loadEditPage(pageNum) {
 
     try {
         const page = await loadedPdf.getPage(pageNum);
-        const viewport = page.getViewport({ scale: 1.5 });
+
+        // Calculate Scale based on Container Width (Responsive)
+        const pdfContainer = document.getElementById('editor-main-area');
+        const availableWidth = pdfContainer ? pdfContainer.clientWidth - 20 : window.innerWidth - 30; // 20px buffer
+
+        // Get unscaled viewport to calculate ratio
+        const unscaledViewport = page.getViewport({ scale: 1.0 });
+        let targetScale = 1.5; // Default for desktop
+
+        // Mobile / Responsive Logic
+        if (availableWidth < unscaledViewport.width * 1.5) {
+            targetScale = availableWidth / unscaledViewport.width;
+        }
+
+        // Update global zoom state so controls work from here
+        setZoom(targetScale);
+
+        const viewport = page.getViewport({ scale: targetScale });
 
         // Update canvas dimensions (Create or Resize)
         if (!fabricCanvas) {
