@@ -194,7 +194,7 @@ textarea.form-control:focus {
   height: auto;
 }
 
-.form-control + .form-control-border {
+.form-control+.form-control-border {
   content: "";
   position: absolute;
   z-index: -1;
@@ -210,13 +210,13 @@ textarea.form-control:focus {
   transition: all 0.3s ease-in-out;
 }
 
-.form-control:focus + .form-control-border {
+.form-control:focus+.form-control-border {
   left: 0;
   right: 0;
   z-index: 1;
 }
 
-.has-error .form-control + .form-control-border {
+.has-error .form-control+.form-control-border {
   background: #ff4c4c;
 }
 
@@ -412,7 +412,7 @@ input[type="submit"]:hover {
 }
 
 /* Footer */
-body > footer {
+body>footer {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -420,7 +420,7 @@ body > footer {
 }
 
 /* copyrights block */
-body > footer .copyrights {
+body>footer .copyrights {
   display: block;
   margin-bottom: 12px;
   text-align: center;
@@ -793,6 +793,7 @@ body > footer .copyrights {
 }
 
 @media only screen and (max-width: 991px) {
+
   .site-main-menu li a,
   .site-main-menu li a:hover {
     font-size: 2.6rem;
@@ -2222,13 +2223,13 @@ body > footer .copyrights {
   text-align: right;
 }
 
-.ajax-page-nav > div.nav-item {
+.ajax-page-nav>div.nav-item {
   position: relative;
   display: inline-block;
   margin: 0 3px;
 }
 
-.ajax-page-nav > div.nav-item a {
+.ajax-page-nav>div.nav-item a {
   display: inline-block;
   height: 42px;
   width: 42px;
@@ -2238,11 +2239,11 @@ body > footer .copyrights {
   background-color: #f5f5f5;
 }
 
-.ajax-page-nav > div.nav-item a:hover {
+.ajax-page-nav>div.nav-item a:hover {
   color: #05739a;
 }
 
-.ajax-page-nav > div.nav-item a i {
+.ajax-page-nav>div.nav-item a i {
   line-height: 42px;
   font-size: 22px;
 }
@@ -2460,7 +2461,7 @@ blockquote .small {
   margin-top: 30px;
 }
 
-.blog-post-content .post-comments > .media {
+.blog-post-content .post-comments>.media {
   margin-top: 0;
 }
 
@@ -2919,7 +2920,8 @@ blockquote .small {
   top: 0;
   left: 0;
   width: 100%;
-  background: rgba(0, 24, 54, 0.2);
+  height: 100%;
+  background: rgba(32, 34, 36, 0.1);
   height: 100%;
   color: #fff;
   border-radius: 2%;
@@ -2931,6 +2933,51 @@ blockquote .small {
 
 .show-message {
   display: block;
+}
+
+#message-loader {
+  margin-top: 15px;
+  text-align: center;
+  clear: both;
+}
+
+.loader-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: conic-gradient(#09009f, #00ff95c9 25%, #f3f3f3 25%);
+  /* Cut out the center to make it a ring */
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 0);
+
+  -webkit-animation: spin 1s linear infinite;
+  /* Safari */
+  animation: spin 1s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .preloader-sendMail {
@@ -3036,7 +3083,7 @@ blockquote .small {
   align-items: flex-start;
 }
 
-.testi .aside > p {
+.testi .aside>p {
   position: relative;
   font-size: 15px;
   line-height: normal;
@@ -3046,13 +3093,13 @@ blockquote .small {
   transition: transform 1s, opacity 1s;
 }
 
-.testi .swiper-slide-active .aside > p {
+.testi .swiper-slide-active .aside>p {
   transform: translateX(0);
   opacity: 1;
 }
 
-.testi .aside > p::before,
-.testi .aside > p::after {
+.testi .aside>p::before,
+.testi .aside>p::after {
   font-family: serif;
   font-size: 80px;
   font-weight: 800;
@@ -3063,13 +3110,13 @@ blockquote .small {
   z-index: -1;
 }
 
-.testi .aside > p::before {
+.testi .aside>p::before {
   content: open-quote;
   top: -48px;
   left: 10px;
 }
 
-.testi .aside > p::after {
+.testi .aside>p::after {
   content: close-quote;
   right: 0;
 }
@@ -3447,21 +3494,18 @@ blockquote .small {
 
 .scroller[data-animated="true"] {
   overflow: hidden;
-  -webkit-mask: linear-gradient(
-    90deg,
-    transparent,
-    white 20%,
-    white 80%,
-    transparent
-  );
+  -webkit-mask: linear-gradient(90deg,
+      transparent,
+      white 20%,
+      white 80%,
+      transparent);
   mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
 }
 
 .scroller[data-animated="true"] .scroller__inner {
   width: max-content;
   flex-wrap: nowrap;
-  animation: scroll var(--_animation-duration, 40s)
-    var(--_animation-direction, forwards) linear infinite;
+  animation: scroll var(--_animation-duration, 40s) var(--_animation-direction, forwards) linear infinite;
 }
 
 .scroller[data-animated="true"]:hover .scroller__inner {
@@ -3539,6 +3583,7 @@ blockquote .small {
 }
 
 @keyframes heartbeat {
+
   0%,
   100% {
     transform: scale(1);
