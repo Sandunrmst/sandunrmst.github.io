@@ -1,6 +1,6 @@
 (function () {
 
-  const sURL = 'https://script.google.com/macros/s/AKfycbxOHUMcJVW9jgTh5uMDcY0ahGbJXJ6th7tvM_nCnKCKubzSTZ_aHumo1EKafyB0ywJSxQ/exec';
+  const sURL = 'https://script.google.com/macros/s/AKfycbxyiqjbK58lP4xz53GnV6EdrVE8hsszG0k3FOeypIdiDM6Hdj8NBK6gl_WmYF6REWVaPw/exec';
   const form = document.forms['submit-to-google-sheet'];
 
   const msg = document.getElementById("sent-message");
@@ -13,17 +13,22 @@
     document.getElementById('message-loader').innerHTML = '<div class="preloader-sendMail"><div class="loading-dot"></div></div>';
 
     fetch(sURL, { method: 'POST', body: new FormData(form) })
-      .then(response => {
+      .then(res => res.json())
+      .then(data => {
         document.getElementById('message-loader').className = "hide-message";
-        msg.innerHTML = "Message sent successfully! 😊";
-        setTimeout(function () {
-          msg.innerHTML = "";
-        }, 2000);
-        form.reset();
+
+        if (data.result === "success") {
+          msg.innerHTML = "Message sent successfully! 😊";
+          form.reset();
+        } else {
+          throw new Error("Script error");
+        }
+
+        setTimeout(() => msg.innerHTML = "", 2000);
       })
-      .catch(error => {
+      .catch(() => {
         document.getElementById('message-loader').className = "hide-message";
-        msg.innerHTML = "Sorry, Couldn't send message on this time! 😞";
+        msg.innerHTML = "Sorry, couldn't send message 😞";
       });
   });
 
