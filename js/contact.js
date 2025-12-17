@@ -1,6 +1,6 @@
 (function () {
 
-  const sURL = 'https://script.google.com/macros/s/AKfycbxyiqjbK58lP4xz53GnV6EdrVE8hsszG0k3FOeypIdiDM6Hdj8NBK6gl_WmYF6REWVaPw/exec';
+  const sURL = 'https://script.google.com/macros/s/AKfycbx-BEy24tR_6wV5xqqdMz5r4aTTkOQcRpv0hyh6kM6U4xgysbJlvOWojyAfTvbS_AiLPQ/exec';
   const form = document.forms['submit-to-google-sheet'];
 
   const msg = document.getElementById("sent-message");
