@@ -1562,21 +1562,22 @@ function setupEditEvents() {
     const modalCancel = document.getElementById('modal-cancel-btn');
     const modalConfirm = document.getElementById('modal-confirm-btn');
 
-    function showConfirmModal(action) {
+    // Make global so other features can use it
+    window.showConfirmModal = function (action) {
         onConfirmAction = action;
         modal.classList.remove('hidden');
-    }
+    };
 
-    function hideConfirmModal() {
+    window.hideConfirmModal = function () {
         modal.classList.add('hidden');
         onConfirmAction = null;
-    }
+    };
 
-    modalCancel.addEventListener('click', hideConfirmModal);
+    modalCancel.addEventListener('click', window.hideConfirmModal);
 
     modalConfirm.addEventListener('click', () => {
         if (onConfirmAction) onConfirmAction();
-        hideConfirmModal();
+        window.hideConfirmModal();
     });
 
     // Buttons
@@ -2478,12 +2479,18 @@ async function saveWatermarkedPDF() {
 }
 
 // --- WELCOME POPUP ---
+// --- WELCOME POPUP & FIREWORKS ---
 function setupWelcomePopup() {
     const popup = document.getElementById('welcome-popup');
     const closeBtn = document.getElementById('popup-close-btn');
     const actionBtn = document.getElementById('popup-action-btn');
+    const canvas = document.getElementById('fireworks-canvas');
 
-    if (!popup) return;
+    if (!popup || !canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId = null;
 
     // Show popup after page load
     window.addEventListener('load', () => {
@@ -2493,7 +2500,7 @@ function setupWelcomePopup() {
             void popup.offsetWidth;
             popup.classList.add('show');
             document.body.classList.add('modal-open'); // Lock scroll
-        }, 1000); // 1s delay for better UX
+        }, 1000); // 1s delay
     });
 
     const closePopup = () => {
@@ -2501,7 +2508,13 @@ function setupWelcomePopup() {
         document.body.classList.remove('modal-open'); // Unlock scroll
         setTimeout(() => {
             popup.classList.add('hidden');
-        }, 400); // Match transition duration
+            // Stop animation after popup closes to save resources
+            setTimeout(() => {
+                cancelAnimationFrame(animationId);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles = [];
+            }, 2000);
+        }, 400); // 0.4s default fade out
     };
 
     if (closeBtn) closeBtn.addEventListener('click', closePopup);
@@ -2512,44 +2525,119 @@ function setupWelcomePopup() {
         }
     });
 
-    // Confetti Logic
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            // Explosion velocity
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 8 + 2; // Random speed
+            this.vx = Math.cos(angle) * velocity;
+            this.vy = Math.sin(angle) * velocity;
+
+            this.friction = 0.96; // Slow down
+            this.gravity = 0.15; // Fall down
+            this.alpha = 1;
+            this.decay = Math.random() * 0.015 + 0.005; // Fade out speed
+        }
+
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+
+            // Glow effect
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = this.color;
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        update() {
+            this.vx *= this.friction;
+            this.vy *= this.friction;
+            this.vy += this.gravity;
+            this.x += this.vx;
+            this.y += this.vy;
+            this.alpha -= this.decay;
+        }
+    }
+
+    function createExplosion(x, y) {
+        const colors = ['#FF1493', '#00BFFF', '#32CD32', '#FFD700', '#9400D3', '#FF4500'];
+        const particleCount = 150; // High quality count
+
+        for (let i = 0; i < particleCount; i++) {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particles.push(new Particle(x, y, color));
+        }
+    }
+
+    function animate() {
+        animationId = requestAnimationFrame(animate);
+
+        // Trail effect with transparent background
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Fade out existing particles to transparency
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.globalCompositeOperation = 'source-over'; // Reset for drawing new particles
+
+        // Update and draw particles
+        particles.forEach((particle, index) => {
+            if (particle.alpha > 0) {
+                particle.update();
+                particle.draw();
+            } else {
+                particles.splice(index, 1);
+            }
+        });
+    }
+
     if (actionBtn) {
         actionBtn.addEventListener('click', (e) => {
-            const rect = actionBtn.getBoundingClientRect();
-            const center = {
-                x: rect.left + rect.width / 2,
-                y: rect.top + rect.height / 2
-            };
+            // Blast from the top of the popup box
+            const popupBox = document.querySelector('.popup-box');
+            let x, y;
 
-            // Fire Confetti
-            const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6'];
-
-            for (let i = 0; i < 100; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('confetti');
-
-                // Random spread
-                const angle = Math.random() * Math.PI * 2;
-                const velocity = 100 + Math.random() * 200; // Distance
-                const dx = Math.cos(angle) * velocity + 'px';
-                const dy = Math.sin(angle) * velocity + 'px';
-                const rot = (Math.random() * 720 - 360) + 'deg';
-
-                particle.style.left = center.x + 'px';
-                particle.style.top = center.y + 'px';
-                particle.style.setProperty('--dx', dx);
-                particle.style.setProperty('--dy', dy);
-                particle.style.setProperty('--rot', rot);
-                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-
-                document.body.appendChild(particle);
-
-                // Cleanup
-                setTimeout(() => particle.remove(), 1500);
+            if (popupBox) {
+                const rect = popupBox.getBoundingClientRect();
+                x = rect.left + rect.width / 2;
+                y = rect.top; // Top edge of the popup
+            } else {
+                // Fallback to center screen if box not found
+                x = window.innerWidth / 2;
+                y = window.innerHeight / 2;
             }
 
-            // Close popup after burst starts
-            setTimeout(closePopup, 300);
+            // Start animation loop if not running
+            if (!animationId || particles.length === 0) {
+                animate();
+            }
+
+            // Multiple explosions for "Big Blast" effect
+            createExplosion(x, y);
+
+            // Delayed explosions for better effect
+            setTimeout(() => createExplosion(x + (Math.random() - 0.5) * 100, y + (Math.random() - 0.5) * 100), 100);
+            setTimeout(() => createExplosion(x + (Math.random() - 0.5) * 100, y + (Math.random() - 0.5) * 100), 200);
+            setTimeout(() => createExplosion(x + (Math.random() - 0.5) * 100, y + (Math.random() - 0.5) * 100), 300);
+
+            // Close popup immediately 
+            closePopup();
         });
     }
 }
@@ -2575,10 +2663,626 @@ function setupSecurityEvents() {
     });
 
     setupProtectPDFEvents();
+    setupSignPDFEvents();
 }
 
 let protectFile = null;
+let signFile = null;
+let signCanvas = null; // Fabric instance for signing
+let signaturePadContext = null;
+let isSigning = false;
+let currentSignPage = 1;
+let totalSignPages = 0;
+let signPageAnnotations = {}; // Store page modifications
+
 let qpdfModulePromise = null;
+
+// --- SIGN PDF LOGIC ---
+
+function setupSignEvents() {
+    // This function is alias for setupSignPDFEvents in my mind or vice versa
+}
+
+function setupSignPDFEvents() {
+    const signFileInput = document.getElementById('sign-file-input');
+    if (signFileInput) {
+        signFileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) await handleSignFile(file);
+        });
+    }
+
+    // Toolbar Buttons
+    document.getElementById('tool-signature').addEventListener('click', () => openSignatureModal('draw'));
+
+    // Stamp Modal
+    const stampModal = document.getElementById('stamp-modal');
+    document.getElementById('tool-stamp').addEventListener('click', () => {
+        stampModal.classList.remove('hidden');
+    });
+
+    document.getElementById('close-stamp-modal').addEventListener('click', () => {
+        stampModal.classList.add('hidden');
+    });
+
+    // Close on click outside
+    window.addEventListener('click', (e) => {
+        if (e.target === stampModal) {
+            stampModal.classList.add('hidden');
+        }
+    });
+
+    document.getElementById('tool-date').addEventListener('click', () => {
+        const dateStr = new Date().toLocaleDateString();
+        addSignText(dateStr);
+    });
+
+    document.getElementById('tool-sign-text').addEventListener('click', () => {
+        addSignText('Text Here');
+    });
+
+    // Zoom Controls
+    window.currentSignZoom = 1;
+    const updateZoomDisplay = () => {
+        document.getElementById('sign-zoom-level').textContent = `${Math.round(window.currentSignZoom * 100)}%`;
+        if (signCanvas && window.signBaseDims) {
+            signCanvas.setZoom(window.currentSignZoom);
+            signCanvas.setDimensions({
+                width: window.signBaseDims.width * window.currentSignZoom,
+                height: window.signBaseDims.height * window.currentSignZoom
+            });
+            signCanvas.requestRenderAll();
+        }
+    };
+
+    document.getElementById('sign-zoom-in').addEventListener('click', () => {
+        if (window.currentSignZoom < 3) {
+            window.currentSignZoom += 0.25;
+            updateZoomDisplay();
+        }
+    });
+
+    document.getElementById('sign-zoom-out').addEventListener('click', () => {
+        if (window.currentSignZoom > 0.1) {
+            window.currentSignZoom -= 0.1; // Smaller steps for finer control
+            updateZoomDisplay();
+        }
+    });
+
+    document.getElementById('sign-zoom-reset').addEventListener('click', () => {
+        window.currentSignZoom = 1;
+        updateZoomDisplay();
+    });
+
+    document.getElementById('tool-delete-sign').addEventListener('click', () => {
+        if (!signCanvas) return;
+        const activeObj = signCanvas.getActiveObject();
+        if (activeObj) {
+            signCanvas.remove(activeObj);
+            signCanvas.discardActiveObject();
+            signCanvas.requestRenderAll();
+        } else {
+
+            showNotification('Select an item to delete..', 'error');
+
+        }
+    });
+
+    document.getElementById('save-signed-pdf-btn').addEventListener('click', saveSignedPdf);
+    document.getElementById('clear-sign-btn').addEventListener('click', () => {
+        if (typeof window.showConfirmModal === 'function') {
+            window.showConfirmModal(() => {
+                signCanvas.clear();
+                // Restore background
+                loadSignPage(currentSignPage);
+            });
+        } else if (confirm('Clear all signatures?')) {
+            // Fallback
+            signCanvas.clear();
+            loadSignPage(currentSignPage);
+        }
+    });
+
+    // Signature Modal Logic
+    setupSignatureModalEvents();
+}
+
+async function handleSignFile(file) {
+    if (!file || file.type !== 'application/pdf') return;
+
+    signFile = file;
+    document.getElementById('sign-upload-area').classList.add('hidden');
+    document.getElementById('sign-editor-container').classList.remove('hidden');
+
+    // Reset
+    if (signCanvas) {
+        signCanvas.dispose();
+        signCanvas = null;
+    }
+    signPageAnnotations = {};
+    currentSignPage = 1;
+
+    // Load PDF
+    const arrayBuffer = await file.arrayBuffer();
+    const loadingTask = pdfjsLib.getDocument(arrayBuffer);
+    const pdf = await loadingTask.promise;
+    totalSignPages = pdf.numPages;
+
+    // Render Sidebars
+    renderSignPageList(pdf);
+    // Load First Page
+    loadSignPage(1, pdf);
+}
+
+// Reuse render logic but for sign sidebar
+async function renderSignPageList(pdf) {
+    const listContainer = document.getElementById('sign-page-list');
+    listContainer.innerHTML = '';
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+        const thumbDiv = document.createElement('div');
+        thumbDiv.className = `page-thumbnail ${i === 1 ? 'active' : ''}`;
+        thumbDiv.onclick = () => switchSignPage(i, pdf);
+
+        const canvas = document.createElement('canvas');
+        thumbDiv.appendChild(canvas);
+        const numSpan = document.createElement('span');
+        numSpan.className = 'page-number';
+        numSpan.innerText = i;
+        thumbDiv.appendChild(numSpan);
+        listContainer.appendChild(thumbDiv);
+
+        renderThumbnailToCanvasDirect(pdf, i, canvas);
+    }
+}
+
+async function renderThumbnailToCanvasDirect(pdf, pageNum, canvas) {
+    const page = await pdf.getPage(pageNum);
+    const viewport = page.getViewport({ scale: 0.3 });
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+}
+
+async function switchSignPage(pageNum, pdf) {
+    if (currentSignPage === pageNum) return;
+
+    // Save state
+    if (signCanvas) {
+        const json = signCanvas.toJSON();
+        delete json.backgroundImage;
+        signPageAnnotations[currentSignPage] = json;
+    }
+
+    currentSignPage = pageNum;
+    loadSignPage(pageNum, pdf);
+
+    // Update active thumb
+    document.querySelectorAll('#sign-page-list .page-thumbnail').forEach((el, idx) => {
+        el.classList.toggle('active', idx + 1 === pageNum);
+    });
+}
+
+async function loadSignPage(pageNum, pdfInstance = null) {
+    // If no pdf instance provided, we need to reload it or store it globally. 
+    // Ideally store globally or re-fetch. For now assume we fetch from file again if needed or pass it.
+    // Let's refetch from file to be safe if not passed, or store global `loadedSignPdf`
+
+    // Let's refetch from file to be safe if not passed, or store global `loadedSignPdf`
+
+    let pdf = pdfInstance;
+    if (!pdf) {
+        const ab = await signFile.arrayBuffer();
+        pdf = await pdfjsLib.getDocument(ab).promise;
+    }
+
+    const page = await pdf.getPage(pageNum);
+    const viewport = page.getViewport({ scale: 1.5 }); // Base scale
+
+    // Store base dims for zooming
+    window.signBaseDims = { width: viewport.width, height: viewport.height };
+
+    // Smart Responsive Zoom: Fit width on load
+    const wrapper = document.querySelector('#sign-viewport .canvas-wrapper');
+    if (wrapper) {
+        const availableWidth = wrapper.clientWidth - 40; // 40px padding safety
+        const fitScale = availableWidth / viewport.width;
+        // If it's a huge PDF or small screen, scale down. Max 1 (100%) initially if plenty of space.
+        window.currentSignZoom = Math.min(1, fitScale);
+    } else {
+        window.currentSignZoom = 1;
+    }
+
+    const canvasEl = document.getElementById('sign-canvas');
+
+    if (!signCanvas) {
+        // Init Fabric
+        signCanvas = new fabric.Canvas('sign-canvas', {
+            width: viewport.width * window.currentSignZoom,
+            height: viewport.height * window.currentSignZoom
+        });
+        signCanvas.setZoom(window.currentSignZoom);
+    } else {
+        // Just reset dimensions based on current zoom
+        signCanvas.setDimensions({
+            width: viewport.width * window.currentSignZoom,
+            height: viewport.height * window.currentSignZoom
+        });
+        signCanvas.setZoom(window.currentSignZoom);
+        signCanvas.clear();
+    }
+
+    // Render BG
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = viewport.width;
+    tempCanvas.height = viewport.height;
+    await page.render({ canvasContext: tempCanvas.getContext('2d'), viewport }).promise;
+
+    // Restore Annotations or Init Empty
+    const json = signPageAnnotations[pageNum];
+
+    if (json) {
+        signCanvas.loadFromJSON(json, () => {
+            // Re-apply background after JSON load (which might have cleared it or had old one)
+            signCanvas.setBackgroundImage(tempCanvas.toDataURL(), signCanvas.renderAll.bind(signCanvas), {
+                scaleX: 1,
+                scaleY: 1
+            });
+        });
+    } else {
+        signCanvas.setBackgroundImage(tempCanvas.toDataURL(), signCanvas.renderAll.bind(signCanvas), {
+            scaleX: 1,
+            scaleY: 1
+        });
+    }
+}
+
+// --- SIGNATURE MODAL & CREATION ---
+let drawingContext = null;
+let isDrawing = false;
+let lastX = 0;
+let lastY = 0;
+
+function setupSignatureModalEvents() {
+    const modal = document.getElementById('signature-modal');
+    const closeBtn = document.getElementById('close-sign-modal');
+    const cancelBtn = document.getElementById('cancel-signature');
+    const createBtn = document.getElementById('create-signature-btn');
+    const pad = document.getElementById('signature-pad');
+
+    closeBtn.onclick = () => modal.classList.add('hidden');
+    cancelBtn.onclick = () => modal.classList.add('hidden');
+
+    // Tabs
+    document.querySelectorAll('.sign-tabs .sign-tab-btn').forEach(btn => {
+        btn.onclick = (e) => {
+            document.querySelectorAll('.sign-tabs .sign-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.sign-tab-content').forEach(c => c.classList.add('hidden'));
+
+            e.target.classList.add('active');
+            document.getElementById(`tab-${e.target.dataset.tab}`).classList.remove('hidden');
+        };
+    });
+
+    // Drawing Logic
+    drawingContext = pad.getContext('2d');
+
+    // --- SMOOTH DRAWING HELPER ---
+    let points = [];
+
+    const startDraw = (x, y) => {
+        isDrawing = true;
+        points = [{ x, y }];
+        drawingContext.lineWidth = document.getElementById('sign-width').value;
+        drawingContext.lineCap = 'round';
+        drawingContext.lineJoin = 'round';
+        drawingContext.strokeStyle = document.getElementById('sign-color').value;
+
+        // Draw a dot
+        drawingContext.beginPath();
+        drawingContext.arc(x, y, drawingContext.lineWidth / 2, 0, Math.PI * 2, !0);
+        drawingContext.fill();
+        drawingContext.closePath();
+    };
+
+    const moveDraw = (x, y) => {
+        if (!isDrawing) return;
+        points.push({ x, y });
+
+        if (points.length < 3) return;
+
+        const p1 = points[points.length - 2];
+        const p2 = points[points.length - 1];
+
+        // Calculate midpoints for smooth quadratic curves
+        const midPoint1 = { x: (p1.x + points[points.length - 3].x) / 2, y: (p1.y + points[points.length - 3].y) / 2 };
+        const midPoint2 = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+
+        drawingContext.beginPath();
+        drawingContext.moveTo(midPoint1.x, midPoint1.y);
+        drawingContext.quadraticCurveTo(p1.x, p1.y, midPoint2.x, midPoint2.y);
+        drawingContext.stroke();
+        drawingContext.closePath();
+    };
+
+    // Desktop Mouse
+    pad.addEventListener('mousedown', (e) => {
+        startDraw(e.offsetX, e.offsetY);
+    });
+
+    pad.addEventListener('mousemove', (e) => {
+        moveDraw(e.offsetX, e.offsetY);
+    });
+
+    pad.addEventListener('mouseup', () => isDrawing = false);
+    pad.addEventListener('mouseout', () => isDrawing = false);
+
+    // Mobile Touch
+    pad.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = pad.getBoundingClientRect();
+        startDraw(touch.clientX - rect.left, touch.clientY - rect.top);
+    }, { passive: false });
+
+    pad.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = pad.getBoundingClientRect();
+        moveDraw(touch.clientX - rect.left, touch.clientY - rect.top);
+    }, { passive: false });
+
+    pad.addEventListener('touchend', () => isDrawing = false);
+
+    document.getElementById('clear-signature').onclick = () => {
+        drawingContext.clearRect(0, 0, pad.width, pad.height);
+    };
+
+    // Color/Width
+    document.getElementById('sign-color').addEventListener('input', (e) => {
+        drawingContext.strokeStyle = e.target.value;
+    });
+
+    // Create Signature
+    createBtn.onclick = () => {
+        const activeTab = document.querySelector('.sign-tabs .sign-tab-btn.active').dataset.tab;
+        let dataUrl = null;
+
+        if (activeTab === 'draw') {
+            // Trim whitespace? For now just take full canvas
+            dataUrl = pad.toDataURL();
+        } else if (activeTab === 'type') {
+            // Render text to canvas then to image
+            // For simplicity, just use Fabric Text directly on main canvas
+        } else if (activeTab === 'upload') {
+            const img = document.getElementById('upload-preview');
+            if (img.src) dataUrl = img.src;
+        }
+
+        if (activeTab === 'type') {
+            const text = document.getElementById('type-signature-input').value;
+            const font = document.querySelector('.font-btn.active')?.style.fontFamily || 'Arial';
+            addSignText(text, { fontFamily: font, fontSize: 40, color: '#000000' });
+        } else if (dataUrl) {
+            fabric.Image.fromURL(dataUrl, (img) => {
+                img.scaleToWidth(200);
+                signCanvas.add(img);
+                signCanvas.centerObject(img);
+                signCanvas.setActiveObject(img);
+            });
+        }
+
+        modal.classList.add('hidden');
+    };
+
+    // Type Preview
+    const typeInput = document.getElementById('type-signature-input');
+    typeInput.addEventListener('input', updateTypePreview);
+
+    document.querySelectorAll('.font-btn').forEach(btn => {
+        btn.onclick = (e) => {
+            document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            updateTypePreview();
+        };
+    });
+
+    // Drag & Drop for Upload Tab
+    const uploadBox = document.querySelector('.upload-box');
+    const uploadInput = document.getElementById('upload-sign-file');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadBox.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadBox.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadBox.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        uploadBox.classList.add('dragover');
+    }
+
+    function unhighlight(e) {
+        uploadBox.classList.remove('dragover');
+    }
+
+    uploadBox.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files.length) {
+            uploadInput.files = files;
+            const event = new Event('change');
+            uploadInput.dispatchEvent(event);
+        }
+    }
+
+    // Upload
+    document.getElementById('upload-sign-file').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (f) => {
+                const img = document.getElementById('upload-preview');
+                img.src = f.target.result;
+                img.classList.remove('hidden');
+                document.querySelector('.upload-box p').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+// Helper for type preview
+
+
+
+function updateTypePreview() {
+    const text = document.getElementById('type-signature-input').value || 'Signature';
+    const font = document.querySelector('.font-btn.active')?.style.fontFamily || 'cursive';
+    const preview = document.getElementById('type-preview');
+    preview.textContent = text;
+    preview.style.fontFamily = font;
+}
+
+function openSignatureModal(mode) {
+    document.getElementById('signature-modal').classList.remove('hidden');
+    // Clear canvas
+    document.getElementById('clear-signature').click();
+    document.getElementById('type-signature-input').value = '';
+    document.getElementById('type-preview').textContent = '';
+}
+
+function addSignText(text, options = {}) {
+    if (!signCanvas) return;
+    const txt = new fabric.IText(text, {
+        left: 100, top: 100,
+        fontSize: options.fontSize || 20,
+        fontFamily: options.fontFamily || 'Arial',
+        fill: options.color || '#000000'
+    });
+    signCanvas.add(txt);
+    signCanvas.setActiveObject(txt);
+}
+
+// Make global window function for HTML onclick
+window.addStamp = function (text, color) {
+    if (!signCanvas) return;
+
+    // Modern Stamp Look
+    const group = new fabric.Group([], {
+        position: 'relative',
+        left: 250,
+        top: 250,
+        originX: 'center', originY: 'center'
+    });
+
+    // Outer Border
+    const rectObj = new fabric.Rect({
+        width: 200, height: 60,
+        fill: 'transparent',
+        stroke: color,
+        strokeWidth: 5,
+        rx: 10, ry: 10,
+        originX: 'center', originY: 'center'
+    });
+
+    // Text
+    const txt = new fabric.Text(text, {
+        fontSize: 32,
+        fontFamily: 'Impact, Arial Black, sans-serif',
+        fill: color,
+        originX: 'center', originY: 'center',
+        fontWeight: 'bold',
+        charSpacing: 50
+    });
+
+    group.addWithUpdate(rectObj);
+    group.addWithUpdate(txt);
+
+    signCanvas.add(group);
+    signCanvas.setActiveObject(group);
+    signCanvas.requestRenderAll();
+
+    // Close modal if open
+    const modal = document.getElementById('stamp-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+async function saveSignedPdf() {
+    if (!signFile) return;
+
+    // Save current page state first
+    if (signCanvas) {
+        const json = signCanvas.toJSON();
+        delete json.backgroundImage;
+        signPageAnnotations[currentSignPage] = json;
+    }
+
+    const btn = document.getElementById('save-signed-pdf-btn');
+    btn.textContent = 'Processing...';
+
+    try {
+        const arrayBuffer = await signFile.arrayBuffer();
+        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+        const pages = pdfDoc.getPages();
+
+        // Iterate pages with annotations
+        for (const [pageNumStr, json] of Object.entries(signPageAnnotations)) {
+            const pageNum = parseInt(pageNumStr);
+            if (json.objects.length === 0) continue;
+
+            const page = pages[pageNum - 1]; // 0-indexed
+            const { width, height } = page.getSize();
+
+            // Recreate a temp canvas to render the annotations as an image
+            // We need a canvas same size as page to capture all positions correctly
+            // Canvas was recording at 1.5 scale, so we must render at 1.5 scale then drawImage scales it down
+            const scale = 1.5;
+            const tempC = document.createElement('canvas');
+            tempC.width = width * scale;
+            tempC.height = height * scale;
+
+            const fabricStatic = new fabric.StaticCanvas(tempC);
+            // Load JSON
+            await new Promise(resolve => fabricStatic.loadFromJSON(json, resolve));
+
+            // Render to PNG
+            const dataUrl = fabricStatic.toDataURL({ format: 'png' });
+
+            // Embed PNG
+            const pngImage = await pdfDoc.embedPng(dataUrl);
+
+            // Draw on PDF Page (it will scale down the high-res image to fit)
+            page.drawImage(pngImage, {
+                x: 0,
+                y: 0,
+                width: width,
+                height: height
+            });
+        }
+
+        const pdfBytes = await pdfDoc.save();
+        downloadFile(pdfBytes, 'signed_document.pdf', 'application/pdf');
+
+    } catch (err) {
+        console.error(err);
+        showNotification('Error saving PDF', 'error');
+    } finally {
+        btn.textContent = 'Sign & Download PDF';
+    }
+}
 
 // Initialize (lazy) - returns a ready qpdf module
 async function getQpdfModule() {
@@ -2598,7 +3302,7 @@ async function getQpdfModule() {
             return qpdf;
         } catch (err) {
             console.error("qpdf-wasm load error:", err);
-            throw new Error("Failed to load qpdf WASM module. Check network / CDN availability.");
+            throw new Error("Failed to load CDN. Check network availability.");
         }
     })();
 

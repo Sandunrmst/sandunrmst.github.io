@@ -34,7 +34,13 @@
     <!-- Fabric.js for PDF Editing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
     <!-- qpdf-wasm (community build via jsDelivr) -->
+    <!-- qpdf-wasm (community build via jsDelivr) -->
     <script type="module" src="https://cdn.jsdelivr.net/npm/@jspawn/qpdf-wasm/qpdf.mjs"></script>
+
+    <!-- Signature Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Great+Vibes&family=Sacramento&display=swap"
+        rel="stylesheet">
 
 </head>
 
@@ -695,9 +701,128 @@
 
                 <!-- Sign PDF Sub-section -->
                 <div id="sign-pdf-section" class="security-section hidden">
-                    <div class="upload-area">
-                        <p>Sign PDF Documents</p>
-                        <p class="small-text">(Coming Soon)</p>
+                    <div class="upload-area" id="sign-upload-area">
+                        <p>Drag & Drop a PDF to Sign or</p>
+                        <input type="file" id="sign-file-input" accept="application/pdf" hidden>
+                        <button class="btn secondary"
+                            onclick="document.getElementById('sign-file-input').click()">Select
+                            File</button>
+                    </div>
+
+                    <div id="sign-editor-container" class="hidden editor-layout">
+                        <!-- Reuse sidebar styling -->
+                        <div id="sign-page-list" class="page-sidebar"></div>
+
+                        <div class="editor-main-area" id="sign-main-area">
+                            <!-- Floating Sign Toolbar -->
+                            <div class="editor-toolbar floating-toolbar" id="sign-toolbar">
+                                <button id="tool-signature" class="tool-btn large-btn" title="Add Signature">
+                                    <span class="icon">
+                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                                            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                                            <path d="M2 2l7.586 7.586"></path>
+                                            <circle cx="11" cy="11" r="2"></circle>
+                                        </svg>
+                                    </span>
+                                    <span class="label">Signature</span>
+                                </button>
+                                <div class="tool-divider"></div>
+                                <button id="tool-stamp" class="tool-btn large-btn" title="Add Stamp">
+                                    <span class="icon">
+                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <path d="M8 12h8"></path>
+                                            <path d="M12 8v8"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="label">Stamp</span>
+                                </button>
+                                <button id="tool-date" class="tool-btn large-btn" title="Add Date">
+                                    <span class="icon">
+                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                    </span>
+                                    <span class="label">Date</span>
+                                </button>
+                                <button id="tool-sign-text" class="tool-btn large-btn" title="Add Text">
+                                    <span class="icon">
+                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                                            <line x1="9" y1="20" x2="15" y2="20"></line>
+                                            <line x1="12" y1="4" x2="12" y2="20"></line>
+                                        </svg>
+                                    </span>
+                                    <span class="label">Text</span>
+                                </button>
+                                <div class="tool-divider"></div>
+                                <button id="tool-delete-sign" class="tool-btn large-btn text-danger"
+                                    title="Delete Selected">
+                                    <span class="icon">
+                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                        </svg>
+                                    </span>
+                                    <span class="label">Delete</span>
+                                </button>
+                            </div>
+
+                            <div id="sign-viewport" class="editor-viewport">
+                                <div class="canvas-wrapper">
+                                    <canvas id="sign-canvas"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Sign Zoom Controls -->
+                            <div id="sign-zoom-controls" class="zoom-controls">
+                                <button id="sign-zoom-out" class="zoom-btn" title="Zoom Out">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </button>
+                                <span id="sign-zoom-level">100%</span>
+                                <button id="sign-zoom-in" class="zoom-btn" title="Zoom In">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </button>
+                                <div class="zoom-separator"></div>
+                                <button id="sign-zoom-reset" class="zoom-btn" title="Fit to Screen">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path
+                                            d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Sign Actions -->
+                            <div class="actions">
+                                <button id="save-signed-pdf-btn" class="btn primary">Sign & Download PDF</button>
+                                <button id="clear-sign-btn" class="btn secondary">Clear All</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -720,14 +845,82 @@
         </div>
     </div>
 
+    <!-- SIGNATURE CREATION MODAL -->
+    <div id="signature-modal" class="modal-overlay hidden">
+        <div class="modal-box large-modal">
+            <div class="modal-header">
+                <h3>Create Signature</h3>
+                <button class="close-modal" id="close-sign-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="sign-tabs">
+                    <button class="sign-tab-btn active" data-tab="draw">Draw</button>
+                    <button class="sign-tab-btn" data-tab="type">Type</button>
+                    <button class="sign-tab-btn" data-tab="upload">Upload</button>
+                </div>
+
+                <!-- DRAW TAB -->
+                <div id="tab-draw" class="sign-tab-content active">
+                    <div class="draw-area">
+                        <canvas id="signature-pad" width="600" height="200"></canvas>
+                        <div class="draw-controls">
+                            <button id="clear-signature" class="btn sm secondary">Clear</button>
+                            <label>Color: <input type="color" id="sign-color" value="#000000"></label>
+                            <label>Width: <input type="range" id="sign-width" min="1" max="5" value="2"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TYPE TAB -->
+                <div id="tab-type" class="sign-tab-content hidden">
+                    <input type="text" id="type-signature-input" placeholder="Type your name" class="full-width-input">
+                    <div class="font-options">
+                        <button class="font-btn" style="font-family: 'Great Vibes', cursive;">Signature 1</button>
+                        <button class="font-btn" style="font-family: 'Dancing Script', cursive;">Signature 2</button>
+                        <button class="font-btn" style="font-family: 'Sacramento', cursive;">Signature 3</button>
+                    </div>
+                    <div id="type-preview" class="signature-preview"></div>
+                </div>
+
+                <!-- UPLOAD TAB -->
+                <div id="tab-upload" class="sign-tab-content hidden">
+                    <div class="upload-box" onclick="document.getElementById('upload-sign-file').click()">
+                        <p>Click to Upload Image (PNG/JPG)</p>
+                        <input type="file" id="upload-sign-file" accept="image/*" hidden>
+                    </div>
+                    <img id="upload-preview" class="hidden" alt="Signature Preview">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="cancel-signature" class="btn secondary">Cancel</button>
+                <button id="create-signature-btn" class="btn primary">Create Signature</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STAMP SELECTION MODAL -->
+    <div id="stamp-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Select Stamp</h3>
+                <button class="close-modal" id="close-stamp-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="stamp-grid">
+                    <button class="stamp-btn approved" onclick="addStamp('APPROVED', '#27ae60')">APPROVED</button>
+                    <button class="stamp-btn paid" onclick="addStamp('PAID', '#2980b9')">PAID</button>
+                    <button class="stamp-btn received" onclick="addStamp('RECEIVED', '#8e44ad')">RECEIVED</button>
+                    <button class="stamp-btn confidential"
+                        onclick="addStamp('CONFIDENTIAL', '#c0392b')">CONFIDENTIAL</button>
+                    <button class="stamp-btn rejected" onclick="addStamp('REJECTED', '#c0392b')">REJECTED</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <footer>
-        <div class="copyrights">
-            &copy;
-            <script>
-                document.currentScript.parentElement.innerHTML +=
-                    new Date().getFullYear();
-            </script>
-            PDF Surgeon by RMST. All rights reserved.
+        <div class="copyrights">&copy;
+            <script>document.currentScript.parentElement.innerHTML += new Date().getFullYear();</script> PDF Surgeon by
+            RMST. All rights reserved.
         </div>
     </footer>
     <!-- WELCOME POPUP -->
@@ -758,6 +951,9 @@
             </div>
         </div>
     </div>
+
+    <!-- FIREWORKS CANVAS -->
+    <canvas id="fireworks-canvas"></canvas>
 
     <script src="script.js"></script>
 </body>

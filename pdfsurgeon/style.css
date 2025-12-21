@@ -1637,6 +1637,28 @@ input[type="color"]#wm-color::-webkit-color-swatch {
     transform: scale(1.1);
 }
 
+/* Signature Range Input */
+#sign-width {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100px;
+    height: 4px;
+    background: #eef1f5;
+    border-radius: 2px;
+    outline: none;
+}
+
+#sign-width::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
 /* Position Grid */
 .wm-position-grid {
     display: grid;
@@ -1714,12 +1736,14 @@ input[type="color"]#wm-color::-webkit-color-swatch {
     align-items: center;
     opacity: 0;
     visibility: hidden;
+    visibility: hidden;
     transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 .popup-overlay.show {
     opacity: 1;
     visibility: visible;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 .popup-overlay.hidden {
@@ -2294,7 +2318,100 @@ body.modal-open {
     }
 }
 
-/* EDITOR ZOOM & PAN */
+/* FLOATING TOOLBAR */
+.floating-toolbar {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 50px;
+    padding: 8px 20px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+    width: auto;
+    max-width: 95%;
+}
+
+.floating-toolbar .tool-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    transition: all 0.2s;
+    min-width: 70px;
+    color: #555;
+    height: auto;
+}
+
+.floating-toolbar .tool-btn:hover {
+    background: #f0f7ff;
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.floating-toolbar .tool-btn .icon svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2px;
+}
+
+.floating-toolbar .tool-btn .label {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.floating-toolbar .tool-divider {
+    height: 30px;
+    width: 1px;
+    background: #eee;
+    margin: 0 4px;
+}
+
+/* Red Delete Button override */
+.floating-toolbar .tool-btn.text-danger:hover {
+    background: #fff5f5;
+    color: #e74c3c;
+}
+
+
+/* Responsive adjustments for editor */
+@media (max-width: 768px) {
+    .floating-toolbar {
+        top: auto;
+        bottom: 80px;
+        /* Above zoom controls */
+        width: 95%;
+        border-radius: 16px;
+        flex-wrap: wrap;
+        overflow-x: auto;
+        background: white;
+        justify-content: flex-start;
+        padding: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .floating-toolbar .tool-btn {
+        min-width: 60px;
+        padding: 6px 10px;
+    }
+
+    .floating-toolbar .tool-btn .label {
+        font-size: 0.7rem;
+    }
+}
+
 .editor-viewport {
     width: 100%;
     height: 600px;
@@ -2538,9 +2655,7 @@ body.modal-open {
         gap: 15px;
     }
 
-    .compress-option-card .option-content {
-        /* align-items: flex-start; */
-    }
+
 
     /* Split Grid - 2 Column Clean */
     .pages-grid {
@@ -2738,4 +2853,348 @@ body.modal-open {
         margin: 0 auto;
     }
 
+
+}
+
+/* FIREWORKS CANVAS */
+#fireworks-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2100;
+    /* Above popup (2000) */
+    background: transparent;
+}
+
+/* --- SIGN PDF STYLES --- */
+.floating-toolbar {
+    /* Changed from absolute to relative to sit in flow */
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    background: var(--surface-card);
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 100;
+    border: 2px solid var(--primary-hover);
+    margin: 1rem auto;
+    /* Center it */
+    width: fit-content;
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tool-btn.large-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: auto;
+    height: auto;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.tool-btn.large-btn .icon {
+    font-size: 1.2rem;
+}
+
+.tool-btn.large-btn .label {
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+/* Modal Styles */
+.large-modal {
+    width: 700px;
+    max-width: 95%;
+}
+
+.sign-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.tab-btn,
+.sign-tab-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.tab-btn.active,
+.sign-tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.sign-tab-content {
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Header & Close Button */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.close-modal {
+    background: #ff4d4d;
+    /* Red background */
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    line-height: 1;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.close-modal:hover {
+    background: #ff0000;
+}
+
+.draw-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    background: var(--surface-ground);
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+#signature-pad {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: #fff;
+    cursor: crosshair;
+    width: 100%;
+    height: 200px;
+    touch-action: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.draw-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Type Tab */
+/* Type Tab */
+.full-width-input {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--surface-ground);
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.full-width-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    background: #fff;
+}
+
+.font-options {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.font-btn {
+    padding: 15px 25px;
+    border: 2px solid var(--border-color);
+    background: var(--surface-card);
+    border-radius: 12px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.font-btn:hover,
+.font-btn.active {
+    border-color: var(--primary-color);
+    background: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.signature-preview {
+    font-size: 4rem;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    padding: 2rem;
+    background: var(--surface-ground);
+    border-radius: 12px;
+    width: 100%;
+}
+
+/* Upload Tab */
+.upload-box {
+    border: 2px dashed var(--border-color);
+    padding: 3rem;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    background: var(--surface-ground);
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.upload-box.dragover {
+    border-color: var(--primary-color);
+    background: var(--primary-light);
+    transform: scale(1.02);
+}
+
+.upload-box:hover {
+    border-color: var(--primary-color);
+}
+
+#upload-preview {
+    max-width: 100%;
+    max-height: 250px;
+    margin-top: 1.5rem;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile Tweaks */
+@media (max-width: 768px) {
+    .floating-toolbar {
+        top: auto;
+        bottom: 20px;
+        width: 90%;
+        overflow-x: auto;
+        background: var(--bg-color);
+        justify-content: space-between;
+    }
+
+    .large-modal {
+        width: 95%;
+    }
+}
+
+/* STAMP MODAL STYLES */
+.stamp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    padding: 10px;
+}
+
+.stamp-btn {
+    background: white;
+    padding: 15px 10px;
+    border: 3px solid #ccc;
+    border-radius: 8px;
+    font-weight: 900;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+.stamp-btn:hover {
+    transform: scale(1.05) rotate(-2deg);
+    opacity: 1;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stamp-btn:active {
+    transform: scale(0.95);
+}
+
+.stamp-btn.approved {
+    color: #27ae60;
+    border-color: #27ae60;
+}
+
+.stamp-btn.paid {
+    color: #2980b9;
+    border-color: #2980b9;
+}
+
+.stamp-btn.received {
+    color: #8e44ad;
+    border-color: #8e44ad;
+}
+
+.stamp-btn.confidential {
+    color: #c0392b;
+    border-color: #c0392b;
+}
+
+.stamp-btn.rejected {
+    color: #c0392b;
+    border-color: #c0392b;
+    border-style: dashed;
+}
+
+/* Mobile Adjustments for Stamp */
+@media (max-width: 600px) {
+    .stamp-grid {
+        grid-template-columns: 1fr;
+    }
 }
