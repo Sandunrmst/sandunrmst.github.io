@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Surgeon – Free PDF Tools | Merge, Split, Compress, Convert & Edit</title>
-    <meta name="description"
-        content="PDF Surgeon is a free all-in-one PDF toolkit. Merge PDFs, split pages, compress files, convert to Word/Excel, extract pages, protect and more. 100% secure and fast." />
-    <meta name="keywords"
-        content="pdf surgeon, pdf tools offline, free pdf toolkit, merge pdf, split pdf, compress pdf, convert pdf, pdf to word, pdf to excel, rotate pdf, unlock pdf, protect pdf, extract pdf pages, offline pdf editor, ilovepdf alternative, smallpdf alternative" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      PDF Surgeon – Free PDF Tools | Merge, Split, Compress, Convert & Edit
+    </title>
+    <meta
+      name="description"
+      content="PDF Surgeon is a free all-in-one PDF toolkit. Merge PDFs, split pages, compress files, convert to Word/Excel, extract pages, protect and more. 100% secure and fast."
+    />
+    <meta
+      name="keywords"
+      content="pdf surgeon, pdf tools offline, free pdf toolkit, merge pdf, split pdf, compress pdf, convert pdf, pdf to word, pdf to excel, rotate pdf, unlock pdf, protect pdf, extract pdf pages, offline pdf editor, ilovepdf alternative, smallpdf alternative"
+    />
     <!-- OPEN GRAPH -->
     <meta property="og:title" content="PDF Surgeon – Free PDF Tools by RMST" />
-    <meta property="og:description"
-        content="Free all-in-one PDF editor with offline merge, split, compress, convert, rotate, extract, protect, unlock and more tools." />
+    <meta
+      property="og:description"
+      content="Free all-in-one PDF editor with offline merge, split, compress, convert, rotate, extract, protect, unlock and more tools."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://sandunrmst.com/pdfsurgeon/preview.jpg" />
+    <meta
+      property="og:image"
+      content="https://sandunrmst.com/pdfsurgeon/preview.jpg"
+    />
     <meta property="og:url" content="https://sandunrmst.com/pdfsurgeon" />
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="favicon.png" />
     <!-- PDF Lib (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js?v=reload"></script>
+    <script src="https://unpkg.com/@pdf-lib/fontkit/dist/fontkit.umd.js"></script>
     <!-- Local PDF.js for rendering -->
     <script src="libs/pdf.min.js"></script>
     <script>
-        // Set worker path
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'libs/pdf.worker.min.js';
+      // Set worker path
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "libs/pdf.worker.min.js";
     </script>
     <!-- Word to PDF Libs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
@@ -35,927 +46,1600 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
     <!-- qpdf-wasm (community build via jsDelivr) -->
     <!-- qpdf-wasm (community build via jsDelivr) -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@jspawn/qpdf-wasm/qpdf.mjs"></script>
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@jspawn/qpdf-wasm/qpdf.mjs"
+    ></script>
 
     <!-- Signature Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Great+Vibes&family=Sacramento&display=swap"
-        rel="stylesheet">
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Great+Vibes&family=Sacramento&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-</head>
-
-<body>
-
+  <body>
     <div class="container">
-        <header>
-            <div class="header-content">
-                <img src="logo.png" alt="PDF Surgeon Logo" class="logo">
-                <h1>PDF SURGEON</h1>
-            </div>
-        </header>
+      <header>
+        <div class="header-content">
+          <img src="logo.png" alt="PDF Surgeon Logo" class="logo" />
+          <h1>PDF SURGEON</h1>
+        </div>
+      </header>
 
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="merge-tab">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 7h-3a2 2 0 0 1-2-2V2" />
-                    <path d="M9 18a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2Z" />
-                    <path d="M3 7.6v12.8A1.6 1.6 0 0 0 4.6 22h9.8" />
-                </svg>
-                Merge PDFs
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="merge-tab">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M20 7h-3a2 2 0 0 1-2-2V2" />
+            <path
+              d="M9 18a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2Z"
+            />
+            <path d="M3 7.6v12.8A1.6 1.6 0 0 0 4.6 22h9.8" />
+          </svg>
+          Merge PDFs
+        </button>
+        <button class="tab-btn" data-tab="split-tab">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="6" cy="6" r="3" />
+            <circle cx="6" cy="18" r="3" />
+            <line x1="20" y1="4" x2="8.12" y2="15.88" />
+            <line x1="14.47" y1="14.48" x2="20" y2="20" />
+            <line x1="8.12" y1="8.12" x2="12" y2="12" />
+          </svg>
+          Split PDF
+        </button>
+        <button class="tab-btn" data-tab="compress-tab">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="4 14 10 14 10 20" />
+            <line x1="10" y1="14" x2="3" y2="21" />
+            <line x1="14" y1="10" x2="21" y2="3" />
+            <polyline points="20 10 14 10 14 4" />
+          </svg>
+          Compress PDF
+        </button>
+        <button class="tab-btn" data-tab="convert-tab">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M8 3 4 7l4 4" />
+            <path d="M4 7h16" />
+            <path d="m16 21 4-4-4-4" />
+            <path d="M20 17H4" />
+          </svg>
+          Convert PDF
+        </button>
+        <button class="tab-btn" data-tab="edit-tab">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+            />
+            <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z" />
+          </svg>
+          Edit PDF
+        </button>
+        <button class="tab-btn" data-tab="security-tab">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          Security
+        </button>
+      </div>
+
+      <div class="tab-content">
+        <!-- MERGE SECTION -->
+        <div id="merge-tab" class="tab-pane active">
+          <div class="upload-area" id="merge-upload-area">
+            <p>Drag & Drop PDF files here or</p>
+            <input
+              type="file"
+              id="merge-file-input"
+              multiple
+              accept="application/pdf"
+              hidden
+            />
+            <button
+              class="btn secondary"
+              onclick="document.getElementById('merge-file-input').click()"
+            >
+              Select Files
             </button>
-            <button class="tab-btn" data-tab="split-tab">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="6" cy="6" r="3" />
-                    <circle cx="6" cy="18" r="3" />
-                    <line x1="20" y1="4" x2="8.12" y2="15.88" />
-                    <line x1="14.47" y1="14.48" x2="20" y2="20" />
-                    <line x1="8.12" y1="8.12" x2="12" y2="12" />
-                </svg>
-                Split PDF
+
+            <div id="merge-help-text" class="help-text hidden"></div>
+
+            <ul id="file-list" class="file-list">
+              <!-- File items will be added here dynamically -->
+            </ul>
+          </div>
+
+          <div class="actions">
+            <button id="merge-btn" class="btn primary" disabled>
+              Merge PDF
             </button>
-            <button class="tab-btn" data-tab="compress-tab">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="4 14 10 14 10 20" />
-                    <line x1="10" y1="14" x2="3" y2="21" />
-                    <line x1="14" y1="10" x2="21" y2="3" />
-                    <polyline points="20 10 14 10 14 4" />
-                </svg>
-                Compress PDF
-            </button>
-            <button class="tab-btn" data-tab="convert-tab">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M8 3 4 7l4 4" />
-                    <path d="M4 7h16" />
-                    <path d="m16 21 4-4-4-4" />
-                    <path d="M20 17H4" />
-                </svg>
-                Convert PDF
-            </button>
-            <button class="tab-btn" data-tab="edit-tab">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z" />
-                </svg>
-                Edit PDF
-            </button>
-            <button class="tab-btn" data-tab="security-tab">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                Security
-            </button>
+          </div>
         </div>
 
-        <div class="tab-content">
-            <!-- MERGE SECTION -->
-            <div id="merge-tab" class="tab-pane active">
-                <div class="upload-area" id="merge-upload-area">
-                    <p>Drag & Drop PDF files here or</p>
-                    <input type="file" id="merge-file-input" multiple accept="application/pdf" hidden>
-                    <button class="btn secondary" onclick="document.getElementById('merge-file-input').click()">Select
-                        Files</button>
+        <!-- SPLIT SECTION -->
+        <div id="split-tab" class="tab-pane">
+          <div class="upload-area" id="split-upload-area">
+            <p>Drag & Drop a PDF file here or</p>
+            <input
+              type="file"
+              id="split-file-input"
+              accept="application/pdf"
+              hidden
+            />
+            <button
+              class="btn secondary"
+              onclick="document.getElementById('split-file-input').click()"
+            >
+              Select File
+            </button>
+          </div>
 
-                    <div id="merge-help-text" class="help-text hidden"></div>
+          <div id="split-preview" class="hidden">
+            <h3>Select Pages to Split</h3>
+            <div class="compress-options">
+              <label class="compress-option-card">
+                <input type="radio" name="split-mode" value="all" checked />
+                <div class="option-content">
+                  <span class="option-title">Extract Pages</span>
+                  <span class="option-desc"
+                    >Split all pages or select manually</span
+                  >
+                </div>
+              </label>
+              <label class="compress-option-card">
+                <input type="radio" name="split-mode" value="range" />
+                <div class="option-content">
+                  <span class="option-title">Split by Range</span>
+                  <span class="option-desc">Extract custom page range</span>
+                </div>
+              </label>
+            </div>
 
-                    <ul id="file-list" class="file-list">
-                        <!-- File items will be added here dynamically -->
-                    </ul>
+            <div id="split-help-text" class="help-text"></div>
+
+            <div id="range-input-container" class="hidden">
+              <input
+                type="text"
+                id="range-input"
+                placeholder="e.g. 1-3, 5, 7-9"
+              />
+              <small>Enter page numbers or ranges (e.g., 1-3)</small>
+            </div>
+
+            <div id="pages-grid" class="pages-grid">
+              <!-- Pages will be rendered here -->
+            </div>
+
+            <div class="actions">
+              <button id="split-btn" class="btn primary">Split PDF</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- COMPRESS SECTION -->
+        <div id="compress-tab" class="tab-pane">
+          <div class="upload-area" id="compress-upload-area">
+            <p>Drag & Drop a PDF file here or</p>
+            <input
+              type="file"
+              id="compress-file-input"
+              accept="application/pdf"
+              hidden
+            />
+            <button
+              class="btn secondary"
+              onclick="document.getElementById('compress-file-input').click()"
+            >
+              Select File
+            </button>
+          </div>
+
+          <div id="compress-options-container" class="hidden">
+            <h3>Compression Levels</h3>
+            <div class="compress-options">
+              <label class="compress-option-card">
+                <input type="radio" name="compress-level" value="low" />
+                <div class="option-content">
+                  <span class="option-title">Low</span>
+                  <span class="option-desc">Smallest size</span>
+                </div>
+              </label>
+              <label class="compress-option-card">
+                <input
+                  type="radio"
+                  name="compress-level"
+                  value="standard"
+                  checked
+                />
+                <div class="option-content">
+                  <span class="option-title">Standard</span>
+                  <span class="option-desc">Balanced</span>
+                </div>
+              </label>
+              <label class="compress-option-card">
+                <input type="radio" name="compress-level" value="high" />
+                <div class="option-content">
+                  <span class="option-title">High</span>
+                  <span class="option-desc">Best quality</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="file-info-display" id="compress-file-info"></div>
+
+            <div class="actions">
+              <button id="compress-btn" class="btn primary">
+                Compress PDF
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONVERT SECTION -->
+        <div id="convert-tab" class="tab-pane">
+          <div class="sub-tabs">
+            <label class="radio-tab">
+              <input
+                type="radio"
+                name="convert-mode"
+                value="convert-to-pdf"
+                checked
+              />
+              <span>Convert to PDF</span>
+            </label>
+            <label class="radio-tab">
+              <input
+                type="radio"
+                name="convert-mode"
+                value="convert-from-pdf"
+              />
+              <span>Convert from PDF</span>
+            </label>
+          </div>
+
+          <div id="convert-to-pdf" class="sub-tab-pane active">
+            <div class="conversion-type-selector">
+              <label class="compress-option-card">
+                <input type="radio" name="convert-to-type" value="jpg-to-pdf" />
+                <div class="option-content">
+                  <span class="option-title">Image to PDF</span>
+                  <span class="option-desc">Convert JPG/PNG to PDF</span>
+                </div>
+              </label>
+              <label class="compress-option-card">
+                <input
+                  type="radio"
+                  name="convert-to-type"
+                  value="word-to-pdf"
+                />
+                <div class="option-content">
+                  <span class="option-title">Word to PDF</span>
+                  <span class="option-desc">Convert DOCX to PDF</span>
+                </div>
+              </label>
+              <label class="compress-option-card">
+                <input
+                  type="radio"
+                  name="convert-to-type"
+                  value="excel-to-pdf"
+                />
+                <div class="option-content">
+                  <span class="option-title">Excel to PDF</span>
+                  <span class="option-desc">Convert XLSX to PDF</span>
+                </div>
+              </label>
+            </div>
+
+            <!-- JPG TO PDF -->
+            <div id="jpg-to-pdf-section" class="conversion-section hidden">
+              <div class="upload-area" id="jpg-upload-area">
+                <p>Drag & Drop Images (JPG, PNG) here or</p>
+                <input
+                  type="file"
+                  id="jpg-file-input"
+                  multiple
+                  accept="image/jpeg, image/jpg, image/png"
+                  hidden
+                />
+                <button
+                  class="btn secondary"
+                  onclick="document.getElementById('jpg-file-input').click()"
+                >
+                  Select Images
+                </button>
+              </div>
+              <div id="jpg-help-text" class="help-text hidden"></div>
+              <div id="jpg-file-list" class="file-list"></div>
+              <div class="actions">
+                <button id="jpg-convert-btn" class="btn primary" disabled>
+                  Convert to PDF
+                </button>
+              </div>
+            </div>
+
+            <!-- WORD TO PDF -->
+            <div id="word-to-pdf-section" class="conversion-section hidden">
+              <div class="upload-area" id="word-upload-area">
+                <p>Drag & Drop Word file (.docx) here or</p>
+                <input type="file" id="word-file-input" accept=".docx" hidden />
+                <button
+                  class="btn secondary"
+                  onclick="document.getElementById('word-file-input').click()"
+                >
+                  Select Word File
+                </button>
+              </div>
+              <div id="word-file-info" class="file-info-display hidden"></div>
+              <div class="actions">
+                <button id="word-convert-btn" class="btn primary" disabled>
+                  Convert to PDF
+                </button>
+              </div>
+            </div>
+
+            <!-- EXCEL TO PDF -->
+            <div id="excel-to-pdf-section" class="conversion-section hidden">
+              <div class="upload-area" id="excel-upload-area">
+                <p>Drag & Drop Excel file (.xlsx, .xls) here or</p>
+                <input
+                  type="file"
+                  id="excel-file-input"
+                  accept=".xlsx, .xls"
+                  hidden
+                />
+                <button
+                  class="btn secondary"
+                  onclick="document.getElementById('excel-file-input').click()"
+                >
+                  Select Excel File
+                </button>
+              </div>
+              <div id="excel-file-info" class="file-info-display hidden"></div>
+              <div class="actions">
+                <button id="excel-convert-btn" class="btn primary" disabled>
+                  Convert to PDF
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="convert-from-pdf" class="sub-tab-pane">
+            <div class="upload-area">
+              <p>Convert PDF to Word, Excel, JPG</p>
+              <p class="small-text">(Coming Soon)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDIT SECTION -->
+        <div id="edit-tab" class="tab-pane">
+          <div class="sub-tabs">
+            <label class="radio-tab">
+              <input
+                type="radio"
+                name="edit-feature-mode"
+                value="edit"
+                checked
+              />
+              <span>Edit PDF</span>
+            </label>
+            <label class="radio-tab">
+              <input type="radio" name="edit-feature-mode" value="rotate" />
+              <span>Rotate PDF</span>
+            </label>
+            <label class="radio-tab">
+              <input type="radio" name="edit-feature-mode" value="watermark" />
+              <span>Add Watermark</span>
+            </label>
+            <label class="radio-tab">
+              <input
+                type="radio"
+                name="edit-feature-mode"
+                value="page-numbers"
+              />
+              <span>Page Numbers</span>
+            </label>
+          </div>
+
+          <!-- Rotate PDF Section -->
+          <div id="rotate-pdf-section" class="conversion-section hidden">
+            <div class="upload-area" id="rotate-upload-area">
+              <p>Drag & Drop PDF to Rotate</p>
+              <input
+                type="file"
+                id="rotate-file-input"
+                accept="application/pdf"
+                hidden
+              />
+              <button
+                class="btn secondary"
+                onclick="document.getElementById('rotate-file-input').click()"
+              >
+                Select PDF File
+              </button>
+            </div>
+
+            <div id="rotate-controls" class="hidden">
+              <div id="rotate-previews" class="pages-grid">
+                <!-- Page thumbnails will be injected here -->
+              </div>
+              <div class="actions">
+                <button id="download-rotated-btn" class="btn primary">
+                  Download Rotated PDF
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Watermark Controls (Hidden by default) -->
+          <div id="watermark-controls" class="watermark-panel hidden">
+            <div class="wm-group">
+              <label>Type:</label>
+              <div class="wm-toggle">
+                <button id="wm-type-text" class="active">Text</button>
+                <button id="wm-type-image">Image</button>
+              </div>
+            </div>
+
+            <!-- Text Controls -->
+            <div id="wm-text-settings">
+              <input
+                type="text"
+                id="wm-text-input"
+                placeholder="Add Your Watermark"
+                value="Add your text watermark here"
+              />
+              <div class="wm-row">
+                <select id="wm-font-family">
+                  <option value="Arial">Arial</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Courier New">Courier New</option>
+                  <option value="Verdana">Verdana</option>
+                </select>
+                <input
+                  type="number"
+                  id="wm-font-size"
+                  value="48"
+                  min="8"
+                  max="200"
+                  title="Font Size"
+                />
+                <input
+                  type="color"
+                  id="wm-color"
+                  value="#cccccc"
+                  title="Color"
+                />
+              </div>
+            </div>
+
+            <!-- Image Controls -->
+            <div id="wm-image-settings" class="hidden">
+              <button
+                class="btn secondary sm"
+                onclick="document.getElementById('wm-image-input').click()"
+              >
+                Upload Image
+              </button>
+              <input type="file" id="wm-image-input" accept="image/*" hidden />
+              <div class="wm-row">
+                <label>Scale: <span id="wm-scale-val">100%</span></label>
+                <input
+                  type="range"
+                  id="wm-scale"
+                  min="10"
+                  max="200"
+                  value="100"
+                />
+              </div>
+            </div>
+
+            <div class="wm-divider"></div>
+
+            <!-- Common Controls -->
+            <div class="wm-grid-box">
+              <div class="wm-row">
+                <label>Opacity: <span id="wm-opacity-val">50%</span></label>
+                <input
+                  type="range"
+                  id="wm-opacity"
+                  min="0"
+                  max="100"
+                  value="50"
+                />
+              </div>
+              <div class="wm-row">
+                <label>Rotation: <span id="wm-rotation-val">45°</span></label>
+                <input
+                  type="range"
+                  id="wm-rotation"
+                  min="0"
+                  max="360"
+                  value="45"
+                />
+              </div>
+
+              <!-- Position Grid -->
+              <div class="wm-position-grid">
+                <button data-pos="tl">⌜</button>
+                <button data-pos="tc">⬆</button>
+                <button data-pos="tr">⌝</button>
+                <button data-pos="cl">⬅</button>
+                <button data-pos="cc" class="active">●</button>
+                <button data-pos="cr">➡</button>
+                <button data-pos="bl">⌞</button>
+                <button data-pos="bc">⬇</button>
+                <button data-pos="br">⌟</button>
+              </div>
+            </div>
+
+            <div class="wm-info">
+              <span id="wm-file-info"
+                >Note: You can use the above controller to manage the watermark
+                position in the PDF file. Load PDF to see info</span
+              >
+            </div>
+
+            <button id="apply-watermark-btn" class="btn primary full-width">
+              Add Watermark & Download
+            </button>
+          </div>
+
+          <!-- Page Number Controls (Hidden by default) -->
+          <div id="page-number-controls" class="watermark-panel hidden">
+            <div class="wm-group">
+              <label>Format:</label>
+              <select id="pn-format" class="full-width-select">
+                <option value="1">1, 2, 3...</option>
+                <option value="page-of">Page 1 of 10</option>
+                <option value="fraction">1 / 10</option>
+              </select>
+            </div>
+
+            <div class="wm-group">
+              <label>Page Number Position:</label>
+              <!-- Reusing wm-position-grid styling -->
+              <div class="wm-position-grid" id="pn-position-grid">
+                <button data-pos="tl">⌜</button>
+                <button data-pos="tc">⬆</button>
+                <button data-pos="tr">⌝</button>
+                <button data-pos="bl">⌞</button>
+                <button data-pos="bc" class="active">⬇</button>
+                <button data-pos="br">⌟</button>
+              </div>
+            </div>
+
+            <div class="wm-divider"></div>
+
+            <div class="wm-group">
+              <div class="pn-style-row">
+                <div class="wm-row compact">
+                  <label>Font:</label>
+                  <select id="pn-font-family" class="full-width-select">
+                    <option value="Helvetica">Helvetica (Standard)</option>
+                    <option value="TimesRoman">Times Roman (Standard)</option>
+                    <option value="Courier">Courier (Standard)</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="OpenSans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Merriweather">Merriweather</option>
+                    <option value="PTSans">PT Sans</option>
+                  </select>
+                </div>
+                <div class="wm-row compact">
+                  <label>Font Size: <span id="pn-fontsize-val">12</span></label>
+                  <input
+                    type="range"
+                    id="pn-fontsize"
+                    min="8"
+                    max="72"
+                    value="12"
+                  />
+                </div>
+                <div class="wm-row compact">
+                  <label>Margin: <span id="pn-margin-val">10</span></label>
+                  <input
+                    type="range"
+                    id="pn-margin"
+                    min="0"
+                    max="100"
+                    value="10"
+                  />
+                </div>
+                <div class="wm-row">
+                  <label>Color:</label>
+                  <input type="color" id="pn-color" value="#000000" />
+                </div>
+              </div>
+            </div>
+
+            <div class="wm-divider"></div>
+
+            <div class="wm-group">
+              <label>Pages:</label>
+              <div class="wm-toggle">
+                <button id="pn-range-all" class="active">All</button>
+                <button id="pn-range-custom">Range</button>
+              </div>
+              <input
+                type="text"
+                id="pn-custom-range"
+                class="hidden full-width-input margin-top-10"
+                placeholder="e.g. 1-5, 8 Page"
+              />
+            </div>
+            <div class="add-page-numbers-btn">
+              <button
+                id="apply-page-numbers-btn"
+                class="btn primary add-page-numbers-btn-go"
+              >
+                Add Page Numbers
+              </button>
+            </div>
+          </div>
+
+          <div id="edit-feature-content">
+            <div class="upload-area" id="edit-upload-area">
+              <p>Drag & Drop a PDF file here or</p>
+              <input
+                type="file"
+                id="edit-file-input"
+                accept="application/pdf"
+                hidden
+              />
+              <button
+                class="btn secondary"
+                onclick="document.getElementById('edit-file-input').click()"
+              >
+                Select File
+              </button>
+            </div>
+
+            <div id="editor-container" class="hidden editor-layout">
+              <!-- Sidebar for Page Thumbnails -->
+              <div id="edit-page-list" class="page-sidebar">
+                <!-- Thumbnails injected here -->
+              </div>
+
+              <!-- Main Editor Workspace -->
+              <div class="editor-main-area">
+                <div class="editor-toolbar hidden" id="main-editor-toolbar">
+                  <button
+                    id="tool-select"
+                    class="tool-btn active"
+                    title="Select"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+                    </svg>
+                  </button>
+                  <button
+                    id="tool-hand"
+                    class="tool-btn"
+                    title="Hand Tool (Pan)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                      <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                      <path
+                        d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"
+                      ></path>
+                      <path
+                        d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a.9.9 0 0 1 0-1.27l2.49-2.49a.9.9 0 0 1 1.28 0l1.72 1.72H13"
+                      ></path>
+                    </svg>
+                  </button>
+                  <button id="tool-text" class="tool-btn" title="Add Text">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M4 7V4h16v3M9 20h6M12 4v16"></path>
+                    </svg>
+                  </button>
+                  <button id="tool-draw" class="tool-btn" title="Free Draw">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                      <path d="M2 2l7.586 7.586"></path>
+                      <circle cx="11" cy="11" r="2"></circle>
+                    </svg>
+                  </button>
+                  <div class="tool-divider"></div>
+                  <button id="tool-rect" class="tool-btn" title="Rectangle">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="2"
+                        ry="2"
+                      ></rect>
+                    </svg>
+                  </button>
+                  <button id="tool-circle" class="tool-btn" title="Circle">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10"></circle>
+                    </svg>
+                  </button>
+                  <button id="tool-line" class="tool-btn" title="Line">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <line x1="4" y1="20" x2="20" y2="4"></line>
+                    </svg>
+                  </button>
+
+                  <div class="tool-divider"></div>
+
+                  <div class="emoji-dropdown">
+                    <button
+                      id="tool-emoji"
+                      class="tool-btn"
+                      title="Insert Emoji"
+                    >
+                      <span>😀</span>
+                    </button>
+                    <div class="emoji-content hidden">
+                      <span data-emoji="😀">😀</span>
+                      <span data-emoji="😂">😂</span>
+                      <span data-emoji="😍">😍</span>
+                      <span data-emoji="🤔">🤔</span>
+                      <span data-emoji="👍">👍</span>
+                      <span data-emoji="👎">👎</span>
+                      <span data-emoji="✅">✅</span>
+                      <span data-emoji="❌">❌</span>
+                      <span data-emoji="🔥">🔥</span>
+                      <span data-emoji="⭐">⭐</span>
+                      <span data-emoji="🚩">🚩</span>
+                      <span data-emoji="💡">💡</span>
+                      <!-- New Emojis -->
+                      <span data-emoji="🇱🇰">🇱🇰</span>
+                      <span data-emoji="❤️">❤️</span>
+                      <span data-emoji="💲">💲</span>
+                      <span data-emoji="⚠️">⚠️</span>
+                      <span data-emoji="📍">📍</span>
+                      <span data-emoji="📞">📞</span>
+                      <span data-emoji="✉️">✉️</span>
+                      <span data-emoji="➡️">➡️</span>
+                    </div>
+                  </div>
+                  <div class="tool-divider"></div>
+                  <button
+                    id="tool-image"
+                    class="tool-btn"
+                    title="Add Image"
+                    onclick="document.getElementById('edit-image-input').click()"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="2"
+                        ry="2"
+                      ></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </button>
+                  <input
+                    type="file"
+                    id="edit-image-input"
+                    accept="image/*"
+                    hidden
+                  />
+
+                  <div class="tool-divider"></div>
+                  <input
+                    type="color"
+                    id="tool-color"
+                    value="#000000"
+                    title="Color"
+                  />
+                  <button
+                    id="tool-delete"
+                    class="tool-btn text-danger"
+                    title="Delete Selected"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path
+                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- TEXT PROPERTIES TOOLBAR (Hidden by default) -->
+                <div
+                  id="text-properties-toolbar"
+                  class="editor-toolbar secondary-toolbar hidden"
+                >
+                  <select id="font-family" title="Font Family">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="OpenSans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Merriweather">Merriweather</option>
+                    <option value="PTSans">PT Sans</option>
+                  </select>
+
+                  <div class="tool-divider"></div>
+
+                  <select id="font-size" title="Font Size">
+                    <option value="12">12</option>
+                    <option value="14">14</option>
+                    <option value="16">16</option>
+                    <option value="18">18</option>
+                    <option value="20" selected>20</option>
+                    <option value="24">24</option>
+                    <option value="30">30</option>
+                    <option value="36">36</option>
+                    <option value="48">48</option>
+                    <option value="60">60</option>
+                    <option value="72">72</option>
+                  </select>
+
+                  <div class="tool-divider"></div>
+
+                  <button id="text-bold" class="tool-btn" title="Bold">
+                    <strong>B</strong>
+                  </button>
+                  <button id="text-italic" class="tool-btn" title="Italic">
+                    <em>I</em>
+                  </button>
+                  <button
+                    id="text-underline"
+                    class="tool-btn"
+                    title="Underline"
+                  >
+                    <u>U</u>
+                  </button>
+
+                  <div class="tool-divider"></div>
+
+                  <button
+                    id="text-align-left"
+                    class="tool-btn"
+                    title="Align Left"
+                  >
+                    <span style="font-size: 14px">&#9776;</span>
+                  </button>
+                  <button
+                    id="text-align-center"
+                    class="tool-btn"
+                    title="Align Center"
+                  >
+                    <span style="font-size: 14px">&#9778;</span>
+                  </button>
+                  <button
+                    id="text-align-right"
+                    class="tool-btn"
+                    title="Align Right"
+                  >
+                    <span style="font-size: 14px">&#9779;</span>
+                  </button>
+
+                  <div class="tool-divider"></div>
+
+                  <!-- Reusing the color input logic, but specific for text updating -->
+                  <!-- We will sync this with the main color picker -->
+                </div>
+
+                <div id="editor-viewport" class="editor-viewport">
+                  <div
+                    id="editor-transform-layer"
+                    class="editor-transform-layer"
+                  >
+                    <div id="canvas-wrapper" class="canvas-wrapper">
+                      <canvas id="pdf-editor-canvas"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Zoom Controls Floating Bar -->
+                <div id="zoom-controls" class="zoom-controls hidden">
+                  <button id="zoom-out" class="zoom-btn" title="Zoom Out">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                  <span id="zoom-level">100%</span>
+                  <button id="zoom-in" class="zoom-btn" title="Zoom In">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                  <div class="zoom-separator"></div>
+                  <button id="zoom-fit" class="zoom-btn" title="Fit to Screen">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
+                      ></path>
+                    </svg>
+                  </button>
                 </div>
 
                 <div class="actions">
-                    <button id="merge-btn" class="btn primary" disabled>Merge PDF</button>
+                  <button id="save-pdf-btn" class="btn primary">
+                    Save & Download PDF
+                  </button>
+                  <button id="clear-pdf-btn" class="btn secondary">
+                    Clear All
+                  </button>
                 </div>
+              </div>
             </div>
-
-            <!-- SPLIT SECTION -->
-            <div id="split-tab" class="tab-pane">
-                <div class="upload-area" id="split-upload-area">
-                    <p>Drag & Drop a PDF file here or</p>
-                    <input type="file" id="split-file-input" accept="application/pdf" hidden>
-                    <button class="btn secondary" onclick="document.getElementById('split-file-input').click()">Select
-                        File</button>
-                </div>
-
-                <div id="split-preview" class="hidden">
-                    <h3>Select Pages to Split</h3>
-                    <div class="compress-options">
-                        <label class="compress-option-card">
-                            <input type="radio" name="split-mode" value="all" checked>
-                            <div class="option-content">
-                                <span class="option-title">Extract Pages</span>
-                                <span class="option-desc">Split all pages or select manually</span>
-                            </div>
-                        </label>
-                        <label class="compress-option-card">
-                            <input type="radio" name="split-mode" value="range">
-                            <div class="option-content">
-                                <span class="option-title">Split by Range</span>
-                                <span class="option-desc">Extract custom page range</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div id="split-help-text" class="help-text"></div>
-
-                    <div id="range-input-container" class="hidden">
-                        <input type="text" id="range-input" placeholder="e.g. 1-3, 5, 7-9">
-                        <small>Enter page numbers or ranges (e.g., 1-3)</small>
-                    </div>
-
-                    <div id="pages-grid" class="pages-grid">
-                        <!-- Pages will be rendered here -->
-                    </div>
-
-                    <div class="actions">
-                        <button id="split-btn" class="btn primary">Split PDF</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- COMPRESS SECTION -->
-            <div id="compress-tab" class="tab-pane">
-                <div class="upload-area" id="compress-upload-area">
-                    <p>Drag & Drop a PDF file here or</p>
-                    <input type="file" id="compress-file-input" accept="application/pdf" hidden>
-                    <button class="btn secondary"
-                        onclick="document.getElementById('compress-file-input').click()">Select
-                        File</button>
-                </div>
-
-                <div id="compress-options-container" class="hidden">
-                    <h3>Compression Levels</h3>
-                    <div class="compress-options">
-                        <label class="compress-option-card">
-                            <input type="radio" name="compress-level" value="low">
-                            <div class="option-content">
-                                <span class="option-title">Low</span>
-                                <span class="option-desc">Smallest size</span>
-                            </div>
-                        </label>
-                        <label class="compress-option-card">
-                            <input type="radio" name="compress-level" value="standard" checked>
-                            <div class="option-content">
-                                <span class="option-title">Standard</span>
-                                <span class="option-desc">Balanced</span>
-                            </div>
-                        </label>
-                        <label class="compress-option-card">
-                            <input type="radio" name="compress-level" value="high">
-                            <div class="option-content">
-                                <span class="option-title">High</span>
-                                <span class="option-desc">Best quality</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="file-info-display" id="compress-file-info"></div>
-
-                    <div class="actions">
-                        <button id="compress-btn" class="btn primary">Compress PDF</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CONVERT SECTION -->
-            <div id="convert-tab" class="tab-pane">
-                <div class="sub-tabs">
-                    <label class="radio-tab">
-                        <input type="radio" name="convert-mode" value="convert-to-pdf" checked>
-                        <span>Convert to PDF</span>
-                    </label>
-                    <label class="radio-tab">
-                        <input type="radio" name="convert-mode" value="convert-from-pdf">
-                        <span>Convert from PDF</span>
-                    </label>
-                </div>
-
-                <div id="convert-to-pdf" class="sub-tab-pane active">
-                    <div class="conversion-type-selector">
-                        <label class="compress-option-card">
-                            <input type="radio" name="convert-to-type" value="jpg-to-pdf">
-                            <div class="option-content">
-                                <span class="option-title">Image to PDF</span>
-                                <span class="option-desc">Convert JPG/PNG to PDF</span>
-                            </div>
-                        </label>
-                        <label class="compress-option-card">
-                            <input type="radio" name="convert-to-type" value="word-to-pdf">
-                            <div class="option-content">
-                                <span class="option-title">Word to PDF</span>
-                                <span class="option-desc">Convert DOCX to PDF</span>
-                            </div>
-                        </label>
-                        <label class="compress-option-card">
-                            <input type="radio" name="convert-to-type" value="excel-to-pdf">
-                            <div class="option-content">
-                                <span class="option-title">Excel to PDF</span>
-                                <span class="option-desc">Convert XLSX to PDF</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <!-- JPG TO PDF -->
-                    <div id="jpg-to-pdf-section" class="conversion-section hidden">
-                        <div class="upload-area" id="jpg-upload-area">
-                            <p>Drag & Drop Images (JPG, PNG) here or</p>
-                            <input type="file" id="jpg-file-input" multiple accept="image/jpeg, image/jpg, image/png"
-                                hidden>
-                            <button class="btn secondary"
-                                onclick="document.getElementById('jpg-file-input').click()">Select Images</button>
-                        </div>
-                        <div id="jpg-help-text" class="help-text hidden"></div>
-                        <div id="jpg-file-list" class="file-list"></div>
-                        <div class="actions">
-                            <button id="jpg-convert-btn" class="btn primary" disabled>Convert to PDF</button>
-                        </div>
-                    </div>
-
-                    <!-- WORD TO PDF -->
-                    <div id="word-to-pdf-section" class="conversion-section hidden">
-                        <div class="upload-area" id="word-upload-area">
-                            <p>Drag & Drop Word file (.docx) here or</p>
-                            <input type="file" id="word-file-input" accept=".docx" hidden>
-                            <button class="btn secondary"
-                                onclick="document.getElementById('word-file-input').click()">Select Word File</button>
-                        </div>
-                        <div id="word-file-info" class="file-info-display hidden"></div>
-                        <div class="actions">
-                            <button id="word-convert-btn" class="btn primary" disabled>Convert to PDF</button>
-                        </div>
-                    </div>
-
-                    <!-- EXCEL TO PDF -->
-                    <div id="excel-to-pdf-section" class="conversion-section hidden">
-                        <div class="upload-area" id="excel-upload-area">
-                            <p>Drag & Drop Excel file (.xlsx, .xls) here or</p>
-                            <input type="file" id="excel-file-input" accept=".xlsx, .xls" hidden>
-                            <button class="btn secondary"
-                                onclick="document.getElementById('excel-file-input').click()">Select Excel File</button>
-                        </div>
-                        <div id="excel-file-info" class="file-info-display hidden"></div>
-                        <div class="actions">
-                            <button id="excel-convert-btn" class="btn primary" disabled>Convert to PDF</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="convert-from-pdf" class="sub-tab-pane">
-                    <div class="upload-area">
-                        <p>Convert PDF to Word, Excel, JPG</p>
-                        <p class="small-text">(Coming Soon)</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- EDIT SECTION -->
-            <div id="edit-tab" class="tab-pane">
-                <div class="sub-tabs">
-                    <label class="radio-tab">
-                        <input type="radio" name="edit-feature-mode" value="edit" checked>
-                        <span>Edit PDF</span>
-                    </label>
-                    <label class="radio-tab">
-                        <input type="radio" name="edit-feature-mode" value="rotate">
-                        <span>Rotate PDF</span>
-                    </label>
-                    <label class="radio-tab">
-                        <input type="radio" name="edit-feature-mode" value="watermark">
-                        <span>Add Watermark</span>
-                    </label>
-                </div>
-
-                <!-- Rotate PDF Section -->
-                <div id="rotate-pdf-section" class="conversion-section hidden">
-                    <div class="upload-area" id="rotate-upload-area">
-                        <p>Drag & Drop PDF to Rotate</p>
-                        <input type="file" id="rotate-file-input" accept="application/pdf" hidden>
-                        <button class="btn secondary"
-                            onclick="document.getElementById('rotate-file-input').click()">Select PDF File</button>
-                    </div>
-
-                    <div id="rotate-controls" class="hidden">
-                        <div id="rotate-previews" class="pages-grid">
-                            <!-- Page thumbnails will be injected here -->
-                        </div>
-                        <div class="actions">
-                            <button id="download-rotated-btn" class="btn primary">Download Rotated PDF</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Watermark Controls (Hidden by default) -->
-                <div id="watermark-controls" class="watermark-panel hidden">
-                    <div class="wm-group">
-                        <label>Type:</label>
-                        <div class="wm-toggle">
-                            <button id="wm-type-text" class="active">Text</button>
-                            <button id="wm-type-image">Image</button>
-                        </div>
-                    </div>
-
-                    <!-- Text Controls -->
-                    <div id="wm-text-settings">
-                        <input type="text" id="wm-text-input" placeholder="Add Your Watermark"
-                            value="Add your text watermark here">
-                        <div class="wm-row">
-                            <select id="wm-font-family">
-                                <option value="Arial">Arial</option>
-                                <option value="Times New Roman">Times New Roman</option>
-                                <option value="Courier New">Courier New</option>
-                                <option value="Verdana">Verdana</option>
-                            </select>
-                            <input type="number" id="wm-font-size" value="48" min="8" max="200" title="Font Size">
-                            <input type="color" id="wm-color" value="#cccccc" title="Color">
-                        </div>
-                    </div>
-
-                    <!-- Image Controls -->
-                    <div id="wm-image-settings" class="hidden">
-                        <button class="btn secondary sm"
-                            onclick="document.getElementById('wm-image-input').click()">Upload Image</button>
-                        <input type="file" id="wm-image-input" accept="image/*" hidden>
-                        <div class="wm-row">
-                            <label>Scale: <span id="wm-scale-val">100%</span></label>
-                            <input type="range" id="wm-scale" min="10" max="200" value="100">
-                        </div>
-                    </div>
-
-                    <div class="wm-divider"></div>
-
-                    <!-- Common Controls -->
-                    <div class="wm-grid-box">
-                        <div class="wm-row">
-                            <label>Opacity: <span id="wm-opacity-val">50%</span></label>
-                            <input type="range" id="wm-opacity" min="0" max="100" value="50">
-                        </div>
-                        <div class="wm-row">
-                            <label>Rotation: <span id="wm-rotation-val">45°</span></label>
-                            <input type="range" id="wm-rotation" min="0" max="360" value="45">
-                        </div>
-
-                        <!-- Position Grid -->
-                        <div class="wm-position-grid">
-                            <button data-pos="tl">⌜</button> <button data-pos="tc">⬆</button> <button
-                                data-pos="tr">⌝</button>
-                            <button data-pos="cl">⬅</button> <button data-pos="cc" class="active">●</button> <button
-                                data-pos="cr">➡</button>
-                            <button data-pos="bl">⌞</button> <button data-pos="bc">⬇</button> <button
-                                data-pos="br">⌟</button>
-                        </div>
-                    </div>
-
-                    <div class="wm-info">
-                        <span id="wm-file-info">Note: You can use the above controller to manage the watermark position
-                            in the PDF file. Load PDF to see info</span>
-                    </div>
-
-                    <button id="apply-watermark-btn" class="btn primary full-width">Add Watermark & Download</button>
-                </div>
-
-                <div id="edit-feature-content">
-                    <div class="upload-area" id="edit-upload-area">
-                        <p>Drag & Drop a PDF file here or</p>
-                        <input type="file" id="edit-file-input" accept="application/pdf" hidden>
-                        <button class="btn secondary"
-                            onclick="document.getElementById('edit-file-input').click()">Select
-                            File</button>
-                    </div>
-
-                    <div id="editor-container" class="hidden editor-layout">
-                        <!-- Sidebar for Page Thumbnails -->
-                        <div id="edit-page-list" class="page-sidebar">
-                            <!-- Thumbnails injected here -->
-                        </div>
-
-                        <!-- Main Editor Workspace -->
-                        <div class="editor-main-area">
-                            <div class="editor-toolbar hidden" id="main-editor-toolbar">
-                                <button id="tool-select" class="tool-btn active" title="Select">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
-                                    </svg>
-                                </button>
-                                <button id="tool-hand" class="tool-btn" title="Hand Tool (Pan)">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
-                                        <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
-                                        <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
-                                        <path
-                                            d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a.9.9 0 0 1 0-1.27l2.49-2.49a.9.9 0 0 1 1.28 0l1.72 1.72H13">
-                                        </path>
-                                    </svg>
-                                </button>
-                                <button id="tool-text" class="tool-btn" title="Add Text">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path d="M4 7V4h16v3M9 20h6M12 4v16"></path>
-                                    </svg>
-                                </button>
-                                <button id="tool-draw" class="tool-btn" title="Free Draw">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                                        <path d="M2 2l7.586 7.586"></path>
-                                        <circle cx="11" cy="11" r="2"></circle>
-                                    </svg>
-                                </button>
-                                <div class="tool-divider"></div>
-                                <button id="tool-rect" class="tool-btn" title="Rectangle">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    </svg>
-                                </button>
-                                <button id="tool-circle" class="tool-btn" title="Circle">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                    </svg>
-                                </button>
-                                <button id="tool-line" class="tool-btn" title="Line">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <line x1="4" y1="20" x2="20" y2="4"></line>
-                                    </svg>
-                                </button>
-
-                                <div class="tool-divider"></div>
-
-                                <div class="emoji-dropdown">
-                                    <button id="tool-emoji" class="tool-btn" title="Insert Emoji">
-                                        <span>😀</span>
-                                    </button>
-                                    <div class="emoji-content hidden">
-                                        <span data-emoji="😀">😀</span>
-                                        <span data-emoji="😂">😂</span>
-                                        <span data-emoji="😍">😍</span>
-                                        <span data-emoji="🤔">🤔</span>
-                                        <span data-emoji="👍">👍</span>
-                                        <span data-emoji="👎">👎</span>
-                                        <span data-emoji="✅">✅</span>
-                                        <span data-emoji="❌">❌</span>
-                                        <span data-emoji="🔥">🔥</span>
-                                        <span data-emoji="⭐">⭐</span>
-                                        <span data-emoji="🚩">🚩</span>
-                                        <span data-emoji="💡">💡</span>
-                                        <!-- New Emojis -->
-                                        <span data-emoji="🇱🇰">🇱🇰</span>
-                                        <span data-emoji="❤️">❤️</span>
-                                        <span data-emoji="💲">💲</span>
-                                        <span data-emoji="⚠️">⚠️</span>
-                                        <span data-emoji="📍">📍</span>
-                                        <span data-emoji="📞">📞</span>
-                                        <span data-emoji="✉️">✉️</span>
-                                        <span data-emoji="➡️">➡️</span>
-                                    </div>
-                                </div>
-                                <div class="tool-divider"></div>
-                                <button id="tool-image" class="tool-btn" title="Add Image"
-                                    onclick="document.getElementById('edit-image-input').click()">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                        <polyline points="21 15 16 10 5 21"></polyline>
-                                    </svg>
-                                </button>
-                                <input type="file" id="edit-image-input" accept="image/*" hidden>
-
-                                <div class="tool-divider"></div>
-                                <input type="color" id="tool-color" value="#000000" title="Color">
-                                <button id="tool-delete" class="tool-btn text-danger" title="Delete Selected">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path
-                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <!-- TEXT PROPERTIES TOOLBAR (Hidden by default) -->
-                            <div id="text-properties-toolbar" class="editor-toolbar secondary-toolbar hidden">
-                                <select id="font-family" title="Font Family">
-                                    <option value="Arial">Arial</option>
-                                    <option value="Times New Roman">Times New Roman</option>
-                                    <option value="Courier New">Courier New</option>
-                                    <option value="Georgia">Georgia</option>
-                                    <option value="Verdana">Verdana</option>
-                                </select>
-
-                                <div class="tool-divider"></div>
-
-                                <select id="font-size" title="Font Size">
-                                    <option value="12">12</option>
-                                    <option value="14">14</option>
-                                    <option value="16">16</option>
-                                    <option value="18">18</option>
-                                    <option value="20" selected>20</option>
-                                    <option value="24">24</option>
-                                    <option value="30">30</option>
-                                    <option value="36">36</option>
-                                    <option value="48">48</option>
-                                    <option value="60">60</option>
-                                    <option value="72">72</option>
-                                </select>
-
-                                <div class="tool-divider"></div>
-
-                                <button id="text-bold" class="tool-btn" title="Bold">
-                                    <strong>B</strong>
-                                </button>
-                                <button id="text-italic" class="tool-btn" title="Italic">
-                                    <em>I</em>
-                                </button>
-                                <button id="text-underline" class="tool-btn" title="Underline">
-                                    <u>U</u>
-                                </button>
-
-                                <div class="tool-divider"></div>
-
-                                <button id="text-align-left" class="tool-btn" title="Align Left">
-                                    <span style="font-size: 14px;">&#9776;</span>
-                                </button>
-                                <button id="text-align-center" class="tool-btn" title="Align Center">
-                                    <span style="font-size: 14px;">&#9778;</span>
-                                </button>
-                                <button id="text-align-right" class="tool-btn" title="Align Right">
-                                    <span style="font-size: 14px;">&#9779;</span>
-                                </button>
-
-                                <div class="tool-divider"></div>
-
-                                <!-- Reusing the color input logic, but specific for text updating -->
-                                <!-- We will sync this with the main color picker -->
-                            </div>
-
-                            <div id="editor-viewport" class="editor-viewport">
-                                <div id="editor-transform-layer" class="editor-transform-layer">
-                                    <div id="canvas-wrapper" class="canvas-wrapper">
-                                        <canvas id="pdf-editor-canvas"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Zoom Controls Floating Bar -->
-                            <div id="zoom-controls" class="zoom-controls hidden">
-                                <button id="zoom-out" class="zoom-btn" title="Zoom Out">
-                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg>
-                                </button>
-                                <span id="zoom-level">100%</span>
-                                <button id="zoom-in" class="zoom-btn" title="Zoom In">
-                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg>
-                                </button>
-                                <div class="zoom-separator"></div>
-                                <button id="zoom-fit" class="zoom-btn" title="Fit to Screen">
-                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path
-                                            d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <div class="actions">
-                                <button id="save-pdf-btn" class="btn primary">Save & Download PDF</button>
-                                <button id="clear-pdf-btn" class="btn secondary">Clear All</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECURITY SECTION -->
-            <div id="security-tab" class="tab-pane">
-                <div class="sub-tabs">
-                    <label class="radio-tab">
-                        <input type="radio" name="security-mode" value="protect-pdf" checked>
-                        <span>Protect PDF</span>
-                    </label>
-                    <label class="radio-tab">
-                        <input type="radio" name="security-mode" value="sign-pdf">
-                        <span>Sign PDF</span>
-                    </label>
-                </div>
-
-                <!-- Protect PDF Sub-section -->
-                <div id="protect-pdf-section" class="security-section">
-                    <div class="upload-area" id="protect-upload-area">
-                        <p>Drag & Drop a PDF file here or</p>
-                        <input type="file" id="protect-file-input" accept="application/pdf" hidden>
-                        <button class="btn secondary"
-                            onclick="document.getElementById('protect-file-input').click()">Select
-                            File</button>
-                    </div>
-
-                    <div id="protect-settings-container" class="hidden">
-                        <div id="protect-file-info" class="file-info-display"></div>
-
-                        <div class="protect-form">
-                            <div class="form-group">
-                                <label for="protect-password">Enter Password</label>
-                                <div class="password-input-wrapper">
-                                    <input type="password" id="protect-password" placeholder="Type a strong password">
-                                    <button type="button" class="toggle-password" tabindex="-1">🙈</button>
-                                </div>
-                            </div>
-
-                            <div class="strength-meter-container">
-                                <div class="strength-bar-bg">
-                                    <div id="password-strength-bar" class="strength-bar"></div>
-                                </div>
-                                <span id="password-strength-text">Password Strength: </span>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="protect-password-confirm">Re-enter Password</label>
-                                <div class="password-input-wrapper">
-                                    <input type="password" id="protect-password-confirm" placeholder="Confirm password">
-                                </div>
-                            </div>
-
-                            <div class="actions">
-                                <button id="protect-btn" class="btn primary">Protect & Download PDF</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sign PDF Sub-section -->
-                <div id="sign-pdf-section" class="security-section hidden">
-                    <div class="upload-area" id="sign-upload-area">
-                        <p>Drag & Drop a PDF to Sign or</p>
-                        <input type="file" id="sign-file-input" accept="application/pdf" hidden>
-                        <button class="btn secondary"
-                            onclick="document.getElementById('sign-file-input').click()">Select
-                            File</button>
-                    </div>
-
-                    <div id="sign-editor-container" class="hidden editor-layout">
-                        <!-- Reuse sidebar styling -->
-                        <div id="sign-page-list" class="page-sidebar"></div>
-
-                        <div class="editor-main-area" id="sign-main-area">
-                            <!-- Floating Sign Toolbar -->
-                            <div class="editor-toolbar floating-toolbar" id="sign-toolbar">
-                                <button id="tool-signature" class="tool-btn large-btn" title="Add Signature">
-                                    <span class="icon">
-                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                                            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                                            <path d="M2 2l7.586 7.586"></path>
-                                            <circle cx="11" cy="11" r="2"></circle>
-                                        </svg>
-                                    </span>
-                                    <span class="label">Signature</span>
-                                </button>
-                                <div class="tool-divider"></div>
-                                <button id="tool-stamp" class="tool-btn large-btn" title="Add Stamp">
-                                    <span class="icon">
-                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <path d="M8 12h8"></path>
-                                            <path d="M12 8v8"></path>
-                                        </svg>
-                                    </span>
-                                    <span class="label">Stamp</span>
-                                </button>
-                                <button id="tool-date" class="tool-btn large-btn" title="Add Date">
-                                    <span class="icon">
-                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                                        </svg>
-                                    </span>
-                                    <span class="label">Date</span>
-                                </button>
-                                <button id="tool-sign-text" class="tool-btn large-btn" title="Add Text">
-                                    <span class="icon">
-                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <polyline points="4 7 4 4 20 4 20 7"></polyline>
-                                            <line x1="9" y1="20" x2="15" y2="20"></line>
-                                            <line x1="12" y1="4" x2="12" y2="20"></line>
-                                        </svg>
-                                    </span>
-                                    <span class="label">Text</span>
-                                </button>
-                                <div class="tool-divider"></div>
-                                <button id="tool-delete-sign" class="tool-btn large-btn text-danger"
-                                    title="Delete Selected">
-                                    <span class="icon">
-                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path
-                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                            </path>
-                                        </svg>
-                                    </span>
-                                    <span class="label">Delete</span>
-                                </button>
-                            </div>
-
-                            <div id="sign-viewport" class="editor-viewport">
-                                <div class="canvas-wrapper">
-                                    <canvas id="sign-canvas"></canvas>
-                                </div>
-                            </div>
-
-                            <!-- Sign Zoom Controls -->
-                            <div id="sign-zoom-controls" class="zoom-controls">
-                                <button id="sign-zoom-out" class="zoom-btn" title="Zoom Out">
-                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg>
-                                </button>
-                                <span id="sign-zoom-level">100%</span>
-                                <button id="sign-zoom-in" class="zoom-btn" title="Zoom In">
-                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg>
-                                </button>
-                                <div class="zoom-separator"></div>
-                                <button id="sign-zoom-reset" class="zoom-btn" title="Fit to Screen">
-                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path
-                                            d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <!-- Sign Actions -->
-                            <div class="actions">
-                                <button id="save-signed-pdf-btn" class="btn primary">Sign & Download PDF</button>
-                                <button id="clear-sign-btn" class="btn secondary">Clear All</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+
+        <!-- SECURITY SECTION -->
+        <div id="security-tab" class="tab-pane">
+          <div class="sub-tabs">
+            <label class="radio-tab">
+              <input
+                type="radio"
+                name="security-mode"
+                value="protect-pdf"
+                checked
+              />
+              <span>Protect PDF</span>
+            </label>
+            <label class="radio-tab">
+              <input type="radio" name="security-mode" value="sign-pdf" />
+              <span>Sign PDF</span>
+            </label>
+          </div>
+
+          <!-- Protect PDF Sub-section -->
+          <div id="protect-pdf-section" class="security-section">
+            <div class="upload-area" id="protect-upload-area">
+              <p>Drag & Drop a PDF file here or</p>
+              <input
+                type="file"
+                id="protect-file-input"
+                accept="application/pdf"
+                hidden
+              />
+              <button
+                class="btn secondary"
+                onclick="document.getElementById('protect-file-input').click()"
+              >
+                Select File
+              </button>
+            </div>
+
+            <div id="protect-settings-container" class="hidden">
+              <div id="protect-file-info" class="file-info-display"></div>
+
+              <div class="protect-form">
+                <div class="form-group">
+                  <label for="protect-password">Enter Password</label>
+                  <div class="password-input-wrapper">
+                    <input
+                      type="password"
+                      id="protect-password"
+                      placeholder="Type a strong password"
+                    />
+                    <button type="button" class="toggle-password" tabindex="-1">
+                      🙈
+                    </button>
+                  </div>
+                </div>
+
+                <div class="strength-meter-container">
+                  <div class="strength-bar-bg">
+                    <div id="password-strength-bar" class="strength-bar"></div>
+                  </div>
+                  <span id="password-strength-text">Password Strength: </span>
+                </div>
+
+                <div class="form-group">
+                  <label for="protect-password-confirm"
+                    >Re-enter Password</label
+                  >
+                  <div class="password-input-wrapper">
+                    <input
+                      type="password"
+                      id="protect-password-confirm"
+                      placeholder="Confirm password"
+                    />
+                  </div>
+                </div>
+
+                <div class="actions">
+                  <button id="protect-btn" class="btn primary">
+                    Protect & Download PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sign PDF Sub-section -->
+          <div id="sign-pdf-section" class="security-section hidden">
+            <div class="upload-area" id="sign-upload-area">
+              <p>Drag & Drop a PDF to Sign or</p>
+              <input
+                type="file"
+                id="sign-file-input"
+                accept="application/pdf"
+                hidden
+              />
+              <button
+                class="btn secondary"
+                onclick="document.getElementById('sign-file-input').click()"
+              >
+                Select File
+              </button>
+            </div>
+
+            <div id="sign-editor-container" class="hidden editor-layout">
+              <!-- Reuse sidebar styling -->
+              <div id="sign-page-list" class="page-sidebar"></div>
+
+              <div class="editor-main-area" id="sign-main-area">
+                <!-- Floating Sign Toolbar -->
+                <div class="editor-toolbar floating-toolbar" id="sign-toolbar">
+                  <button
+                    id="tool-signature"
+                    class="tool-btn large-btn"
+                    title="Add Signature"
+                  >
+                    <span class="icon">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                        <path
+                          d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"
+                        ></path>
+                        <path d="M2 2l7.586 7.586"></path>
+                        <circle cx="11" cy="11" r="2"></circle>
+                      </svg>
+                    </span>
+                    <span class="label">Signature</span>
+                  </button>
+                  <div class="tool-divider"></div>
+                  <button
+                    id="tool-stamp"
+                    class="tool-btn large-btn"
+                    title="Add Stamp"
+                  >
+                    <span class="icon">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M8 12h8"></path>
+                        <path d="M12 8v8"></path>
+                      </svg>
+                    </span>
+                    <span class="label">Stamp</span>
+                  </button>
+                  <button
+                    id="tool-date"
+                    class="tool-btn large-btn"
+                    title="Add Date"
+                  >
+                    <span class="icon">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect
+                          x="3"
+                          y="4"
+                          width="18"
+                          height="18"
+                          rx="2"
+                          ry="2"
+                        ></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                    </span>
+                    <span class="label">Date</span>
+                  </button>
+                  <button
+                    id="tool-sign-text"
+                    class="tool-btn large-btn"
+                    title="Add Text"
+                  >
+                    <span class="icon">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                        <line x1="9" y1="20" x2="15" y2="20"></line>
+                        <line x1="12" y1="4" x2="12" y2="20"></line>
+                      </svg>
+                    </span>
+                    <span class="label">Text</span>
+                  </button>
+                  <div class="tool-divider"></div>
+                  <button
+                    id="tool-delete-sign"
+                    class="tool-btn large-btn text-danger"
+                    title="Delete Selected"
+                  >
+                    <span class="icon">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path
+                          d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                        ></path>
+                      </svg>
+                    </span>
+                    <span class="label">Delete</span>
+                  </button>
+                </div>
+
+                <div id="sign-viewport" class="editor-viewport">
+                  <div class="canvas-wrapper">
+                    <canvas id="sign-canvas"></canvas>
+                  </div>
+                </div>
+
+                <!-- Sign Zoom Controls -->
+                <div id="sign-zoom-controls" class="zoom-controls">
+                  <button id="sign-zoom-out" class="zoom-btn" title="Zoom Out">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                  <span id="sign-zoom-level">100%</span>
+                  <button id="sign-zoom-in" class="zoom-btn" title="Zoom In">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                  <div class="zoom-separator"></div>
+                  <button
+                    id="sign-zoom-reset"
+                    class="zoom-btn"
+                    title="Fit to Screen"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Sign Actions -->
+                <div class="actions">
+                  <button id="save-signed-pdf-btn" class="btn primary">
+                    Sign & Download PDF
+                  </button>
+                  <button id="clear-sign-btn" class="btn secondary">
+                    Clear All
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- CONFIRMATION MODAL -->
     <div id="confirmation-modal" class="modal-overlay hidden">
-        <div class="modal-box">
-            <div class="modal-header">
-                <h3>Clear All Edits?</h3>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to clear all annotations? This action cannot be undone.</p>
-            </div>
-            <div class="modal-actions">
-                <button id="modal-cancel-btn" class="btn secondary">Cancel</button>
-                <button id="modal-confirm-btn" class="btn danger">Yes, I'm sure</button>
-            </div>
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>Clear All Edits?</h3>
         </div>
+        <div class="modal-body">
+          <p>
+            Are you sure you want to clear all annotations? This action cannot
+            be undone.
+          </p>
+        </div>
+        <div class="modal-actions">
+          <button id="modal-cancel-btn" class="btn secondary">Cancel</button>
+          <button id="modal-confirm-btn" class="btn danger">
+            Yes, I'm sure
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- SIGNATURE CREATION MODAL -->
     <div id="signature-modal" class="modal-overlay hidden">
-        <div class="modal-box large-modal">
-            <div class="modal-header">
-                <h3>Create Signature</h3>
-                <button class="close-modal" id="close-sign-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="sign-tabs">
-                    <button class="sign-tab-btn active" data-tab="draw">Draw</button>
-                    <button class="sign-tab-btn" data-tab="type">Type</button>
-                    <button class="sign-tab-btn" data-tab="upload">Upload</button>
-                </div>
-
-                <!-- DRAW TAB -->
-                <div id="tab-draw" class="sign-tab-content active">
-                    <div class="draw-area">
-                        <canvas id="signature-pad" width="600" height="200"></canvas>
-                        <div class="draw-controls">
-                            <button id="clear-signature" class="btn sm secondary">Clear</button>
-                            <label>Color: <input type="color" id="sign-color" value="#000000"></label>
-                            <label>Width: <input type="range" id="sign-width" min="1" max="5" value="2"></label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TYPE TAB -->
-                <div id="tab-type" class="sign-tab-content hidden">
-                    <input type="text" id="type-signature-input" placeholder="Type your name" class="full-width-input">
-                    <div class="font-options">
-                        <button class="font-btn" style="font-family: 'Great Vibes', cursive;">Signature 1</button>
-                        <button class="font-btn" style="font-family: 'Dancing Script', cursive;">Signature 2</button>
-                        <button class="font-btn" style="font-family: 'Sacramento', cursive;">Signature 3</button>
-                    </div>
-                    <div id="type-preview" class="signature-preview"></div>
-                </div>
-
-                <!-- UPLOAD TAB -->
-                <div id="tab-upload" class="sign-tab-content hidden">
-                    <div class="upload-box" onclick="document.getElementById('upload-sign-file').click()">
-                        <p>Click to Upload Image (PNG/JPG)</p>
-                        <input type="file" id="upload-sign-file" accept="image/*" hidden>
-                    </div>
-                    <img id="upload-preview" class="hidden" alt="Signature Preview">
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button id="cancel-signature" class="btn secondary">Cancel</button>
-                <button id="create-signature-btn" class="btn primary">Create Signature</button>
-            </div>
+      <div class="modal-box large-modal">
+        <div class="modal-header">
+          <h3>Create Signature</h3>
+          <button class="close-modal" id="close-sign-modal">&times;</button>
         </div>
+        <div class="modal-body">
+          <div class="sign-tabs">
+            <button class="sign-tab-btn active" data-tab="draw">Draw</button>
+            <button class="sign-tab-btn" data-tab="type">Type</button>
+            <button class="sign-tab-btn" data-tab="upload">Upload</button>
+          </div>
+
+          <!-- DRAW TAB -->
+          <div id="tab-draw" class="sign-tab-content active">
+            <div class="draw-area">
+              <canvas id="signature-pad" width="600" height="200"></canvas>
+              <div class="draw-controls">
+                <button id="clear-signature" class="btn sm secondary">
+                  Clear
+                </button>
+                <label
+                  >Color: <input type="color" id="sign-color" value="#000000"
+                /></label>
+                <label
+                  >Width:
+                  <input type="range" id="sign-width" min="1" max="5" value="2"
+                /></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- TYPE TAB -->
+          <div id="tab-type" class="sign-tab-content hidden">
+            <input
+              type="text"
+              id="type-signature-input"
+              placeholder="Type your name"
+              class="full-width-input"
+            />
+            <div class="font-options">
+              <button
+                class="font-btn"
+                style="font-family: 'Great Vibes', cursive"
+              >
+                Signature 1
+              </button>
+              <button
+                class="font-btn"
+                style="font-family: 'Dancing Script', cursive"
+              >
+                Signature 2
+              </button>
+              <button
+                class="font-btn"
+                style="font-family: 'Sacramento', cursive"
+              >
+                Signature 3
+              </button>
+            </div>
+            <div id="type-preview" class="signature-preview"></div>
+          </div>
+
+          <!-- UPLOAD TAB -->
+          <div id="tab-upload" class="sign-tab-content hidden">
+            <div
+              class="upload-box"
+              onclick="document.getElementById('upload-sign-file').click()"
+            >
+              <p>Click to Upload Image (PNG/JPG)</p>
+              <input
+                type="file"
+                id="upload-sign-file"
+                accept="image/*"
+                hidden
+              />
+            </div>
+            <img id="upload-preview" class="hidden" alt="Signature Preview" />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button id="cancel-signature" class="btn secondary">Cancel</button>
+          <button id="create-signature-btn" class="btn primary">
+            Create Signature
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- STAMP SELECTION MODAL -->
     <div id="stamp-modal" class="modal-overlay hidden">
-        <div class="modal-box">
-            <div class="modal-header">
-                <h3>Select Stamp</h3>
-                <button class="close-modal" id="close-stamp-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="stamp-grid">
-                    <button class="stamp-btn approved" onclick="addStamp('APPROVED', '#27ae60')">APPROVED</button>
-                    <button class="stamp-btn paid" onclick="addStamp('PAID', '#2980b9')">PAID</button>
-                    <button class="stamp-btn received" onclick="addStamp('RECEIVED', '#8e44ad')">RECEIVED</button>
-                    <button class="stamp-btn confidential"
-                        onclick="addStamp('CONFIDENTIAL', '#c0392b')">CONFIDENTIAL</button>
-                    <button class="stamp-btn rejected" onclick="addStamp('REJECTED', '#c0392b')">REJECTED</button>
-                </div>
-            </div>
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>Select Stamp</h3>
+          <button class="close-modal" id="close-stamp-modal">&times;</button>
         </div>
+        <div class="modal-body">
+          <div class="stamp-grid">
+            <button
+              class="stamp-btn approved"
+              onclick="addStamp('APPROVED', '#27ae60')"
+            >
+              APPROVED
+            </button>
+            <button
+              class="stamp-btn paid"
+              onclick="addStamp('PAID', '#2980b9')"
+            >
+              PAID
+            </button>
+            <button
+              class="stamp-btn received"
+              onclick="addStamp('RECEIVED', '#8e44ad')"
+            >
+              RECEIVED
+            </button>
+            <button
+              class="stamp-btn confidential"
+              onclick="addStamp('CONFIDENTIAL', '#c0392b')"
+            >
+              CONFIDENTIAL
+            </button>
+            <button
+              class="stamp-btn rejected"
+              onclick="addStamp('REJECTED', '#c0392b')"
+            >
+              REJECTED
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
     <footer>
-        <div class="copyrights">&copy;
-            <script>document.currentScript.parentElement.innerHTML += new Date().getFullYear();</script> PDF Surgeon by
-            RMST. All rights reserved.
-        </div>
+      <div class="copyrights">
+        &copy;
+        <script>
+          document.currentScript.parentElement.innerHTML +=
+            new Date().getFullYear();
+        </script>
+        PDF Surgeon by RMST. All rights reserved.
+      </div>
     </footer>
     <!-- WELCOME POPUP -->
     <div id="welcome-popup" class="popup-overlay hidden">
-        <div class="popup-box">
-            <button id="popup-close-btn" class="popup-close">&times;</button>
-            <div class="popup-content">
-                <h2>Welcome to our all-in-one PDF tool!</h2>
-                <p>This platform is designed to be <strong>fast, simple, and user-friendly.</strong> You can easily
-                    edit,
-                    convert, merge, and manage PDFs in one place.</p>
+      <div class="popup-box">
+        <button id="popup-close-btn" class="popup-close">&times;</button>
+        <div class="popup-content">
+          <h2>Welcome to our all-in-one PDF tool!</h2>
+          <p>
+            This platform is designed to be
+            <strong>fast, simple, and user-friendly.</strong> You can easily
+            edit, convert, merge, and manage PDFs in one place.
+          </p>
 
-                <div class="feature-highlight">
-                    <span class="highlight-icon">⚡</span>
-                    <div>
-                        <strong>100% Free - Online and Offline</strong>
-                        <p>Our tool works completely offline as well, so you can use all features even without an
-                            internet connection. No ads, no limitations, and no hidden fees.</p>
-                    </div>
-                </div>
-
-                <p class="future-note">We’re continuously working to bring you more powerful features. Stay with us for
-                    upcoming updates and improvements!</p>
-                <p class="future-note">PDF Surgeon by RMST</p>
-
-
-                <button id="popup-action-btn" class="btn primary pulse-btn">Let's Go 🚀</button>
+          <div class="feature-highlight">
+            <span class="highlight-icon">⚡</span>
+            <div>
+              <strong>100% Free - Online and Offline</strong>
+              <p>
+                Our tool works completely offline as well, so you can use all
+                features even without an internet connection. No ads, no
+                limitations, and no hidden fees.
+              </p>
             </div>
+          </div>
+
+          <p class="future-note">
+            We’re continuously working to bring you more powerful features. Stay
+            with us for upcoming updates and improvements!
+          </p>
+          <p class="future-note">PDF Surgeon by RMST</p>
+
+          <button id="popup-action-btn" class="btn primary pulse-btn">
+            Let's Go 🚀
+          </button>
         </div>
+      </div>
     </div>
 
     <!-- FIREWORKS CANVAS -->
     <canvas id="fireworks-canvas"></canvas>
 
-    <script src="script.js"></script>
-</body>
-
+    <script src="app.min.js"></script>
+  </body>
 </html>
