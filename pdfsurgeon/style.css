@@ -5,47 +5,6 @@
 
 
 
-/* Local Fonts for Edit PDF */
-@font-face {
-    font-family: 'Roboto';
-    src: url('fonts/Roboto-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'OpenSans';
-    src: url('fonts/OpenSans-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Lato';
-    src: url('fonts/Lato-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Montserrat';
-    src: url('fonts/Montserrat-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Oswald';
-    src: url('fonts/Oswald-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Raleway';
-    src: url('fonts/Raleway-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Merriweather';
-    src: url('fonts/Merriweather-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'PTSans';
-    src: url('fonts/PTSans-Regular.ttf') format('truetype');
-}
-
 :root {
     --primary-color: #4a90e2;
     --primary-hover: #357abd;
@@ -107,8 +66,10 @@ header h1 {
     margin: 0;
     color: #c30800;
     font-size: 2.2rem;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
 }
 
 /* TABS */
@@ -437,11 +398,100 @@ header h1 {
     /* Nice readable yellow/gold */
     font-size: 0.9rem;
     margin-bottom: 15px;
-    margin-top: 15px;
+    margin-top: 5px;
     font-style: italic;
     min-height: 1.2em;
     /* Prevent layout shift */
     font-weight: 500;
+}
+
+/* Premium Toggle Switch */
+.toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding: 0 5px;
+}
+
+.page-number-format {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-number-format .page-number-format-inside {
+    width: 40%;
+}
+
+@media (max-width: 768px) {
+    .page-number-format .page-number-format-inside {
+        width: 100%;
+    }
+}
+
+.toggle-row .toggle-row-inside {
+    display: flex;
+    gap: 20px;
+}
+
+.toggle-label {
+    margin: 0;
+    font-weight: 500;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .3s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+input:checked+.slider {
+    background-color: var(--primary-color);
+}
+
+input:checked+.slider:before {
+    transform: translateX(20px);
+}
+
+.checkbox-container input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
 }
 
 #range-input {
@@ -1537,7 +1587,7 @@ footer {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 0;
+    margin-bottom: 10px;
 }
 
 /* Input Styling */
@@ -1548,10 +1598,55 @@ footer {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     font-size: 14px;
-    transition: all 0.2s;
-    outline: none;
     width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
 }
+
+/* Premium Color Picker */
+.color-picker-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.color-picker-row label {
+    font-weight: 500;
+    color: #444;
+}
+
+.color-picker-row input[type="color"] {
+    -webkit-appearance: none;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+}
+
+.color-picker-row input[type="color"]:hover {
+    transform: scale(1.1);
+}
+
+.color-picker-row input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.color-picker-row input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #ddd;
+}
+
+
 
 .watermark-panel input[type="text"]:focus,
 .watermark-panel input[type="number"]:focus,
@@ -1561,8 +1656,7 @@ footer {
 }
 
 /* Color Picker */
-input[type="color"]#wm-color,
-input[type="color"]#pn-color {
+input[type="color"]#wm-color {
     -webkit-appearance: none;
     appearance: none;
     border: none;
@@ -1576,13 +1670,11 @@ input[type="color"]#pn-color {
     flex: 0 0 44px;
 }
 
-input[type="color"]#wm-color::-webkit-color-swatch-wrapper,
-input[type="color"]#pn-color::-webkit-color-swatch-wrapper {
+input[type="color"]#wm-color::-webkit-color-swatch-wrapper {
     padding: 0;
 }
 
-input[type="color"]#wm-color::-webkit-color-swatch,
-input[type="color"]#pn-color::-webkit-color-swatch {
+input[type="color"]#wm-color::-webkit-color-swatch {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
 }
@@ -1602,6 +1694,12 @@ input[type="color"]#pn-color::-webkit-color-swatch {
     align-items: center;
     /* Center content on both Desktop & Mobile per user request */
     text-align: center;
+}
+
+.wm-grid-box-options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
 .wm-grid-box .wm-row {
@@ -2994,6 +3092,7 @@ body.modal-open {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
 }
 
 /* Modal Header & Close Button */
@@ -3049,7 +3148,63 @@ body.modal-open {
     width: 100%;
     height: 200px;
     touch-action: none;
+    height: 200px;
+    touch-action: none;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.color-palette {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.color-swatch.active {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--primary-color);
+    border-color: transparent;
+}
+
+.color-swatch.multi-color {
+    background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+    border: none;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+#sign-color {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.separator-vertical {
+    width: 1px;
+    height: 30px;
+    background: #e0e0e0;
+    margin: 0 10px;
 }
 
 .draw-controls {
@@ -3124,24 +3279,35 @@ body.modal-open {
 
 /* Upload Tab */
 .upload-box {
-    border: 2px dashed var(--border-color);
+    border: 2px dashed #ccc;
     padding: 3rem;
     border-radius: 12px;
     cursor: pointer;
     text-align: center;
     width: 100%;
-    background: var(--surface-ground);
     transition: all 0.2s;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 1rem;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+#remove-upload-sign {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    font-size: 1.2rem;
+    z-index: 10;
 }
 
 .upload-box.dragover {
     border-color: var(--primary-color);
-    background: var(--primary-light);
+    background: #e6f0fa;
     transform: scale(1.02);
 }
 
@@ -3152,7 +3318,6 @@ body.modal-open {
 #upload-preview {
     max-width: 100%;
     max-height: 250px;
-    margin-top: 1.5rem;
     object-fit: contain;
     border-radius: 8px;
     border: 1px solid var(--border-color);
@@ -3319,4 +3484,60 @@ body.modal-open {
 /* Fix Zoom Controls Positioning */
 .editor-main-area {
     position: relative;
+}
+
+/* --- APP LOADER --- */
+#app-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+#app-loader.loader-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    position: relative;
+}
+
+.double-bounce1,
+.double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+    animation-delay: -1.0s;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: scale(0.0);
+    }
+
+    50% {
+        transform: scale(1.0);
+    }
 }

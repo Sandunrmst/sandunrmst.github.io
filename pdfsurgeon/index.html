@@ -53,12 +53,20 @@
 
     <!-- Signature Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Great+Vibes&family=Sacramento&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Great+Vibes&family=Sacramento&family=Montserrat:wght@700;800;900&display=swap"
       rel="stylesheet"
     />
   </head>
 
   <body>
+    <!-- App Loader -->
+    <div id="app-loader">
+      <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+      </div>
+    </div>
+
     <div class="container">
       <header>
         <div class="header-content">
@@ -556,6 +564,14 @@
                   <option value="Times New Roman">Times New Roman</option>
                   <option value="Courier New">Courier New</option>
                   <option value="Verdana">Verdana</option>
+                  <option value="Roboto">Roboto</option>
+                  <option value="OpenSans">Open Sans</option>
+                  <option value="Lato">Lato</option>
+                  <option value="Montserrat">Montserrat</option>
+                  <option value="Oswald">Oswald</option>
+                  <option value="Raleway">Raleway</option>
+                  <option value="Merriweather">Merriweather</option>
+                  <option value="PTSans">PT Sans</option>
                 </select>
                 <input
                   type="number"
@@ -599,27 +615,28 @@
 
             <!-- Common Controls -->
             <div class="wm-grid-box">
-              <div class="wm-row">
-                <label>Opacity: <span id="wm-opacity-val">50%</span></label>
-                <input
-                  type="range"
-                  id="wm-opacity"
-                  min="0"
-                  max="100"
-                  value="50"
-                />
+              <div class="wm-grid-box-options">
+                <div class="wm-row">
+                  <label>Opacity: <span id="wm-opacity-val">50%</span></label>
+                  <input
+                    type="range"
+                    id="wm-opacity"
+                    min="0"
+                    max="100"
+                    value="50"
+                  />
+                </div>
+                <div class="wm-row">
+                  <label>Rotation: <span id="wm-rotation-val">45°</span></label>
+                  <input
+                    type="range"
+                    id="wm-rotation"
+                    min="0"
+                    max="360"
+                    value="45"
+                  />
+                </div>
               </div>
-              <div class="wm-row">
-                <label>Rotation: <span id="wm-rotation-val">45°</span></label>
-                <input
-                  type="range"
-                  id="wm-rotation"
-                  min="0"
-                  max="360"
-                  value="45"
-                />
-              </div>
-
               <!-- Position Grid -->
               <div class="wm-position-grid">
                 <button data-pos="tl">⌜</button>
@@ -648,13 +665,15 @@
 
           <!-- Page Number Controls (Hidden by default) -->
           <div id="page-number-controls" class="watermark-panel hidden">
-            <div class="wm-group">
-              <label>Format:</label>
-              <select id="pn-format" class="full-width-select">
-                <option value="1">1, 2, 3...</option>
-                <option value="page-of">Page 1 of 10</option>
-                <option value="fraction">1 / 10</option>
-              </select>
+            <div class="wm-group page-number-format">
+              <div class="page-number-format-inside">
+                <label>Page Number Format:</label>
+                <select id="pn-format" class="">
+                  <option value="1">1, 2, 3...</option>
+                  <option value="page-of">Page 1 of 10</option>
+                  <option value="fraction">1 / 10</option>
+                </select>
+              </div>
             </div>
 
             <div class="wm-group">
@@ -710,14 +729,31 @@
                     value="10"
                   />
                 </div>
-                <div class="wm-row">
+                <div class="wm-row color-picker-row">
                   <label>Color:</label>
-                  <input type="color" id="pn-color" value="#000000" />
+                  <input
+                    type="color"
+                    id="pn-color"
+                    value="#000000"
+                    title="Choose color"
+                  />
                 </div>
               </div>
             </div>
 
             <div class="wm-divider"></div>
+
+            <div class="wm-group toggle-row">
+              <div class="toggle-row-inside">
+                <label for="pn-cover-page" class="toggle-label"
+                  >First page is cover page</label
+                >
+                <label class="switch">
+                  <input type="checkbox" id="pn-cover-page" />
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
 
             <div class="wm-group">
               <label>Pages:</label>
@@ -985,14 +1021,6 @@
                     <option value="Courier New">Courier New</option>
                     <option value="Georgia">Georgia</option>
                     <option value="Verdana">Verdana</option>
-                    <option value="Roboto">Roboto</option>
-                    <option value="OpenSans">Open Sans</option>
-                    <option value="Lato">Lato</option>
-                    <option value="Montserrat">Montserrat</option>
-                    <option value="Oswald">Oswald</option>
-                    <option value="Raleway">Raleway</option>
-                    <option value="Merriweather">Merriweather</option>
-                    <option value="PTSans">PT Sans</option>
                   </select>
 
                   <div class="tool-divider"></div>
@@ -1479,9 +1507,46 @@
                 <button id="clear-signature" class="btn sm secondary">
                   Clear
                 </button>
-                <label
-                  >Color: <input type="color" id="sign-color" value="#000000"
-                /></label>
+                <div class="color-palette">
+                  <div
+                    class="color-swatch active"
+                    style="background-color: #000000"
+                    data-color="#000000"
+                    title="Black"
+                  ></div>
+                  <div
+                    class="color-swatch"
+                    style="background-color: #0000ff"
+                    data-color="#0000ff"
+                    title="Blue"
+                  ></div>
+                  <div
+                    class="color-swatch"
+                    style="background-color: #ff0000"
+                    data-color="#ff0000"
+                    title="Red"
+                  ></div>
+                  <div
+                    class="color-swatch"
+                    style="background-color: #008000"
+                    data-color="#008000"
+                    title="Green"
+                  ></div>
+                  <div class="color-swatch multi-color" title="More Colors">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+                      />
+                    </svg>
+                    <input type="color" id="sign-color" value="#000000" />
+                  </div>
+                </div>
+                <div class="separator-vertical"></div>
                 <label
                   >Width:
                   <input type="range" id="sign-width" min="1" max="5" value="2"
@@ -1527,7 +1592,15 @@
               class="upload-box"
               onclick="document.getElementById('upload-sign-file').click()"
             >
+              <button
+                id="remove-upload-sign"
+                class="close-modal sm hidden"
+                title="Remove Image"
+              >
+                &times;
+              </button>
               <p>Click to Upload Image (PNG/JPG)</p>
+              <img id="upload-preview" class="hidden" alt="Signature Preview" />
               <input
                 type="file"
                 id="upload-sign-file"
@@ -1535,7 +1608,6 @@
                 hidden
               />
             </div>
-            <img id="upload-preview" class="hidden" alt="Signature Preview" />
           </div>
         </div>
         <div class="modal-actions">
