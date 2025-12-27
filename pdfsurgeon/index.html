@@ -543,7 +543,7 @@
           <!-- Watermark Controls (Hidden by default) -->
           <div id="watermark-controls" class="watermark-panel hidden">
             <div class="wm-group">
-              <label>Type:</label>
+              <label>Watermark Type:</label>
               <div class="wm-toggle">
                 <button id="wm-type-text" class="active">Text</button>
                 <button id="wm-type-image">Image</button>
@@ -742,31 +742,35 @@
             </div>
 
             <div class="wm-divider"></div>
-
-            <div class="wm-group toggle-row">
-              <div class="toggle-row-inside">
-                <label for="pn-cover-page" class="toggle-label"
-                  >First page is cover page</label
-                >
-                <label class="switch">
-                  <input type="checkbox" id="pn-cover-page" />
-                  <span class="slider round"></span>
-                </label>
+            <div class="select-pages-page-numbers">
+              <div class="select-page-row">
+                <div class="wm-group toggle-row">
+                  <div class="toggle-row-inside">
+                    <label for="pn-cover-page" class="toggle-label"
+                      >First page is cover page</label
+                    >
+                    <label class="switch">
+                      <input type="checkbox" id="pn-cover-page" />
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div class="wm-group">
-              <label>Pages:</label>
-              <div class="wm-toggle">
-                <button id="pn-range-all" class="active">All</button>
-                <button id="pn-range-custom">Range</button>
+              <div class="select-page-row">
+                <div class="wm-group full-width-select">
+                  <label>Select Pages:</label>
+                  <div class="wm-toggle">
+                    <button id="pn-range-all" class="active">All</button>
+                    <button id="pn-range-custom">Range</button>
+                  </div>
+                  <input
+                    type="text"
+                    id="pn-custom-range"
+                    class="hidden full-width-input margin-top-10"
+                    placeholder="e.g. 1-5, 8 Page"
+                  />
+                </div>
               </div>
-              <input
-                type="text"
-                id="pn-custom-range"
-                class="hidden full-width-input margin-top-10"
-                placeholder="e.g. 1-5, 8 Page"
-              />
             </div>
             <div class="add-page-numbers-btn">
               <button
@@ -869,6 +873,48 @@
                       <circle cx="11" cy="11" r="2"></circle>
                     </svg>
                   </button>
+
+                  <div class="highlight-dropdown" style="position: relative">
+                    <button
+                      id="tool-highlight"
+                      class="tool-btn"
+                      title="Highlight"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="20"
+                        height="20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path d="M9 11l-6 6v3h9l3-3"></path>
+                        <path
+                          d="M22 12l-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"
+                        ></path>
+                      </svg>
+                    </button>
+                    <div class="highlight-colors hidden">
+                      <span
+                        class="hl-swatch"
+                        data-color="rgba(255, 235, 59, 0.4)"
+                        style="background: #ffeb3b"
+                        title="Yellow"
+                      ></span>
+                      <span
+                        class="hl-swatch"
+                        data-color="rgba(76, 175, 80, 0.4)"
+                        style="background: #4caf50"
+                        title="Green"
+                      ></span>
+                      <span
+                        class="hl-swatch"
+                        data-color="rgba(244, 67, 54, 0.4)"
+                        style="background: #f44336"
+                        title="Red"
+                      ></span>
+                    </div>
+                  </div>
                   <div class="tool-divider"></div>
                   <button id="tool-rect" class="tool-btn" title="Rectangle">
                     <svg
@@ -1021,6 +1067,14 @@
                     <option value="Courier New">Courier New</option>
                     <option value="Georgia">Georgia</option>
                     <option value="Verdana">Verdana</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Merriweather">Merriweather</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="PT Sans">PT Sans</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Roboto">Roboto</option>
                   </select>
 
                   <div class="tool-divider"></div>
@@ -1191,7 +1245,9 @@
             </div>
 
             <div id="protect-settings-container" class="hidden">
-              <div id="protect-file-info" class="file-info-display"></div>
+              <div class="protect-display-file-info">
+                <div id="protect-file-info" class="file-info-display"></div>
+              </div>
 
               <div class="protect-form">
                 <div class="form-group">
@@ -1393,6 +1449,76 @@
                   </button>
                 </div>
 
+                <!-- Sign Text Options Toolbar (initially hidden) -->
+                <div
+                  id="sign-text-options"
+                  class="floating-toolbar hidden"
+                  style="bottom: 90px; flex-wrap: wrap"
+                >
+                  <select
+                    id="sign-font-family"
+                    title="Font Family"
+                    style="width: 120px"
+                  >
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Merriweather">Merriweather</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="PT Sans">PT Sans</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Roboto">Roboto</option>
+                  </select>
+                  <div class="tool-divider"></div>
+                  <button id="sign-text-bold" class="tool-btn" title="Bold">
+                    <strong style="font-family: serif; font-size: 18px"
+                      >B</strong
+                    >
+                  </button>
+                  <button id="sign-text-italic" class="tool-btn" title="Italic">
+                    <em style="font-family: serif; font-size: 18px">I</em>
+                  </button>
+                  <button
+                    id="sign-text-underline"
+                    class="tool-btn"
+                    title="Underline"
+                  >
+                    <u style="font-family: serif; font-size: 18px">U</u>
+                  </button>
+                  <div class="tool-divider"></div>
+                  <!-- Font Size Input -->
+                  <input
+                    type="number"
+                    id="sign-font-size"
+                    title="Font Size"
+                    value="20"
+                    min="10"
+                    max="100"
+                    step="1"
+                  />
+
+                  <input
+                    type="color"
+                    id="sign-text-color"
+                    value="#000000"
+                    title="Text Color"
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 50%;
+                      border: none;
+                      padding: 0;
+                      overflow: hidden;
+                      cursor: pointer;
+                    "
+                  />
+                </div>
+
                 <div id="sign-viewport" class="editor-viewport">
                   <div class="canvas-wrapper">
                     <canvas id="sign-canvas"></canvas>
@@ -1588,10 +1714,7 @@
 
           <!-- UPLOAD TAB -->
           <div id="tab-upload" class="sign-tab-content hidden">
-            <div
-              class="upload-box"
-              onclick="document.getElementById('upload-sign-file').click()"
-            >
+            <div class="upload-box" id="upload-input-box">
               <button
                 id="remove-upload-sign"
                 class="close-modal sm hidden"
@@ -1599,8 +1722,45 @@
               >
                 &times;
               </button>
-              <p>Click to Upload Image (PNG/JPG)</p>
+              <div class="upload-content-wrapper" style="text-align: center">
+                <p style="margin-bottom: 15px">
+                  Drag & drop files here, or click to upload
+                </p>
+                <button
+                  class="btn secondary"
+                  id="trigger-upload-btn"
+                  style="padding: 8px 16px"
+                >
+                  <i class="fas fa-upload"></i> Choose Image
+                </button>
+              </div>
               <img id="upload-preview" class="hidden" alt="Signature Preview" />
+              <div
+                class="upload-options hidden"
+                id="upload-sign-options"
+                style="
+                  margin-top: 15px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 10px;
+                "
+              >
+                <label class="toggle-switch">
+                  <input type="checkbox" id="remove-bg-checkbox" />
+                  <span class="slider"></span>
+                </label>
+                <label
+                  for="remove-bg-checkbox"
+                  style="
+                    font-size: 14px;
+                    color: var(--text-color);
+                    font-weight: 500;
+                    cursor: pointer;
+                  "
+                  >Remove Background</label
+                >
+              </div>
               <input
                 type="file"
                 id="upload-sign-file"
