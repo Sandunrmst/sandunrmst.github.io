@@ -15,7 +15,7 @@
       content="pdf surgeon, pdf tools offline, free pdf toolkit, merge pdf, split pdf, compress pdf, convert pdf, pdf to word, pdf to excel, rotate pdf, unlock pdf, protect pdf, extract pdf pages, offline pdf editor, ilovepdf alternative, smallpdf alternative"
     />
     <!-- OPEN GRAPH -->
-    <meta property="og:title" content="PDF Surgeon – Free PDF Tools by RMST" />
+    <meta property="og:title" content="PDF Surgeon – Free PDF Tools" />
     <meta
       property="og:description"
       content="Free all-in-one PDF editor with offline merge, split, compress, convert, rotate, extract, protect, unlock and more tools."
@@ -473,9 +473,136 @@
           </div>
 
           <div id="convert-from-pdf" class="sub-tab-pane">
-            <div class="upload-area">
-              <p>Convert PDF to Word, Excel, JPG</p>
-              <p class="small-text">(Coming Soon)</p>
+            <div class="conversion-type-selector">
+              <label class="compress-option-card">
+                <input
+                  type="radio"
+                  name="convert-from-type"
+                  value="pdf-to-word"
+                />
+                <div class="option-content">
+                  <span class="option-title">PDF to Word</span>
+                  <span class="option-desc">Convert PDF to DOCX</span>
+                </div>
+              </label>
+              <label class="compress-option-card">
+                <input
+                  type="radio"
+                  name="convert-from-type"
+                  value="pdf-to-excel"
+                />
+                <div class="option-content">
+                  <span class="option-title">PDF to Excel</span>
+                  <span class="option-desc">Convert PDF to XLSX</span>
+                </div>
+              </label>
+              <label class="compress-option-card">
+                <input
+                  type="radio"
+                  name="convert-from-type"
+                  value="pdf-to-jpg"
+                />
+                <div class="option-content">
+                  <span class="option-title">PDF to JPG</span>
+                  <span class="option-desc">Convert PDF to Images</span>
+                </div>
+              </label>
+            </div>
+
+            <!-- PDF TO WORD -->
+            <div id="pdf-to-word-section" class="conversion-section hidden">
+              <div class="upload-area" id="pdf-to-word-upload-area">
+                <p>Drag & Drop PDF file here or</p>
+                <input
+                  type="file"
+                  id="pdf-to-word-file-input"
+                  accept="application/pdf"
+                  hidden
+                />
+                <button
+                  class="btn secondary"
+                  onclick="document.getElementById('pdf-to-word-file-input').click()"
+                >
+                  Select PDF File
+                </button>
+              </div>
+              <div
+                id="pdf-to-word-file-info"
+                class="file-info-display hidden"
+              ></div>
+              <div class="actions">
+                <button
+                  id="pdf-to-word-convert-btn"
+                  class="btn primary"
+                  disabled
+                >
+                  Convert to Word
+                </button>
+              </div>
+            </div>
+
+            <!-- PDF TO EXCEL -->
+            <div id="pdf-to-excel-section" class="conversion-section hidden">
+              <div class="upload-area" id="pdf-to-excel-upload-area">
+                <p>Drag & Drop PDF file here or</p>
+                <input
+                  type="file"
+                  id="pdf-to-excel-file-input"
+                  accept="application/pdf"
+                  hidden
+                />
+                <button
+                  class="btn secondary"
+                  onclick="document.getElementById('pdf-to-excel-file-input').click()"
+                >
+                  Select PDF File
+                </button>
+              </div>
+              <div
+                id="pdf-to-excel-file-info"
+                class="file-info-display hidden"
+              ></div>
+              <div class="actions">
+                <button
+                  id="pdf-to-excel-convert-btn"
+                  class="btn primary"
+                  disabled
+                >
+                  Convert to Excel
+                </button>
+              </div>
+            </div>
+
+            <!-- PDF TO JPG -->
+            <div id="pdf-to-jpg-section" class="conversion-section hidden">
+              <div class="upload-area" id="pdf-to-jpg-upload-area">
+                <p>Drag & Drop PDF file here or</p>
+                <input
+                  type="file"
+                  id="pdf-to-jpg-file-input"
+                  accept="application/pdf"
+                  hidden
+                />
+                <button
+                  class="btn secondary"
+                  onclick="document.getElementById('pdf-to-jpg-file-input').click()"
+                >
+                  Select PDF File
+                </button>
+              </div>
+              <div
+                id="pdf-to-jpg-file-info"
+                class="file-info-display hidden"
+              ></div>
+              <div class="actions">
+                <button
+                  id="pdf-to-jpg-convert-btn"
+                  class="btn primary"
+                  disabled
+                >
+                  Convert to JPG
+                </button>
+              </div>
             </div>
           </div>
         </div>
