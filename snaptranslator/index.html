@@ -1,271 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Snap Translator - Free Image to Text & Translation Tool</title>
-    <!-- BASIC SEO -->
-    <meta
-      name="description"
-      content="The Snap Translator is a free online OCR tool that converts images to text instantly. Upload photos, screenshots or documents and extract text with high accuracy. Translate to 100+ languages, fast, secure and fully browser-based."
-    />
 
-    <meta
-      name="keywords"
-      content="the snap translator, image to text, ocr online, ocr tool, photo to text, screenshot to text, extract text from image, free ocr, translate image text, image translator, picture to text converter, ocr reader, jpg to text, png to text, online ocr free, multilingual ocr, offline ocr in browser, rmst"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Snap Translator - Free Image to Text & Translation Tool</title>
+  <!-- BASIC SEO -->
+  <meta name="description"
+    content="The Snap Translator is a free online OCR tool that converts images to text instantly. Upload photos, screenshots or documents and extract text with high accuracy. Translate to 100+ languages, fast, secure and fully browser-based." />
 
-    <!-- OPEN GRAPH -->
-    <meta
-      property="og:title"
-      content="The Snap Translator – Free Image to Text & Translation Tool"
-    />
-    <meta
-      property="og:description"
-      content="Convert images to text and translate instantly using this free OCR tool. Fast, accurate, secure and fully browser-based with no uploads."
-    />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:image"
-      content="https://sandunrmst.com/snaptranslator/preview.jpg"
-    />
-    <meta property="og:url" content="https://sandunrmst.com/snaptranslator" />
+  <meta name="keywords"
+    content="the snap translator, image to text, ocr online, ocr tool, photo to text, screenshot to text, extract text from image, free ocr, translate image text, image translator, picture to text converter, ocr reader, jpg to text, png to text, online ocr free, multilingual ocr, offline ocr in browser, rmst" />
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700&display=swap"
-      rel="stylesheet"
-    />
+  <!-- OPEN GRAPH -->
+  <meta property="og:title" content="The Snap Translator – Free Image to Text & Translation Tool" />
+  <meta property="og:description"
+    content="Convert images to text and translate instantly using this free OCR tool. Fast, accurate, secure and fully browser-based with no uploads." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://sandunrmst.com/snaptranslator/preview.jpg" />
+  <meta property="og:url" content="https://sandunrmst.com/snaptranslator" />
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="shortcut icon" href="favicon.png" />
-    <!-- Third Party Libraries (CDN) -->
-    <!-- Tesseract.js for OCR -->
-    <script src="https://unpkg.com/tesseract.js@v5.0.0/dist/tesseract.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700&display=swap"
+    rel="stylesheet" />
 
-    <!-- PDF.js for PDF Rendering -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-    </script>
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="shortcut icon" href="favicon.png" />
+  <!-- Third Party Libraries (CDN) -->
+  <!-- Tesseract.js for OCR -->
+  <script src="https://unpkg.com/tesseract.js@v5.0.0/dist/tesseract.min.js"></script>
 
-    <!-- PDF-Lib for generating PDFs -->
-    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-  </head>
+  <!-- PDF.js for PDF Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  </script>
 
-  <body>
-    <header class="app-header">
-      <div class="header-content">
-        <h1 class="logo">
-          <img src="img.png" alt="Snap Translator Logo" class="logo-icon" /> The
-          Snap Translator
-        </h1>
-        <p class="tagline">
-          Extract and translate text securely in your browser. No server
-          uploads.
-        </p>
-      </div>
-      <div class="header-actions">
-        <!-- Global actions like settings or github link-->
-      </div>
-    </header>
+  <!-- PDF-Lib for generating PDFs -->
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+</head>
 
-    <main class="app-container">
-      <!-- Sidebar / Processing Area -->
-      <aside class="sidebar">
-        <!-- Upload Area -->
-        <section id="upload-area" class="upload-area">
-          <input
-            type="file"
-            id="file-input"
-            multiple
-            accept="image/*,application/pdf"
-            hidden
-          />
-          <div
-            class="drop-zone"
-            tabindex="0"
-            role="button"
-            aria-label="Upload files"
-          >
-            <div class="icon">📁</div>
-            <h3>Drag & Drop files here</h3>
-            <p>or click to browse</p>
-            <span class="subtext">JPG, PNG, PDF supported</span>
+<body>
+  <header class="app-header">
+    <div class="header-content">
+      <h1 class="logo">
+        <img src="img.png" alt="Snap Translator Logo" class="logo-icon" /> The
+        Snap Translator
+      </h1>
+      <p class="tagline">
+        Extract and translate text securely in your browser. No server
+        uploads.
+      </p>
+    </div>
+    <div class="header-actions">
+      <!-- Global actions like settings or github link could go here -->
+    </div>
+  </header>
+
+  <main class="app-container">
+    <!-- Sidebar / Processing Area -->
+    <aside class="sidebar">
+      <!-- Upload Area -->
+      <section id="upload-area" class="upload-area">
+        <input type="file" id="file-input" multiple accept="image/*,application/pdf" hidden />
+        <div class="drop-zone" tabindex="0" role="button" aria-label="Upload files">
+          <div class="icon">
+            <svg class="icon-svg icon-lg" viewBox="0 0 24 24">
+              <path
+                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+            </svg>
           </div>
-        </section>
-
-        <!-- Previews List -->
-        <section class="previews-container">
-          <div class="previews-header">
-            <h2>Pages</h2>
-            <span id="page-count" class="badge">0</span>
-            <button id="clear-all-btn" class="btn-text">Clear All</button>
-          </div>
-          <div id="previews-list" class="previews-list">
-            <!-- Preview items will be injected here -->
-            <div class="empty-state">
-              <p>No files loaded yet.</p>
-            </div>
-          </div>
-        </section>
-      </aside>
-
-      <!-- Main Editor / Output Area -->
-      <section class="editor-area">
-        <!-- Toolbar -->
-        <div class="toolbar">
-          <div class="toolbar-group">
-            <label for="ocr-lang">OCR Language</label>
-            <select id="ocr-lang" class="select-input">
-              <option value="eng">English</option>
-              <option value="spa">Spanish</option>
-              <option value="fra">French</option>
-              <option value="deu">German</option>
-              <option value="ita">Italian</option>
-              <option value="por">Portuguese</option>
-              <option value="chi_sim">Chinese (Simplified)</option>
-              <option value="jpn">Japanese</option>
-              <option value="rus">Russian</option>
-              <option value="auto">Auto Detect</option>
-            </select>
-          </div>
-
-          <div class="toolbar-group">
-            <label for="trans-lang">Translate To</label>
-            <select id="trans-lang" class="select-input">
-              <option value="none">No Translation</option>
-              <option value="en">English</option>
-              <option value="es">Spanish</option>
-              <option value="fr">French</option>
-              <option value="de">German</option>
-              <option value="it">Italian</option>
-              <option value="pt">Portuguese</option>
-              <option value="zh">Chinese</option>
-              <option value="ja">Japanese</option>
-              <option value="ru">Russian</option>
-            </select>
-          </div>
-
-          <div class="toolbar-actions">
-            <div
-              class="toggle-group"
-              title="Enable preprocessing (slower but better for scans)"
-            >
-              <input type="checkbox" id="enhanced-ocr" />
-              <label for="enhanced-ocr">Enhanced OCR</label>
-            </div>
-            <button id="process-all-btn" class="btn-primary">
-              <span>▶</span> Run All
-            </button>
-          </div>
+          <h3>Drag & Drop files here</h3>
+          <p>or click to browse</p>
+          <span class="subtext">JPG, PNG, PDF supported</span>
         </div>
+      </section>
 
-        <!-- Current Page View -->
-        <div id="output-container" class="output-container">
-          <div class="placeholder-message">
-            <h3>Get Started in 3 Steps</h3>
-            <div
-              style="
-                text-align: left;
-                margin-top: 1.5rem;
-                display: inline-block;
-              "
-            >
-              <p>1. <strong>Upload</strong> images or PDFs via drag & drop.</p>
-              <p>
-                2. <strong>Process</strong> using "Run All" or select a page.
-              </p>
-              <p>3. <strong>Export</strong> your text or translated docs.</p>
-            </div>
-          </div>
-
-          <!-- This content is dynamic based on selection -->
-          <div class="split-view" style="display: none">
-            <!-- Source Panel -->
-            <div class="panel source-panel">
-              <div class="panel-header">
-                <h3>Extracted Text</h3>
-                <div class="panel-actions">
-                  <button
-                    class="btn-icon copy-btn"
-                    data-target="source-text"
-                    title="Copy"
-                  >
-                    📋
-                  </button>
-                </div>
-              </div>
-              <div class="panel-body">
-                <textarea
-                  id="source-text"
-                  placeholder="Extracted text will appear here..."
-                ></textarea>
-              </div>
-            </div>
-
-            <!-- Target Panel -->
-            <div class="panel target-panel" id="target-panel-container">
-              <div class="panel-header">
-                <h3>Translation</h3>
-                <div class="panel-actions">
-                  <button
-                    class="btn-icon copy-btn"
-                    data-target="target-text"
-                    title="Copy"
-                  >
-                    📋
-                  </button>
-                </div>
-              </div>
-              <div class="panel-body">
-                <textarea
-                  id="target-text"
-                  placeholder="Translation will appear here..."
-                ></textarea>
-              </div>
-            </div>
-          </div>
+      <!-- Previews List -->
+      <section class="previews-container">
+        <div class="previews-header">
+          <h2>Pages</h2>
+          <span id="page-count" class="badge">0</span>
+          <button id="clear-all-btn" class="btn-text">Clear All</button>
         </div>
-
-        <!-- Global status / footer actions -->
-        <div class="editor-footer">
-          <div class="progress-section" style="display: none">
-            <div class="progress-header">
-              <span id="global-status-text">Processing...</span>
-              <span id="progress-percent">0%</span>
-            </div>
-            <div class="progress-track">
-              <div id="global-progress" class="progress-bar"></div>
-            </div>
-          </div>
-          <div class="export-actions">
-            <button id="download-txt-btn" class="btn-secondary" disabled>
-              Download Text
-            </button>
-            <button id="download-pdf-btn" class="btn-secondary" disabled>
-              Download PDF
-            </button>
+        <div id="previews-list" class="previews-list">
+          <!-- Preview items will be injected here -->
+          <div class="empty-state">
+            <p>No files loaded yet.</p>
           </div>
         </div>
       </section>
-    </main>
+    </aside>
 
-    <footer class="app-footer">
-      <div class="copyrights">
-        &copy;
-        <script>
-          document.currentScript.parentElement.innerHTML +=
-            new Date().getFullYear();
-        </script>
-        The Snap Translator RMST. All rights reserved.
+    <!-- Main Editor / Output Area -->
+    <section class="editor-area">
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <label for="ocr-lang">OCR Language</label>
+          <select id="ocr-lang" class="select-input">
+            <option value="eng">English</option>
+            <option value="spa">Spanish</option>
+            <option value="fra">French</option>
+            <option value="deu">German</option>
+            <option value="ita">Italian</option>
+            <option value="por">Portuguese</option>
+            <option value="chi_sim">Chinese (Simplified)</option>
+            <option value="jpn">Japanese</option>
+            <option value="rus">Russian</option>
+            <option value="auto">Auto Detect</option>
+          </select>
+        </div>
+
+        <div class="toolbar-group">
+          <label for="trans-lang">Translate To</label>
+          <select id="trans-lang" class="select-input">
+            <option value="none">No Translation</option>
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+            <option value="pt">Portuguese</option>
+            <option value="zh">Chinese</option>
+            <option value="ja">Japanese</option>
+            <option value="ru">Russian</option>
+          </select>
+        </div>
+
+        <div class="toolbar-actions">
+          <div class="toggle-group" title="Enable preprocessing (slower but better for scans)">
+            <input type="checkbox" id="enhanced-ocr" />
+            <label for="enhanced-ocr">Enhanced OCR</label>
+          </div>
+          <button id="process-all-btn" class="btn-primary">
+            <svg class="icon-svg" style="width: 1em; height: 1em;" viewBox="0 0 24 24">
+              <path
+                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+            </svg> Run All
+          </button>
+        </div>
       </div>
-    </footer>
 
-    <script src="app.js"></script>
-  </body>
+      <!-- Current Page View -->
+      <div id="output-container" class="output-container">
+        <div class="placeholder-message">
+          <h3>Get Started in 3 Steps</h3>
+          <div style="
+                text-align: left;
+                margin-top: 1.5rem;
+                display: inline-block;
+              ">
+            <p>1. <strong>Upload</strong> images or PDFs via drag & drop.</p>
+            <p>
+              2. <strong>Process</strong> using "Run All" or select a page.
+            </p>
+            <p>3. <strong>Export</strong> your text or translated docs.</p>
+          </div>
+        </div>
+
+        <!-- This content is dynamic based on selection -->
+        <div class="split-view" style="display: none">
+          <!-- Source Panel -->
+          <div class="panel source-panel">
+            <div class="panel-header">
+              <h3>Extracted Text</h3>
+              <div class="panel-actions">
+                <button class="btn-icon copy-btn" data-target="source-text" title="Copy">
+                  <svg class="icon-svg" viewBox="0 0 24 24">
+                    <path
+                      d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <textarea id="source-text" placeholder="Extracted text will appear here..."></textarea>
+            </div>
+          </div>
+
+          <!-- Target Panel -->
+          <div class="panel target-panel" id="target-panel-container">
+            <div class="panel-header">
+              <h3>Translation</h3>
+              <div class="panel-actions">
+                <button class="btn-icon copy-btn" data-target="target-text" title="Copy">
+                  <svg class="icon-svg" viewBox="0 0 24 24">
+                    <path
+                      d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <textarea id="target-text" placeholder="Translation will appear here..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Global status / footer actions -->
+      <div class="editor-footer">
+        <div class="progress-section" style="display: none">
+          <div class="progress-header">
+            <span id="global-status-text">Processing...</span>
+            <span id="progress-percent">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="global-progress" class="progress-bar"></div>
+          </div>
+        </div>
+        <div class="export-actions">
+          <button id="download-txt-btn" class="btn-secondary" disabled>
+            Download Text
+          </button>
+          <button id="download-pdf-btn" class="btn-secondary" disabled>
+            Download PDF
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>
+      <strong>© 2025 All rights reserved. The Snap Translator by RMST</strong>
+    </p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+
 </html>
