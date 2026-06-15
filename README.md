@@ -9,7 +9,7 @@
 
   👨‍💻 More details about me [https://sandunrmst.github.io/](https://sandunrmst.github.io/)
 
-  💬 Ask me about **Python**
+  💬 Ask me about. **Python**
 
   📫 How to reach me **info@sandunrmst.com**
   
